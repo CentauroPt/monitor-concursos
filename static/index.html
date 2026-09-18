@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Monitor de Concursos Públicos - Portal BASE & TED</title>
-  <link rel="stylesheet" href="/styles.css?v=2.2">
+  <link rel="stylesheet" href="/styles.css?v=2.4">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -172,12 +172,12 @@
           </div>
           <div class="summary-grid">
             <div class="summary-section">
-              <h4>⏳ Prazo de Entrega da Proposta</h4>
-              <p id="modal-deadline" class="summary-badge"></p>
+              <h4>💰 Valor a Concurso / Preço Base</h4>
+              <p id="modal-value" class="summary-badge badge-price"></p>
             </div>
             <div class="summary-section">
-              <h4>💰 Valor a Concurso</h4>
-              <p id="modal-value" class="summary-badge badge-price"></p>
+              <h4>📑 Tipo de Procedimento</h4>
+              <p id="modal-type" class="summary-badge badge-neutral"></p>
             </div>
           </div>
           <div class="summary-section">
@@ -188,9 +188,9 @@
             <h4>📅 Data de Publicação</h4>
             <p id="modal-pubdate"></p>
           </div>
-          <div class="summary-section">
-            <h4>🔗 Ligações Oficiais</h4>
-            <div id="modal-links" class="modal-links-area"></div>
+          <div class="summary-section" id="modal-deadline-container">
+            <h4 id="modal-deadline-label">⏳ Data Limite de Entrega da Proposta</h4>
+            <p id="modal-deadline" class="summary-badge"></p>
           </div>
         </div>
         <div class="modal-footer">
@@ -206,6 +206,6 @@
     </footer>
   </div>
 
-  <script src="/app.js?v=2.3"></script>
+  <script src="/app.js?v=2.4"></script>
 </body>
 </html>
