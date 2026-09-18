@@ -1,10 +1,12 @@
 // Lógica de Frontend para o Monitor de Concursos Públicos
 
 let currentActiveItems = [];
+let currentFavoriteItems = [];
 let currentDismissedItems = [];
 let activeSourceFilter = 'all';
 let currentModalItem = null;
 let selectedItemIds = new Set();
+let activeKeyword = null;
 
 // Elementos DOM
 const btnSearch = document.getElementById('btn-search');
@@ -52,8 +54,6 @@ document.addEventListener('DOMContentLoaded', () => {
   setupEventListeners();
   loadInitialData();
 });
-
-let activeKeyword = null;
 
 function setupEventListeners() {
   btnSearch.addEventListener('click', handleSearchClick);
@@ -158,6 +158,7 @@ async function loadInitialData() {
       const resResults = await fetch('/api/results');
       const data = await resResults.json();
       currentActiveItems = data.items || [];
+      currentFavoriteItems = data.favorite_items || [];
       currentDismissedItems = data.dismissed_items || [];
       updateStats(data);
       renderFilteredList();
@@ -189,6 +190,7 @@ async function handleSearchClick() {
 
     const data = await response.json();
     currentActiveItems = data.items || [];
+    currentFavoriteItems = data.favorite_items || [];
     currentDismissedItems = data.dismissed_items || [];
     updateStats(data);
     renderFilteredList();
@@ -227,7 +229,7 @@ function updateStats(data) {
   countBase.textContent = data.base_count || 0;
   countTed.textContent = data.ted_count || 0;
   if (countFavorites) {
-    countFavorites.textContent = data.favorite_count || (currentActiveItems ? currentActiveItems.filter(it => it.is_favorite).length : 0);
+    countFavorites.textContent = data.favorite_count || (currentFavoriteItems ? currentFavoriteItems.length : 0);
   }
   if (countDismissed) {
     countDismissed.textContent = data.dismissed_count || (currentDismissedItems ? currentDismissedItems.length : 0);
@@ -243,13 +245,17 @@ function normalizeStr(str) {
 function getCurrentlyFilteredItems() {
   const rawQuery = filterInput.value.trim();
   const query = normalizeStr(rawQuery);
-  const sourceList = activeSourceFilter === 'dismissed' ? currentDismissedItems : currentActiveItems;
+  
+  let sourceList = currentActiveItems;
+  if (activeSourceFilter === 'favorites') {
+    sourceList = currentFavoriteItems;
+  } else if (activeSourceFilter === 'dismissed') {
+    sourceList = currentDismissedItems;
+  }
 
   return sourceList.filter(item => {
-    // Filtro de Fonte (Tab) ou Favoritos
-    if (activeSourceFilter === 'favorites') {
-      if (!item.is_favorite) return false;
-    } else if (activeSourceFilter !== 'all' && activeSourceFilter !== 'dismissed' && item.source !== activeSourceFilter) {
+    // Filtro de Fonte (Portal BASE / TED Europa) apenas quando na lista geral
+    if (activeSourceFilter !== 'all' && activeSourceFilter !== 'favorites' && activeSourceFilter !== 'dismissed' && item.source !== activeSourceFilter) {
       return false;
     }
 
@@ -272,12 +278,15 @@ function renderFilteredList() {
 
   if (filtered.length === 0) {
     emptyState.classList.remove('hidden');
-    if (activeSourceFilter === 'dismissed') {
+    if (activeSourceFilter === 'favorites') {
+      emptyState.querySelector('h3').textContent = "Nenhum concurso nos favoritos";
+      emptyState.querySelector('p').textContent = "Clique na estrela (☆) em qualquer concurso para o mover para a sua lista de favoritos.";
+    } else if (activeSourceFilter === 'dismissed') {
       emptyState.querySelector('h3').textContent = "Nenhum concurso descartado";
       emptyState.querySelector('p').textContent = "Os concursos que descartar aparecerão aqui, caso queira recuperá-los mais tarde.";
     } else {
       emptyState.querySelector('h3').textContent = currentActiveItems.length === 0 ? 
-        "Nenhum concurso carregado ainda" : "Nenhum resultado encontrado para os filtros selecionados";
+        "Nenhum concurso novo na lista geral" : "Nenhum resultado encontrado para os filtros selecionados";
       emptyState.querySelector('p').textContent = "Clique em 'Pesquisar Concursos' ou ajuste o termo de filtro.";
     }
     resultsList.innerHTML = '';
@@ -298,6 +307,7 @@ function createTenderCardHtml(item) {
   const sourceIcon = isBase ? '🇵🇹' : '🇪🇺';
   const isSelected = selectedItemIds.has(item.id);
   const isDismissed = activeSourceFilter === 'dismissed';
+  const isFav = !!item.is_favorite;
 
   const matchedHtml = (item.matched_terms || []).map(t => `<span class="tag">${escapeHtml(t)}</span>`).join('');
 
@@ -308,8 +318,8 @@ function createTenderCardHtml(item) {
           <label class="card-select-label" title="Selecionar este concurso para exportar">
             <input type="checkbox" class="item-checkbox" data-id="${escapeHtml(item.id)}" ${isSelected ? 'checked' : ''} />
           </label>
-          <button type="button" class="btn-star ${item.is_favorite ? 'favorited' : ''}" data-id="${escapeHtml(item.id)}" title="${item.is_favorite ? 'Remover dos favoritos' : 'Marcar como favorito'}">
-            ${item.is_favorite ? '★' : '☆'}
+          <button type="button" class="btn-star ${isFav ? 'favorited' : ''}" data-id="${escapeHtml(item.id)}" title="${isFav ? 'Remover dos favoritos (devolver à lista geral)' : 'Mover para os favoritos'}">
+            ${isFav ? '★' : '☆'}
           </button>
           <span class="source-badge ${badgeClass}">${sourceIcon} ${escapeHtml(item.source)}</span>
           <span class="procedure-type-badge">${escapeHtml(item.procedure_type || 'Concurso')}</span>
@@ -342,7 +352,7 @@ function createTenderCardHtml(item) {
         </div>
         <div class="card-actions">
           ${isDismissed ? 
-            `<button class="btn btn-card-restore" data-id="${escapeHtml(item.id)}" title="Recuperar este concurso para os resultados ativos">↩️ Recuperar</button>` :
+            `<button class="btn btn-card-restore" data-id="${escapeHtml(item.id)}" title="Recuperar este concurso para a lista ativa">↩️ Recuperar</button>` :
             `<button class="btn btn-card-dismiss" data-id="${escapeHtml(item.id)}" title="Descartar este concurso para não voltar a ver">🗑️ Descartar</button>`
           }
           <button class="btn btn-card-summary" data-id="${escapeHtml(item.id)}">📋 Ver Resumo</button>
@@ -358,16 +368,16 @@ function createTenderCardHtml(item) {
 function attachCardEvents() {
   // Checkbox individual por concurso
   document.querySelectorAll('.item-checkbox').forEach(cb => {
-    cb.addEventListener('change', (e) => {
+    cb.addEventListener('change', () => {
       const id = cb.dataset.id;
-      if (e.target.checked) {
+      if (cb.checked) {
         selectedItemIds.add(id);
       } else {
         selectedItemIds.delete(id);
       }
       const card = document.querySelector(`.tender-card[data-id="${id}"]`);
       if (card) {
-        if (e.target.checked) card.classList.add('selected-card');
+        if (cb.checked) card.classList.add('selected-card');
         else card.classList.remove('selected-card');
       }
       updateSelectionUI();
@@ -400,40 +410,34 @@ function attachCardEvents() {
   document.querySelectorAll('.btn-card-summary').forEach(btn => {
     btn.addEventListener('click', () => {
       const itemId = btn.dataset.id;
-      const allCandidates = [...currentActiveItems, ...currentDismissedItems];
+      const allCandidates = [...currentActiveItems, ...currentFavoriteItems, ...currentDismissedItems];
       const found = allCandidates.find(it => it.id === itemId);
       if (found) openModal(found);
     });
   });
 }
 
-// Alternar Favorito
+// Alternar Favorito (Mover entre Lista Geral e Favoritos)
 async function handleToggleFavorite(itemId) {
-  const allCandidates = [...currentActiveItems, ...currentDismissedItems];
-  const item = allCandidates.find(it => it.id === itemId);
-  if (!item) return;
-
-  item.is_favorite = !item.is_favorite;
-
-  updateCountsAfterChange();
-
-  if (activeSourceFilter === 'favorites') {
-    renderFilteredList();
+  // Verificar se já está nos favoritos
+  const favIndex = currentFavoriteItems.findIndex(it => it.id === itemId);
+  if (favIndex !== -1) {
+    // Está nos favoritos -> Desmarcar e devolver à lista geral
+    const item = currentFavoriteItems.splice(favIndex, 1)[0];
+    item.is_favorite = false;
+    currentActiveItems.unshift(item);
   } else {
-    // Atualizar apenas o botão específico na interface
-    const btn = document.querySelector(`.btn-star[data-id="${itemId}"]`);
-    if (btn) {
-      if (item.is_favorite) {
-        btn.classList.add('favorited');
-        btn.textContent = '★';
-        btn.title = 'Remover dos favoritos';
-      } else {
-        btn.classList.remove('favorited');
-        btn.textContent = '☆';
-        btn.title = 'Marcar como favorito';
-      }
+    // Está na lista geral -> Marcar e mover para a lista de favoritos
+    const activeIndex = currentActiveItems.findIndex(it => it.id === itemId);
+    if (activeIndex !== -1) {
+      const item = currentActiveItems.splice(activeIndex, 1)[0];
+      item.is_favorite = true;
+      currentFavoriteItems.unshift(item);
     }
   }
+
+  updateCountsAfterChange();
+  renderFilteredList();
 
   // Persistir no servidor
   try {
@@ -449,10 +453,18 @@ async function handleToggleFavorite(itemId) {
 
 // Descartar concurso
 async function handleDismissItem(itemId) {
-  const itemIndex = currentActiveItems.findIndex(it => it.id === itemId);
-  if (itemIndex === -1) return;
+  let item = null;
+  let activeIndex = currentActiveItems.findIndex(it => it.id === itemId);
+  if (activeIndex !== -1) {
+    item = currentActiveItems.splice(activeIndex, 1)[0];
+  } else {
+    let favIndex = currentFavoriteItems.findIndex(it => it.id === itemId);
+    if (favIndex !== -1) {
+      item = currentFavoriteItems.splice(favIndex, 1)[0];
+    }
+  }
+  if (!item) return;
 
-  const item = currentActiveItems.splice(itemIndex, 1)[0];
   item.is_dismissed = true;
   currentDismissedItems.unshift(item);
   selectedItemIds.delete(itemId);
@@ -479,7 +491,11 @@ async function handleRestoreItem(itemId) {
 
   const item = currentDismissedItems.splice(itemIndex, 1)[0];
   item.is_dismissed = false;
-  currentActiveItems.unshift(item);
+  if (item.is_favorite) {
+    currentFavoriteItems.unshift(item);
+  } else {
+    currentActiveItems.unshift(item);
+  }
 
   updateCountsAfterChange();
   renderFilteredList();
@@ -499,11 +515,9 @@ async function handleRestoreItem(itemId) {
 function updateCountsAfterChange() {
   let baseCount = 0;
   let tedCount = 0;
-  let favCount = 0;
   currentActiveItems.forEach(it => {
     if (it.source === 'Portal BASE') baseCount++;
     else tedCount++;
-    if (it.is_favorite) favCount++;
   });
 
   statTotal.textContent = currentActiveItems.length;
@@ -514,7 +528,7 @@ function updateCountsAfterChange() {
   countBase.textContent = baseCount;
   countTed.textContent = tedCount;
   if (countFavorites) {
-    countFavorites.textContent = favCount;
+    countFavorites.textContent = currentFavoriteItems.length;
   }
   if (countDismissed) {
     countDismissed.textContent = currentDismissedItems.length;
