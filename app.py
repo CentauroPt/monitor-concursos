@@ -47,6 +47,8 @@ class MonitorHandler(SimpleHTTPRequestHandler):
                     'total_count': cached.get('total_count', 0),
                     'base_count': cached.get('base_count', 0),
                     'ted_count': cached.get('ted_count', 0),
+                    'favorite_count': cached.get('favorite_count', 0),
+                    'dismissed_count': cached.get('dismissed_count', 0),
                     'ted_country': cached.get('ted_country', 'PRT')
                 }
             else:
@@ -123,9 +125,21 @@ class MonitorHandler(SimpleHTTPRequestHandler):
                 item_id = payload.get('id')
                 if item_id:
                     success = analyzer.restore_item(item_id)
-                    return self._send_json({'success': success, 'id': item_id})
             except Exception as e:
                 logger.error(f"Erro ao restaurar item: {e}")
+            return self._send_json({'success': False}, status=400)
+
+        elif path == "/api/favorite":
+            content_length = int(self.headers.get('Content-Length', 0))
+            body = self.rfile.read(content_length) if content_length > 0 else b'{}'
+            try:
+                payload = json.loads(body.decode('utf-8'))
+                item_id = payload.get('id')
+                if item_id:
+                    is_fav = analyzer.toggle_favorite(item_id)
+                    return self._send_json({'success': True, 'id': item_id, 'is_favorite': is_fav})
+            except Exception as e:
+                logger.error(f"Erro ao alternar favorito: {e}")
             return self._send_json({'success': False}, status=400)
 
         elif path == "/api/export":
