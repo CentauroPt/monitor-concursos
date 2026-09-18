@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Monitor de Concursos Públicos - Portal BASE & TED</title>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Top Header -->
+    <header class="header">
+      <div class="header-content">
+        <div class="header-brand">
+          <div class="brand-icon">🏛️</div>
+          <div>
+            <h1>Monitor de Concursos Públicos</h1>
+            <p class="subtitle">Pesquisa diária automatizada no <strong>Portal BASE</strong> e <strong>TED Europa</strong></p>
+          </div>
+        </div>
+        <div class="header-status">
+          <span class="status-indicator live"></span>
+          <span id="last-update-text">A carregar estado...</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Query Info Banner -->
+    <section class="criteria-banner">
+      <div class="criteria-item">
+        <span class="criteria-label">Palavras-chave:</span>
+        <div class="tags-list">
+          <button type="button" class="tag keyword-btn" data-keyword="Unidade Móvel" title="Clique para filtrar por Unidade Móvel">Unidade Móvel</button>
+          <button type="button" class="tag keyword-btn" data-keyword="Unidades Móveis" title="Clique para filtrar por Unidades Móveis">Unidades Móveis</button>
+          <button type="button" class="tag keyword-btn" data-keyword="Viatura especial" title="Clique para filtrar por Viatura especial">Viatura especial</button>
+          <button type="button" class="tag keyword-btn" data-keyword="Viaturas Especiais" title="Clique para filtrar por Viaturas Especiais">Viaturas Especiais</button>
+          <button type="button" class="tag keyword-btn" data-keyword="Carrinha" title="Clique para filtrar por Carrinha">Carrinha</button>
+          <button type="button" class="tag keyword-btn" data-keyword="Biblioteca itinerante" title="Clique para filtrar por Biblioteca itinerante">Biblioteca itinerante</button>
+        </div>
+      </div>
+      <div class="criteria-item">
+        <span class="criteria-label">Código CPV:</span>
+        <button type="button" class="tag tag-cpv keyword-btn" data-keyword="3414" title="Clique para filtrar pela gama CPV 3414xxxx">34140000 até 34149999 (Viaturas pesadas e especiais)</button>
+      </div>
+    </section>
+
+    <!-- Action Bar -->
+    <section class="action-card">
+      <div class="action-controls">
+        <div class="primary-action">
+          <button id="btn-search" class="btn btn-primary btn-large">
+            <span class="btn-icon">🔍</span>
+            <span class="btn-text">Pesquisar Concursos</span>
+          </button>
+        </div>
+
+        <div class="search-options">
+          <div class="option-group">
+            <label for="ted-scope">Âmbito TED:</label>
+            <select id="ted-scope" class="form-select">
+              <option value="PRT" selected>🇵🇹 Portugal (Recomendado)</option>
+              <option value="ALL">🇪🇺 Toda a União Europeia</option>
+            </select>
+          </div>
+
+          <div class="option-group export-group">
+            <button id="btn-export-custom" class="btn btn-secondary" title="Exportar para folha de cálculo Excel">
+              <span>📥</span> <span id="btn-export-text">Exportar Excel</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Filter & Tabs -->
+      <div class="filter-bar">
+        <div class="source-tabs">
+          <button class="tab-btn active" data-filter="all">Todos (<span id="count-all">0</span>)</button>
+          <button class="tab-btn" data-filter="Portal BASE">🇵🇹 Portal BASE (<span id="count-base">0</span>)</button>
+          <button class="tab-btn" data-filter="TED Europa">🇪🇺 TED Europa (<span id="count-ted">0</span>)</button>
+          <button class="tab-btn tab-dismissed" data-filter="dismissed">🗑️ Descartados (<span id="count-dismissed">0</span>)</button>
+        </div>
+
+        <div class="search-filter-input">
+          <input type="text" id="filter-input" placeholder="Filtrar por entidade, palavra ou valor..." />
+        </div>
+      </div>
+
+      <!-- Selection Toolbar for Export -->
+      <div class="selection-toolbar">
+        <div class="selection-controls">
+          <label class="checkbox-container">
+            <input type="checkbox" id="select-all-visible" />
+            <span class="checkmark"></span>
+            <span class="select-label">Selecionar todos os visíveis</span>
+          </label>
+          <span class="selection-counter" id="selection-counter">(0 selecionados)</span>
+          <button id="btn-clear-selection" class="btn-link-action hidden">Desmarcar todos</button>
+        </div>
+        <div class="selection-hint">
+          <span>💡 Selecione os concursos pretendidos com as caixas de seleção para exportar apenas o que lhe interessa.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats Summary Row -->
+    <section class="stats-row">
+      <div class="stat-card">
+        <div class="stat-icon bg-blue">📋</div>
+        <div class="stat-info">
+          <span class="stat-value" id="stat-total">0</span>
+          <span class="stat-label">Total de Oportunidades</span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon bg-green">🇵🇹</div>
+        <div class="stat-info">
+          <span class="stat-value" id="stat-base">0</span>
+          <span class="stat-label">Portal BASE (Portugal)</span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon bg-yellow">🇪🇺</div>
+        <div class="stat-info">
+          <span class="stat-value" id="stat-ted">0</span>
+          <span class="stat-label">TED Europa</span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon bg-purple">⏱️</div>
+        <div class="stat-info">
+          <span class="stat-value" id="stat-time">--</span>
+          <span class="stat-label">Tempo de Consulta</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Results Container -->
+    <main class="results-container">
+      <div id="loading-state" class="state-card loading-card hidden">
+        <div class="spinner"></div>
+        <h3>A pesquisar concursos no Portal BASE e no TED...</h3>
+        <p>A comunicar com os portais oficiais. Esta operação demora cerca de 8 a 15 segundos.</p>
+      </div>
+
+      <div id="empty-state" class="state-card empty-card">
+        <div class="state-icon">🔎</div>
+        <h3>Nenhum concurso carregado ainda</h3>
+        <p>Clique no botão <strong>"Pesquisar Concursos"</strong> acima para iniciar a recolha diária.</p>
+      </div>
+
+      <div id="results-list" class="results-list"></div>
+    </main>
+
+    <!-- Modal for Individual Full Summary -->
+    <div id="summary-modal" class="modal-backdrop hidden">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3 id="modal-title">Resumo do Concurso</h3>
+          <button id="modal-close" class="modal-close-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="summary-section">
+            <h4>📌 Objeto do Concurso</h4>
+            <p id="modal-object" class="summary-highlight"></p>
+          </div>
+          <div class="summary-grid">
+            <div class="summary-section">
+              <h4>⏳ Prazo de Entrega da Proposta</h4>
+              <p id="modal-deadline" class="summary-badge"></p>
+            </div>
+            <div class="summary-section">
+              <h4>💰 Valor a Concurso</h4>
+              <p id="modal-value" class="summary-badge badge-price"></p>
+            </div>
+          </div>
+          <div class="summary-section">
+            <h4>🏢 Entidade Adjudicante</h4>
+            <p id="modal-entity"></p>
+          </div>
+          <div class="summary-section">
+            <h4>📅 Data de Publicação</h4>
+            <p id="modal-pubdate"></p>
+          </div>
+          <div class="summary-section">
+            <h4>🔗 Ligações Oficiais</h4>
+            <div id="modal-links" class="modal-links-area"></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="btn-copy-summary" class="btn btn-secondary">📋 Copiar Resumo</button>
+          <a id="btn-modal-open-direct" href="#" target="_blank" class="btn btn-primary">Abrir no Portal Oficial ↗</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>Monitor de Contratos Públicos &bull; Desenvolvido para consulta ágil de viaturas e unidades móveis no Portal BASE e TED Europa.</p>
+    </footer>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
