@@ -356,7 +356,7 @@ function createTenderCardHtml(item) {
             `<button class="btn btn-card-dismiss" data-id="${escapeHtml(item.id)}" title="Descartar este concurso para não voltar a ver">🗑️ Descartar</button>`
           }
           <button class="btn btn-card-summary" data-id="${escapeHtml(item.id)}">📋 Ver Resumo</button>
-          <a href="${escapeHtml(item.direct_url)}" target="_blank" rel="noopener noreferrer" class="btn btn-card-link">
+          <a href="${escapeHtml(getSpecificDirectUrl(item.direct_url))}" target="_blank" rel="noopener noreferrer" class="btn btn-card-link">
             Abrir no Portal Oficial ↗
           </a>
         </div>
@@ -606,6 +606,12 @@ async function handleExportClick() {
   }
 }
 
+function getSpecificDirectUrl(url) {
+  if (!url) return '#';
+  // Garante que links do Portal BASE abrem a ficha de detalhe específico (/detalhe/) e não a lista geral (/pesquisa/)
+  return url.replace('/Base4/pt/pesquisa/?type=', '/Base4/pt/detalhe/?type=');
+}
+
 // Modal Logic
 function openModal(item) {
   currentModalItem = item;
@@ -616,13 +622,17 @@ function openModal(item) {
   modalEntity.textContent = item.entity || "Consulte os termos";
   modalPubDate.textContent = item.publication_date || "N/D";
   
+  const specificUrl = getSpecificDirectUrl(item.direct_url);
+  const isContrato = item.category && item.category.includes('Contrato');
+  const typeName = isContrato ? 'contrato' : 'anúncio';
+
   modalLinks.innerHTML = `
-    <a href="${escapeHtml(item.direct_url)}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
-      🔗 Ver anúncio no ${escapeHtml(item.source)}
+    <a href="${escapeHtml(specificUrl)}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+      🔗 Ver ${typeName} específico no ${escapeHtml(item.source)}
     </a>
   `;
 
-  btnModalOpenDirect.href = item.direct_url;
+  btnModalOpenDirect.href = specificUrl;
   summaryModal.classList.remove('hidden');
 }
 
