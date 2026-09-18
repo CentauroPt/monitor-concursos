@@ -162,7 +162,7 @@ class BaseScraper:
 
     def _normalize_anuncio(self, item: Dict[str, Any], matched_by: str) -> Dict[str, Any]:
         item_id = item.get('id')
-        direct_url = f"{BASE_URL}/Base4/pt/pesquisa/?type=anuncios&id={item_id}"
+        direct_url = f"{BASE_URL}/Base4/pt/detalhe/?type=anuncios&id={item_id}"
         
         return {
             'id': f"base_anuncio_{item_id}",
@@ -181,7 +181,7 @@ class BaseScraper:
 
     def _normalize_contrato(self, item: Dict[str, Any], matched_by: str) -> Dict[str, Any]:
         item_id = item.get('id')
-        direct_url = f"{BASE_URL}/Base4/pt/pesquisa/?type=contratos&id={item_id}"
+        direct_url = f"{BASE_URL}/Base4/pt/detalhe/?type=contratos&id={item_id}"
         proc_type = item.get('contractingProcedureType') or "Ajuste Direto"
         
         return {
