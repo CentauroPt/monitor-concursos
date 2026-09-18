@@ -1,0 +1,566 @@
+// Lógica de Frontend para o Monitor de Concursos Públicos
+
+let currentActiveItems = [];
+let currentDismissedItems = [];
+let activeSourceFilter = 'all';
+let currentModalItem = null;
+let selectedItemIds = new Set();
+
+// Elementos DOM
+const btnSearch = document.getElementById('btn-search');
+const tedScopeSelect = document.getElementById('ted-scope');
+const filterInput = document.getElementById('filter-input');
+const sourceTabButtons = document.querySelectorAll('.tab-btn');
+const resultsList = document.getElementById('results-list');
+const loadingState = document.getElementById('loading-state');
+const emptyState = document.getElementById('empty-state');
+const lastUpdateText = document.getElementById('last-update-text');
+
+// Elementos de Exportação e Seleção
+const btnExportCustom = document.getElementById('btn-export-custom');
+const btnExportText = document.getElementById('btn-export-text');
+const selectAllVisible = document.getElementById('select-all-visible');
+const selectionCounter = document.getElementById('selection-counter');
+const btnClearSelection = document.getElementById('btn-clear-selection');
+
+// Elementos das Estatísticas
+const statTotal = document.getElementById('stat-total');
+const statBase = document.getElementById('stat-base');
+const statTed = document.getElementById('stat-ted');
+const statTime = document.getElementById('stat-time');
+const countAll = document.getElementById('count-all');
+const countBase = document.getElementById('count-base');
+const countTed = document.getElementById('count-ted');
+const countDismissed = document.getElementById('count-dismissed');
+
+// Elementos do Modal
+const summaryModal = document.getElementById('summary-modal');
+const modalClose = document.getElementById('modal-close');
+const modalTitle = document.getElementById('modal-title');
+const modalObject = document.getElementById('modal-object');
+const modalDeadline = document.getElementById('modal-deadline');
+const modalValue = document.getElementById('modal-value');
+const modalEntity = document.getElementById('modal-entity');
+const modalPubDate = document.getElementById('modal-pubdate');
+const modalLinks = document.getElementById('modal-links');
+const btnCopySummary = document.getElementById('btn-copy-summary');
+const btnModalOpenDirect = document.getElementById('btn-modal-open-direct');
+
+// Inicialização
+document.addEventListener('DOMContentLoaded', () => {
+  setupEventListeners();
+  loadInitialData();
+});
+
+let activeKeyword = null;
+
+function setupEventListeners() {
+  btnSearch.addEventListener('click', handleSearchClick);
+
+  const keywordButtons = document.querySelectorAll('.keyword-btn');
+
+  // Filtro por clique nas palavras-chave do topo
+  keywordButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const kw = btn.dataset.keyword;
+      if (activeKeyword === kw) {
+        // Desativar filtro ao clicar novamente
+        activeKeyword = null;
+        btn.classList.remove('active');
+        filterInput.value = '';
+      } else {
+        // Ativar filtro da palavra-chave clicada
+        keywordButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeKeyword = kw;
+        filterInput.value = kw;
+      }
+      renderFilteredList();
+    });
+  });
+
+  filterInput.addEventListener('input', () => {
+    const val = normalizeStr(filterInput.value.trim());
+    keywordButtons.forEach(btn => {
+      if (val && normalizeStr(btn.dataset.keyword) === val) {
+        btn.classList.add('active');
+        activeKeyword = btn.dataset.keyword;
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+    if (!val) activeKeyword = null;
+    renderFilteredList();
+  });
+
+  sourceTabButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      sourceTabButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeSourceFilter = btn.dataset.filter;
+      renderFilteredList();
+    });
+  });
+
+  // Seleção e Exportação
+  selectAllVisible.addEventListener('change', (e) => {
+    const visibleCards = getCurrentlyFilteredItems();
+    if (e.target.checked) {
+      visibleCards.forEach(item => selectedItemIds.add(item.id));
+    } else {
+      visibleCards.forEach(item => selectedItemIds.delete(item.id));
+    }
+    updateSelectionUI();
+    renderFilteredList();
+  });
+
+  btnClearSelection.addEventListener('click', () => {
+    selectedItemIds.clear();
+    selectAllVisible.checked = false;
+    updateSelectionUI();
+    renderFilteredList();
+  });
+
+  btnExportCustom.addEventListener('click', handleExportClick);
+
+  // Modal events
+  modalClose.addEventListener('click', closeModal);
+  summaryModal.addEventListener('click', (e) => {
+    if (e.target === summaryModal) closeModal();
+  });
+
+  btnCopySummary.addEventListener('click', () => {
+    if (!currentModalItem) return;
+    const textToCopy = currentModalItem.summary || 
+      `Objeto: ${currentModalItem.title}\nPrazo de Entrega: ${currentModalItem.deadline}\nValor a Concurso: ${currentModalItem.value}\nEntidade: ${currentModalItem.entity}\nLink: ${currentModalItem.direct_url}`;
+    navigator.clipboard.writeText(textToCopy).then(() => {
+      const originalText = btnCopySummary.textContent;
+      btnCopySummary.textContent = "✅ Copiado!";
+      setTimeout(() => {
+        btnCopySummary.textContent = originalText;
+      }, 2000);
+    });
+  });
+}
+
+// Carregar dados da cache no arranque
+async function loadInitialData() {
+  try {
+    const res = await fetch('/api/status');
+    const status = await res.json();
+
+    if (status.has_data) {
+      lastUpdateText.textContent = `Última pesquisa: ${status.timestamp}`;
+      if (status.ted_country) {
+        tedScopeSelect.value = status.ted_country;
+      }
+      const resResults = await fetch('/api/results');
+      const data = await resResults.json();
+      currentActiveItems = data.items || [];
+      currentDismissedItems = data.dismissed_items || [];
+      updateStats(data);
+      renderFilteredList();
+    } else {
+      lastUpdateText.textContent = "Pronto para pesquisar";
+      emptyState.classList.remove('hidden');
+    }
+  } catch (err) {
+    console.error("Erro ao carregar dados iniciais:", err);
+    lastUpdateText.textContent = "Pronto para pesquisar";
+  }
+}
+
+// Executar pesquisa completa
+async function handleSearchClick() {
+  setLoading(true);
+
+  try {
+    const tedCountry = tedScopeSelect.value;
+    const response = await fetch('/api/search', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ted_country: tedCountry })
+    });
+
+    if (!response.ok) {
+      throw new Error(`Erro na pesquisa: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    currentActiveItems = data.items || [];
+    currentDismissedItems = data.dismissed_items || [];
+    updateStats(data);
+    renderFilteredList();
+    lastUpdateText.textContent = `Última pesquisa: ${data.timestamp}`;
+  } catch (err) {
+    console.error("Erro na pesquisa:", err);
+    alert("Ocorreu um erro ao comunicar com os portais. Por favor tente novamente.");
+  } finally {
+    setLoading(false);
+  }
+}
+
+function setLoading(isLoading) {
+  if (isLoading) {
+    btnSearch.disabled = true;
+    btnSearch.querySelector('.btn-icon').textContent = "⏳";
+    btnSearch.querySelector('.btn-text').textContent = "A pesquisar...";
+    loadingState.classList.remove('hidden');
+    emptyState.classList.add('hidden');
+    resultsList.innerHTML = '';
+  } else {
+    btnSearch.disabled = false;
+    btnSearch.querySelector('.btn-icon').textContent = "🔍";
+    btnSearch.querySelector('.btn-text').textContent = "Pesquisar Concursos";
+    loadingState.classList.add('hidden');
+  }
+}
+
+function updateStats(data) {
+  statTotal.textContent = data.total_count || 0;
+  statBase.textContent = data.base_count || 0;
+  statTed.textContent = data.ted_count || 0;
+  statTime.textContent = data.duration_seconds ? `${data.duration_seconds}s` : '--';
+
+  countAll.textContent = data.total_count || 0;
+  countBase.textContent = data.base_count || 0;
+  countTed.textContent = data.ted_count || 0;
+  if (countDismissed) {
+    countDismissed.textContent = data.dismissed_count || (currentDismissedItems ? currentDismissedItems.length : 0);
+  }
+}
+
+function normalizeStr(str) {
+  if (!str) return '';
+  return String(str).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+}
+
+// Filtragem e Renderização
+function getCurrentlyFilteredItems() {
+  const rawQuery = filterInput.value.trim();
+  const query = normalizeStr(rawQuery);
+  const sourceList = activeSourceFilter === 'dismissed' ? currentDismissedItems : currentActiveItems;
+
+  return sourceList.filter(item => {
+    // Filtro de Fonte (Tab)
+    if (activeSourceFilter !== 'all' && activeSourceFilter !== 'dismissed' && item.source !== activeSourceFilter) {
+      return false;
+    }
+
+    // Filtro de Texto / Palavra-chave
+    if (query) {
+      const matchTitle = normalizeStr(item.title).includes(query);
+      const matchEntity = normalizeStr(item.entity).includes(query);
+      const matchValue = normalizeStr(item.value).includes(query);
+      const matchType = normalizeStr(item.procedure_type).includes(query);
+      const matchTags = (item.matched_terms || []).some(t => normalizeStr(t).includes(query));
+      return matchTitle || matchEntity || matchValue || matchType || matchTags;
+    }
+
+    return true;
+  });
+}
+
+function renderFilteredList() {
+  const filtered = getCurrentlyFilteredItems();
+
+  if (filtered.length === 0) {
+    emptyState.classList.remove('hidden');
+    if (activeSourceFilter === 'dismissed') {
+      emptyState.querySelector('h3').textContent = "Nenhum concurso descartado";
+      emptyState.querySelector('p').textContent = "Os concursos que descartar aparecerão aqui, caso queira recuperá-los mais tarde.";
+    } else {
+      emptyState.querySelector('h3').textContent = currentActiveItems.length === 0 ? 
+        "Nenhum concurso carregado ainda" : "Nenhum resultado encontrado para os filtros selecionados";
+      emptyState.querySelector('p').textContent = "Clique em 'Pesquisar Concursos' ou ajuste o termo de filtro.";
+    }
+    resultsList.innerHTML = '';
+    updateSelectionUI();
+    return;
+  }
+
+  emptyState.classList.add('hidden');
+  resultsList.innerHTML = filtered.map(item => createTenderCardHtml(item)).join('');
+
+  attachCardEvents();
+  updateSelectionUI();
+}
+
+function createTenderCardHtml(item) {
+  const isBase = item.source === 'Portal BASE';
+  const badgeClass = isBase ? 'badge-base' : 'badge-ted';
+  const sourceIcon = isBase ? '🇵🇹' : '🇪🇺';
+  const isSelected = selectedItemIds.has(item.id);
+  const isDismissed = activeSourceFilter === 'dismissed';
+
+  const matchedHtml = (item.matched_terms || []).map(t => `<span class="tag">${escapeHtml(t)}</span>`).join('');
+
+  return `
+    <article class="tender-card ${isSelected ? 'selected-card' : ''} ${isDismissed ? 'dismissed-card' : ''}" data-id="${escapeHtml(item.id)}">
+      <div class="card-top">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <label class="card-select-label" title="Selecionar este concurso para exportar">
+            <input type="checkbox" class="item-checkbox" data-id="${escapeHtml(item.id)}" ${isSelected ? 'checked' : ''} />
+          </label>
+          <span class="source-badge ${badgeClass}">${sourceIcon} ${escapeHtml(item.source)}</span>
+          <span class="procedure-type-badge">${escapeHtml(item.procedure_type || 'Concurso')}</span>
+        </div>
+        <span class="card-date">Publicado a: <strong>${escapeHtml(item.publication_date || 'N/D')}</strong></span>
+      </div>
+
+      <h2 class="card-title">${escapeHtml(item.title)}</h2>
+
+      <div class="card-entity">
+        <span>🏢</span>
+        <span>Entidade: <strong>${escapeHtml(item.entity || 'Entidade Pública')}</strong></span>
+      </div>
+
+      <!-- Resumo Individual Visualmente Destacado -->
+      <div class="summary-pillars">
+        <div class="pillar">
+          <span class="pillar-label">Prazo de Entrega da Proposta</span>
+          <span class="pillar-value pillar-deadline">⏳ ${escapeHtml(item.deadline || 'Consulte o anúncio')}</span>
+        </div>
+        <div class="pillar">
+          <span class="pillar-label">Valor a Concurso / Preço Base</span>
+          <span class="pillar-value pillar-price">💰 ${escapeHtml(item.value || 'Não especificado')}</span>
+        </div>
+      </div>
+
+      <div class="card-bottom">
+        <div class="matched-badges">
+          ${matchedHtml}
+        </div>
+        <div class="card-actions">
+          ${isDismissed ? 
+            `<button class="btn btn-card-restore" data-id="${escapeHtml(item.id)}" title="Recuperar este concurso para os resultados ativos">↩️ Recuperar</button>` :
+            `<button class="btn btn-card-dismiss" data-id="${escapeHtml(item.id)}" title="Descartar este concurso para não voltar a ver">🗑️ Descartar</button>`
+          }
+          <button class="btn btn-card-summary" data-id="${escapeHtml(item.id)}">📋 Ver Resumo</button>
+          <a href="${escapeHtml(item.direct_url)}" target="_blank" rel="noopener noreferrer" class="btn btn-card-link">
+            Abrir no Portal Oficial ↗
+          </a>
+        </div>
+      </div>
+    </article>
+  `;
+}
+
+function attachCardEvents() {
+  // Checkbox individual por concurso
+  document.querySelectorAll('.item-checkbox').forEach(cb => {
+    cb.addEventListener('change', (e) => {
+      const id = cb.dataset.id;
+      if (e.target.checked) {
+        selectedItemIds.add(id);
+      } else {
+        selectedItemIds.delete(id);
+      }
+      const card = document.querySelector(`.tender-card[data-id="${id}"]`);
+      if (card) {
+        if (e.target.checked) card.classList.add('selected-card');
+        else card.classList.remove('selected-card');
+      }
+      updateSelectionUI();
+    });
+  });
+
+  // Botões de Descarte
+  document.querySelectorAll('.btn-card-dismiss').forEach(btn => {
+    btn.addEventListener('click', () => {
+      handleDismissItem(btn.dataset.id);
+    });
+  });
+
+  // Botões de Recuperação
+  document.querySelectorAll('.btn-card-restore').forEach(btn => {
+    btn.addEventListener('click', () => {
+      handleRestoreItem(btn.dataset.id);
+    });
+  });
+
+  // Botões de Ver Resumo
+  document.querySelectorAll('.btn-card-summary').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const itemId = btn.dataset.id;
+      const allCandidates = [...currentActiveItems, ...currentDismissedItems];
+      const found = allCandidates.find(it => it.id === itemId);
+      if (found) openModal(found);
+    });
+  });
+}
+
+// Descartar concurso
+async function handleDismissItem(itemId) {
+  const itemIndex = currentActiveItems.findIndex(it => it.id === itemId);
+  if (itemIndex === -1) return;
+
+  const item = currentActiveItems.splice(itemIndex, 1)[0];
+  item.is_dismissed = true;
+  currentDismissedItems.unshift(item);
+  selectedItemIds.delete(itemId);
+
+  updateCountsAfterChange();
+  renderFilteredList();
+
+  // Persistir no servidor
+  try {
+    await fetch('/api/dismiss', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: itemId })
+    });
+  } catch (e) {
+    console.error("Erro ao persistir descarte:", e);
+  }
+}
+
+// Recuperar concurso descartado
+async function handleRestoreItem(itemId) {
+  const itemIndex = currentDismissedItems.findIndex(it => it.id === itemId);
+  if (itemIndex === -1) return;
+
+  const item = currentDismissedItems.splice(itemIndex, 1)[0];
+  item.is_dismissed = false;
+  currentActiveItems.unshift(item);
+
+  updateCountsAfterChange();
+  renderFilteredList();
+
+  // Persistir no servidor
+  try {
+    await fetch('/api/restore', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: itemId })
+    });
+  } catch (e) {
+    console.error("Erro ao persistir restauro:", e);
+  }
+}
+
+function updateCountsAfterChange() {
+  let baseCount = 0;
+  let tedCount = 0;
+  currentActiveItems.forEach(it => {
+    if (it.source === 'Portal BASE') baseCount++;
+    else tedCount++;
+  });
+
+  statTotal.textContent = currentActiveItems.length;
+  statBase.textContent = baseCount;
+  statTed.textContent = tedCount;
+
+  countAll.textContent = currentActiveItems.length;
+  countBase.textContent = baseCount;
+  countTed.textContent = tedCount;
+  if (countDismissed) {
+    countDismissed.textContent = currentDismissedItems.length;
+  }
+}
+
+function updateSelectionUI() {
+  const visible = getCurrentlyFilteredItems();
+  const selectedCount = selectedItemIds.size;
+
+  selectionCounter.textContent = `(${selectedCount} selecionado${selectedCount === 1 ? '' : 's'})`;
+
+  if (selectedCount > 0) {
+    btnClearSelection.classList.remove('hidden');
+    btnExportText.textContent = `Exportar Selecionados (${selectedCount})`;
+  } else {
+    btnClearSelection.classList.add('hidden');
+    btnExportText.textContent = `Exportar Todos os Visíveis (${visible.length})`;
+  }
+
+  // Verifica se todos os visíveis estão selecionados
+  if (visible.length > 0 && visible.every(it => selectedItemIds.has(it.id))) {
+    selectAllVisible.checked = true;
+    selectAllVisible.indeterminate = false;
+  } else if (visible.some(it => selectedItemIds.has(it.id))) {
+    selectAllVisible.checked = false;
+    selectAllVisible.indeterminate = true;
+  } else {
+    selectAllVisible.checked = false;
+    selectAllVisible.indeterminate = false;
+  }
+}
+
+// Exportar para Excel com seleção
+async function handleExportClick() {
+  const visible = getCurrentlyFilteredItems();
+  let idsToExport = [];
+
+  if (selectedItemIds.size > 0) {
+    idsToExport = Array.from(selectedItemIds);
+  } else {
+    idsToExport = visible.map(it => it.id);
+  }
+
+  if (idsToExport.length === 0) {
+    alert("Não há concursos selecionados ou visíveis para exportar.");
+    return;
+  }
+
+  try {
+    const response = await fetch('/api/export', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ids: idsToExport })
+    });
+
+    if (!response.ok) {
+      throw new Error("Erro na exportação.");
+    }
+
+    const blob = await response.blob();
+    const downloadUrl = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = downloadUrl;
+    const now = new Date();
+    const ts = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}_${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}`;
+    a.download = `concursos_selecionados_${ts}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(downloadUrl);
+  } catch (err) {
+    console.error("Erro ao descarregar ficheiro Excel:", err);
+    alert("Ocorreu um erro ao gerar a exportação.");
+  }
+}
+
+// Modal Logic
+function openModal(item) {
+  currentModalItem = item;
+  modalTitle.textContent = `${item.source} - ${item.procedure_type || 'Detalhes do Concurso'}`;
+  modalObject.textContent = item.title;
+  modalDeadline.textContent = item.deadline || "Consulte o anúncio";
+  modalValue.textContent = item.value || "Não especificado";
+  modalEntity.textContent = item.entity || "Consulte os termos";
+  modalPubDate.textContent = item.publication_date || "N/D";
+  
+  modalLinks.innerHTML = `
+    <a href="${escapeHtml(item.direct_url)}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+      🔗 Ver anúncio no ${escapeHtml(item.source)}
+    </a>
+  `;
+
+  btnModalOpenDirect.href = item.direct_url;
+  summaryModal.classList.remove('hidden');
+}
+
+function closeModal() {
+  summaryModal.classList.add('hidden');
+  currentModalItem = null;
+}
+
+function escapeHtml(text) {
+  if (!text) return '';
+  return String(text)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
