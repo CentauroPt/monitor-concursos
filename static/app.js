@@ -31,6 +31,7 @@ const statTime = document.getElementById('stat-time');
 const countAll = document.getElementById('count-all');
 const countBase = document.getElementById('count-base');
 const countTed = document.getElementById('count-ted');
+const countFavorites = document.getElementById('count-favorites');
 const countDismissed = document.getElementById('count-dismissed');
 
 // Elementos do Modal
@@ -225,6 +226,9 @@ function updateStats(data) {
   countAll.textContent = data.total_count || 0;
   countBase.textContent = data.base_count || 0;
   countTed.textContent = data.ted_count || 0;
+  if (countFavorites) {
+    countFavorites.textContent = data.favorite_count || (currentActiveItems ? currentActiveItems.filter(it => it.is_favorite).length : 0);
+  }
   if (countDismissed) {
     countDismissed.textContent = data.dismissed_count || (currentDismissedItems ? currentDismissedItems.length : 0);
   }
@@ -242,8 +246,10 @@ function getCurrentlyFilteredItems() {
   const sourceList = activeSourceFilter === 'dismissed' ? currentDismissedItems : currentActiveItems;
 
   return sourceList.filter(item => {
-    // Filtro de Fonte (Tab)
-    if (activeSourceFilter !== 'all' && activeSourceFilter !== 'dismissed' && item.source !== activeSourceFilter) {
+    // Filtro de Fonte (Tab) ou Favoritos
+    if (activeSourceFilter === 'favorites') {
+      if (!item.is_favorite) return false;
+    } else if (activeSourceFilter !== 'all' && activeSourceFilter !== 'dismissed' && item.source !== activeSourceFilter) {
       return false;
     }
 
@@ -298,10 +304,13 @@ function createTenderCardHtml(item) {
   return `
     <article class="tender-card ${isSelected ? 'selected-card' : ''} ${isDismissed ? 'dismissed-card' : ''}" data-id="${escapeHtml(item.id)}">
       <div class="card-top">
-        <div style="display: flex; align-items: center; gap: 10px;">
+        <div style="display: flex; align-items: center; gap: 8px;">
           <label class="card-select-label" title="Selecionar este concurso para exportar">
             <input type="checkbox" class="item-checkbox" data-id="${escapeHtml(item.id)}" ${isSelected ? 'checked' : ''} />
           </label>
+          <button type="button" class="btn-star ${item.is_favorite ? 'favorited' : ''}" data-id="${escapeHtml(item.id)}" title="${item.is_favorite ? 'Remover dos favoritos' : 'Marcar como favorito'}">
+            ${item.is_favorite ? '★' : '☆'}
+          </button>
           <span class="source-badge ${badgeClass}">${sourceIcon} ${escapeHtml(item.source)}</span>
           <span class="procedure-type-badge">${escapeHtml(item.procedure_type || 'Concurso')}</span>
         </div>
@@ -365,6 +374,14 @@ function attachCardEvents() {
     });
   });
 
+  // Botões de Estrela / Favorito
+  document.querySelectorAll('.btn-star').forEach(starBtn => {
+    starBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      handleToggleFavorite(starBtn.dataset.id);
+    });
+  });
+
   // Botões de Descarte
   document.querySelectorAll('.btn-card-dismiss').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -388,6 +405,46 @@ function attachCardEvents() {
       if (found) openModal(found);
     });
   });
+}
+
+// Alternar Favorito
+async function handleToggleFavorite(itemId) {
+  const allCandidates = [...currentActiveItems, ...currentDismissedItems];
+  const item = allCandidates.find(it => it.id === itemId);
+  if (!item) return;
+
+  item.is_favorite = !item.is_favorite;
+
+  updateCountsAfterChange();
+
+  if (activeSourceFilter === 'favorites') {
+    renderFilteredList();
+  } else {
+    // Atualizar apenas o botão específico na interface
+    const btn = document.querySelector(`.btn-star[data-id="${itemId}"]`);
+    if (btn) {
+      if (item.is_favorite) {
+        btn.classList.add('favorited');
+        btn.textContent = '★';
+        btn.title = 'Remover dos favoritos';
+      } else {
+        btn.classList.remove('favorited');
+        btn.textContent = '☆';
+        btn.title = 'Marcar como favorito';
+      }
+    }
+  }
+
+  // Persistir no servidor
+  try {
+    await fetch('/api/favorite', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: itemId })
+    });
+  } catch (e) {
+    console.error("Erro ao persistir favorito:", e);
+  }
 }
 
 // Descartar concurso
@@ -442,9 +499,11 @@ async function handleRestoreItem(itemId) {
 function updateCountsAfterChange() {
   let baseCount = 0;
   let tedCount = 0;
+  let favCount = 0;
   currentActiveItems.forEach(it => {
     if (it.source === 'Portal BASE') baseCount++;
     else tedCount++;
+    if (it.is_favorite) favCount++;
   });
 
   statTotal.textContent = currentActiveItems.length;
@@ -454,6 +513,9 @@ function updateCountsAfterChange() {
   countAll.textContent = currentActiveItems.length;
   countBase.textContent = baseCount;
   countTed.textContent = tedCount;
+  if (countFavorites) {
+    countFavorites.textContent = favCount;
+  }
   if (countDismissed) {
     countDismissed.textContent = currentDismissedItems.length;
   }
