@@ -18,6 +18,7 @@ logger = logging.getLogger(__name__)
 CACHE_DIR = os.path.join(os.path.dirname(__file__), "data")
 CACHE_FILE = os.path.join(CACHE_DIR, "cache.json")
 DISMISSED_FILE = os.path.join(CACHE_DIR, "dismissed.json")
+FAVORITES_FILE = os.path.join(CACHE_DIR, "favorites.json")
 
 
 class ProcurementAnalyzer:
@@ -25,6 +26,36 @@ class ProcurementAnalyzer:
         self.base_scraper = BaseScraper()
         self.ted_scraper = TedScraper()
         os.makedirs(CACHE_DIR, exist_ok=True)
+
+    def get_favorite_ids(self) -> Set[str]:
+        """Devolve o conjunto de IDs de concursos marcados como favoritos."""
+        if os.path.exists(FAVORITES_FILE):
+            try:
+                with open(FAVORITES_FILE, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                    if isinstance(data, list):
+                        return set(data)
+                    elif isinstance(data, dict):
+                        return set(data.keys())
+            except Exception as e:
+                logger.error(f"Erro ao ler favoritos: {e}")
+        return set()
+
+    def toggle_favorite(self, item_id: str) -> bool:
+        """Alterna o estado de favorito de um concurso (Adicionar / Remover)."""
+        favorites = self.get_favorite_ids()
+        if item_id in favorites:
+            favorites.remove(item_id)
+            is_fav = False
+        else:
+            favorites.add(item_id)
+            is_fav = True
+        try:
+            with open(FAVORITES_FILE, 'w', encoding='utf-8') as f:
+                json.dump(list(favorites), f, ensure_ascii=False, indent=2)
+        except Exception as e:
+            logger.error(f"Erro ao gravar favoritos: {e}")
+        return is_fav
 
     def get_dismissed_ids(self) -> Set[str]:
         """Devolve o conjunto de IDs de concursos descartados pelo utilizador."""
@@ -115,6 +146,7 @@ class ProcurementAnalyzer:
     def _format_results_payload(self, raw_data: Dict[str, Any]) -> Dict[str, Any]:
         """Separa os itens ativos dos descartados e calcula os totais correspondentes."""
         dismissed_ids = self.get_dismissed_ids()
+        favorite_ids = self.get_favorite_ids()
         all_items = raw_data.get('items', [])
 
         active_items = []
@@ -122,15 +154,19 @@ class ProcurementAnalyzer:
 
         base_active = 0
         ted_active = 0
+        favorite_active = 0
 
         for it in all_items:
             it_id = it.get('id')
+            it['is_favorite'] = it_id in favorite_ids
             if it_id in dismissed_ids:
                 it['is_dismissed'] = True
                 dismissed_items.append(it)
             else:
                 it['is_dismissed'] = False
                 active_items.append(it)
+                if it['is_favorite']:
+                    favorite_active += 1
                 if it.get('source') == 'Portal BASE':
                     base_active += 1
                 else:
@@ -141,6 +177,7 @@ class ProcurementAnalyzer:
             'total_count': len(active_items),
             'base_count': base_active,
             'ted_count': ted_active,
+            'favorite_count': favorite_active,
             'dismissed_count': len(dismissed_items),
             'ted_country': raw_data.get('ted_country', 'PRT'),
             'items': active_items,
