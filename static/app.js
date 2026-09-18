@@ -626,15 +626,50 @@ function openModal(item) {
   modalPubDate.textContent = item.publication_date || "N/D";
   
   // Data limite de entrega da proposta (por baixo da data de publicação)
-  const isContrato = item.category && item.category.includes('Contrato');
-  if (isContrato) {
-    if (modalDeadlineLabel) modalDeadlineLabel.innerHTML = "✍️ Data de Celebração / Prazo";
-    modalDeadline.textContent = item.deadline || "Contrato celebrado";
-    modalDeadline.className = "summary-badge badge-neutral";
-  } else {
-    if (modalDeadlineLabel) modalDeadlineLabel.innerHTML = "⏳ Data Limite de Entrega da Proposta";
-    modalDeadline.textContent = item.deadline || "Consulte o anúncio";
-    modalDeadline.className = "summary-badge";
+  if (modalDeadlineLabel) {
+    modalDeadlineLabel.innerHTML = "⌛ DATA LIMITE DE ENTREGA DA PROPOSTA";
+  }
+  modalDeadline.textContent = item.deadline || "Consulte o anúncio";
+  modalDeadline.className = "summary-badge";
+
+  // Configurar botão de estrela no rodapé do modal
+  const modalBtnStar = document.getElementById('modal-btn-star');
+  if (modalBtnStar) {
+    const isFav = !!item.is_favorite;
+    modalBtnStar.textContent = isFav ? '★' : '☆';
+    modalBtnStar.className = `btn-star ${isFav ? 'favorited' : ''}`;
+    modalBtnStar.title = isFav ? 'Remover dos favoritos (devolver à lista geral)' : 'Mover para os favoritos';
+    modalBtnStar.onclick = async (e) => {
+      e.stopPropagation();
+      await handleToggleFavorite(item.id);
+      const newFav = !!item.is_favorite;
+      modalBtnStar.textContent = newFav ? '★' : '☆';
+      modalBtnStar.className = `btn-star ${newFav ? 'favorited' : ''}`;
+      modalBtnStar.title = newFav ? 'Remover dos favoritos (devolver à lista geral)' : 'Mover para os favoritos';
+    };
+  }
+
+  // Configurar botão de descarte no rodapé do modal
+  const modalBtnDismiss = document.getElementById('modal-btn-dismiss');
+  if (modalBtnDismiss) {
+    const isDismissed = !!item.is_dismissed;
+    if (isDismissed) {
+      modalBtnDismiss.textContent = "↩️ Recuperar";
+      modalBtnDismiss.className = "btn btn-card-restore";
+      modalBtnDismiss.title = "Recuperar este concurso para a lista ativa";
+      modalBtnDismiss.onclick = async () => {
+        await handleRestoreItem(item.id);
+        closeModal();
+      };
+    } else {
+      modalBtnDismiss.textContent = "🗑️ Descartar";
+      modalBtnDismiss.className = "btn btn-card-dismiss";
+      modalBtnDismiss.title = "Descartar este concurso para não voltar a ver";
+      modalBtnDismiss.onclick = async () => {
+        await handleDismissItem(item.id);
+        closeModal();
+      };
+    }
   }
 
   const specificUrl = getSpecificDirectUrl(item.direct_url);
