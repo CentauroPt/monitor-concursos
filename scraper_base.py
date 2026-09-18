@@ -9,6 +9,7 @@ import logging
 import re
 import requests
 from typing import List, Dict, Any, Optional
+from concurrent.futures import ThreadPoolExecutor
 
 logger = logging.getLogger(__name__)
 
@@ -146,7 +147,56 @@ class BaseScraper:
                 else:
                     results_map[key] = self._normalize_contrato(it, matched_by=kw)
 
+        # Ler detalhes dos contratos (e anúncio original se associado) para obter o prazo de entrega de propostas ou prazo de execução
+        contract_items = list(results_map.values())
+        if contract_items:
+            try:
+                raw_ids = [str(it.get('id', '')).replace('base_contrato_', '') for it in contract_items]
+                with ThreadPoolExecutor(max_workers=6) as pool:
+                    deadlines = list(pool.map(self._fetch_contract_deadline, raw_ids))
+                for it, dl in zip(contract_items, deadlines):
+                    if dl:
+                        it['deadline'] = dl
+            except Exception as e:
+                logger.warning(f"Erro ao obter prazos detalhados dos contratos: {e}")
+
         return list(results_map.values())
+
+    def _fetch_contract_deadline(self, contract_id: Any) -> str:
+        """
+        Lê o detalhe do contrato (e anúncio original associado) para obter a data limite
+        de entrega das propostas ou prazo de execução / duração estimada.
+        Nunca utiliza a data de celebração do contrato como prazo de entrega.
+        """
+        try:
+            resp = self.session.post(RESULTADOS_URL, data={
+                'type': 'detail_contratos',
+                'version': self.version,
+                'id': str(contract_id)
+            }, timeout=6)
+            if resp.status_code == 200 and resp.text.strip():
+                d = json.loads(resp.text.strip())
+                aid = d.get('announcementId')
+                if aid and int(aid) > 0:
+                    try:
+                        r2 = self.session.post(RESULTADOS_URL, data={
+                            'type': 'detail_anuncios',
+                            'version': self.version,
+                            'id': str(aid)
+                        }, timeout=6)
+                        if r2.status_code == 200 and r2.text.strip():
+                            d2 = json.loads(r2.text.strip())
+                            p_dl = d2.get('proposalDeadline')
+                            if p_dl:
+                                return p_dl
+                    except Exception:
+                        pass
+                exec_dl = d.get('executionDeadline')
+                if exec_dl:
+                    return f"{exec_dl} (Prazo de Execução)"
+        except Exception:
+            pass
+        return "Consulte o anúncio"
 
     def search_all(self, max_per_term: int = 25) -> List[Dict[str, Any]]:
         """Agrega pesquisa de anúncios e contratos do Portal BASE."""
@@ -193,7 +243,7 @@ class BaseScraper:
             'entity': (item.get('contracting') or '').strip(),
             'contracted': (item.get('contracted') or '').strip(),
             'value': item.get('initialContractualPrice') or "Não especificado",
-            'deadline': f"Celebrado em {item.get('signingDate', 'N/D')}",
+            'deadline': "Consulte o anúncio",
             'publication_date': item.get('publicationDate') or "N/D",
             'direct_url': direct_url,
             'pieces_url': None,
