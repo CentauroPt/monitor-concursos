@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Monitor de Concursos Públicos - Portal BASE & TED</title>
-  <link rel="stylesheet" href="/styles.css?v=2.4">
+  <link rel="stylesheet" href="/styles.css?v=2.5">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -189,13 +189,19 @@
             <p id="modal-pubdate"></p>
           </div>
           <div class="summary-section" id="modal-deadline-container">
-            <h4 id="modal-deadline-label">⏳ Data Limite de Entrega da Proposta</h4>
+            <h4 id="modal-deadline-label">⌛ DATA LIMITE DE ENTREGA DA PROPOSTA</h4>
             <p id="modal-deadline" class="summary-badge"></p>
           </div>
         </div>
         <div class="modal-footer">
-          <button id="btn-copy-summary" class="btn btn-secondary">📋 Copiar Resumo</button>
-          <a id="btn-modal-open-direct" href="#" target="_blank" class="btn btn-primary">Abrir no Portal Oficial ↗</a>
+          <div class="modal-footer-actions-left">
+            <button type="button" id="modal-btn-star" class="btn-star" title="Marcar como favorito">☆</button>
+            <button type="button" id="modal-btn-dismiss" class="btn btn-card-dismiss">🗑️ Descartar</button>
+          </div>
+          <div class="modal-footer-actions-right">
+            <button id="btn-copy-summary" class="btn btn-secondary">📋 Copiar Resumo</button>
+            <a id="btn-modal-open-direct" href="#" target="_blank" class="btn btn-primary">Abrir no Portal Oficial ↗</a>
+          </div>
         </div>
       </div>
     </div>
@@ -206,6 +212,6 @@
     </footer>
   </div>
 
-  <script src="/app.js?v=2.4"></script>
+  <script src="/app.js?v=2.5"></script>
 </body>
 </html>
