@@ -41,11 +41,12 @@ const summaryModal = document.getElementById('summary-modal');
 const modalClose = document.getElementById('modal-close');
 const modalTitle = document.getElementById('modal-title');
 const modalObject = document.getElementById('modal-object');
-const modalDeadline = document.getElementById('modal-deadline');
 const modalValue = document.getElementById('modal-value');
+const modalType = document.getElementById('modal-type');
 const modalEntity = document.getElementById('modal-entity');
 const modalPubDate = document.getElementById('modal-pubdate');
-const modalLinks = document.getElementById('modal-links');
+const modalDeadlineLabel = document.getElementById('modal-deadline-label');
+const modalDeadline = document.getElementById('modal-deadline');
 const btnCopySummary = document.getElementById('btn-copy-summary');
 const btnModalOpenDirect = document.getElementById('btn-modal-open-direct');
 
@@ -617,21 +618,26 @@ function openModal(item) {
   currentModalItem = item;
   modalTitle.textContent = `${item.source} - ${item.procedure_type || 'Detalhes do Concurso'}`;
   modalObject.textContent = item.title;
-  modalDeadline.textContent = item.deadline || "Consulte o anúncio";
   modalValue.textContent = item.value || "Não especificado";
+  if (modalType) {
+    modalType.textContent = item.procedure_type || item.category || "Procedimento Público";
+  }
   modalEntity.textContent = item.entity || "Consulte os termos";
   modalPubDate.textContent = item.publication_date || "N/D";
   
-  const specificUrl = getSpecificDirectUrl(item.direct_url);
+  // Data limite de entrega da proposta (por baixo da data de publicação)
   const isContrato = item.category && item.category.includes('Contrato');
-  const typeName = isContrato ? 'contrato' : 'anúncio';
+  if (isContrato) {
+    if (modalDeadlineLabel) modalDeadlineLabel.innerHTML = "✍️ Data de Celebração / Prazo";
+    modalDeadline.textContent = item.deadline || "Contrato celebrado";
+    modalDeadline.className = "summary-badge badge-neutral";
+  } else {
+    if (modalDeadlineLabel) modalDeadlineLabel.innerHTML = "⏳ Data Limite de Entrega da Proposta";
+    modalDeadline.textContent = item.deadline || "Consulte o anúncio";
+    modalDeadline.className = "summary-badge";
+  }
 
-  modalLinks.innerHTML = `
-    <a href="${escapeHtml(specificUrl)}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
-      🔗 Ver ${typeName} específico no ${escapeHtml(item.source)}
-    </a>
-  `;
-
+  const specificUrl = getSpecificDirectUrl(item.direct_url);
   btnModalOpenDirect.href = specificUrl;
   summaryModal.classList.remove('hidden');
 }
