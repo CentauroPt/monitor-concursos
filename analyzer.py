@@ -144,17 +144,17 @@ class ProcurementAnalyzer:
         return self._format_results_payload(result)
 
     def _format_results_payload(self, raw_data: Dict[str, Any]) -> Dict[str, Any]:
-        """Separa os itens ativos dos descartados e calcula os totais correspondentes."""
+        """Separa os itens em 3 listas distintas: Ativos (Geral), Favoritos e Descartados."""
         dismissed_ids = self.get_dismissed_ids()
         favorite_ids = self.get_favorite_ids()
         all_items = raw_data.get('items', [])
 
         active_items = []
+        favorite_items = []
         dismissed_items = []
 
         base_active = 0
         ted_active = 0
-        favorite_active = 0
 
         for it in all_items:
             it_id = it.get('id')
@@ -162,11 +162,12 @@ class ProcurementAnalyzer:
             if it_id in dismissed_ids:
                 it['is_dismissed'] = True
                 dismissed_items.append(it)
+            elif it_id in favorite_ids:
+                it['is_dismissed'] = False
+                favorite_items.append(it)
             else:
                 it['is_dismissed'] = False
                 active_items.append(it)
-                if it['is_favorite']:
-                    favorite_active += 1
                 if it.get('source') == 'Portal BASE':
                     base_active += 1
                 else:
@@ -177,10 +178,11 @@ class ProcurementAnalyzer:
             'total_count': len(active_items),
             'base_count': base_active,
             'ted_count': ted_active,
-            'favorite_count': favorite_active,
+            'favorite_count': len(favorite_items),
             'dismissed_count': len(dismissed_items),
             'ted_country': raw_data.get('ted_country', 'PRT'),
             'items': active_items,
+            'favorite_items': favorite_items,
             'dismissed_items': dismissed_items,
             'duration_seconds': raw_data.get('duration_seconds', 0)
         }
@@ -239,8 +241,8 @@ class ProcurementAnalyzer:
         if not cached:
             return ""
 
-        # Obter todos os itens (ativos ou descartados, se o utilizador selecionou)
-        candidate_items = cached.get('items', []) + cached.get('dismissed_items', [])
+        # Obter todos os itens (ativos, favoritos ou descartados)
+        candidate_items = cached.get('items', []) + cached.get('favorite_items', []) + cached.get('dismissed_items', [])
 
         if selected_ids and len(selected_ids) > 0:
             ids_set = set(selected_ids)
