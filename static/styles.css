@@ -690,6 +690,13 @@ body {
   font-size: 0.82rem;
 }
 
+.tab-favorites.active {
+  background-color: #fef9c3;
+  color: #a16207;
+  border-color: #fde047;
+  font-weight: 600;
+}
+
 .tab-dismissed.active {
   background-color: #fee2e2;
   color: #b91c1c;
@@ -723,9 +730,39 @@ body {
   opacity: 0.75;
   background-color: #fafafa;
 }
-  padding: 6px 12px;
-  font-size: 0.85rem;
-  border-radius: var(--radius-sm);
+
+/* Star Button */
+.btn-star {
+  background: none;
+  border: none;
+  font-size: 1.45rem;
+  cursor: pointer;
+  color: #94a3b8;
+  transition: all 0.15s ease-in-out;
+  line-height: 1;
+  padding: 2px 4px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+
+.btn-star:hover {
+  transform: scale(1.25);
+  color: #eab308;
+}
+
+.btn-star.favorited {
+  color: #eab308 !important;
+  filter: drop-shadow(0 0 4px rgba(234, 179, 8, 0.6));
+  animation: starPop 0.25s ease;
+}
+
+@keyframes starPop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.35); }
+  100% { transform: scale(1); }
 }
 
 .btn-card-summary:hover {
