@@ -31,6 +31,7 @@ const statTotal = document.getElementById('stat-total');
 const statBase = document.getElementById('stat-base');
 const statTed = document.getElementById('stat-ted');
 const statTime = document.getElementById('stat-time');
+const statLastSearch = document.getElementById('stat-last-search');
 const countAll = document.getElementById('count-all');
 const countBase = document.getElementById('count-base');
 const countTed = document.getElementById('count-ted');
@@ -228,7 +229,15 @@ function updateStats(data) {
   statTotal.textContent = data.total_count || 0;
   statBase.textContent = data.base_count || 0;
   statTed.textContent = data.ted_count || 0;
-  statTime.textContent = data.duration_seconds ? `${data.duration_seconds}s` : '--';
+  if (statTime) {
+    statTime.textContent = data.duration_seconds ? `${data.duration_seconds}s` : '--';
+  }
+  if (statLastSearch) {
+    statLastSearch.textContent = data.timestamp || '--';
+  }
+  if (data.timestamp) {
+    lastUpdateText.textContent = `Última pesquisa: ${data.timestamp}`;
+  }
 
   countAll.textContent = data.total_count || 0;
   countBase.textContent = data.base_count || 0;
