@@ -52,6 +52,83 @@ const modalDeadline = document.getElementById('modal-deadline');
 const btnCopySummary = document.getElementById('btn-copy-summary');
 const btnModalOpenDirect = document.getElementById('btn-modal-open-direct');
 
+// Chaves de armazenamento persistente no navegador (sobrevive a redeploys e pesquisas)
+const STORAGE_FAVS = "mc_favorites";
+const STORAGE_EVALS = "mc_evaluations";
+const STORAGE_DISMS = "mc_dismissed";
+
+function getLocalIds(key) {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? new Set(JSON.parse(raw)) : new Set();
+  } catch (e) {
+    return new Set();
+  }
+}
+
+function saveLocalIds(key, idSet) {
+  try {
+    localStorage.setItem(key, JSON.stringify(Array.from(idSet)));
+  } catch (e) {}
+}
+
+function syncClientStorageWithCurrent() {
+  const favIds = new Set(currentFavoriteItems.map(it => it.id));
+  const evalIds = new Set(currentEvaluationItems.map(it => it.id));
+  const dismIds = new Set(currentDismissedItems.map(it => it.id));
+  saveLocalIds(STORAGE_FAVS, favIds);
+  saveLocalIds(STORAGE_EVALS, evalIds);
+  saveLocalIds(STORAGE_DISMS, dismIds);
+}
+
+function applyClientClassifications(allItems) {
+  const localFavs = getLocalIds(STORAGE_FAVS);
+  const localEvals = getLocalIds(STORAGE_EVALS);
+  const localDisms = getLocalIds(STORAGE_DISMS);
+
+  // Se o cliente tem IDs locais guardados, garante que são fundidos com os do servidor
+  const allCandidates = [...allItems, ...currentActiveItems, ...currentFavoriteItems, ...currentEvaluationItems, ...currentDismissedItems];
+  const uniqueItemsMap = new Map();
+  allCandidates.forEach(it => {
+    if (it && it.id && !uniqueItemsMap.has(it.id)) {
+      uniqueItemsMap.set(it.id, it);
+    }
+  });
+
+  const active = [];
+  const favorites = [];
+  const evaluations = [];
+  const dismissed = [];
+
+  uniqueItemsMap.forEach(item => {
+    const itId = item.id;
+    const isDismissed = localDisms.has(itId) || !!item.is_dismissed;
+    const isFavorite = localFavs.has(itId) || !!item.is_favorite;
+    const isEvaluation = localEvals.has(itId) || !!item.is_evaluation;
+
+    item.is_dismissed = isDismissed;
+    item.is_favorite = isFavorite;
+    item.is_evaluation = isEvaluation;
+
+    if (isDismissed) {
+      dismissed.push(item);
+    } else if (isFavorite) {
+      favorites.push(item);
+    } else if (isEvaluation) {
+      evaluations.push(item);
+    } else {
+      active.push(item);
+    }
+  });
+
+  currentActiveItems = active;
+  currentFavoriteItems = favorites;
+  currentEvaluationItems = evaluations;
+  currentDismissedItems = dismissed;
+
+  syncClientStorageWithCurrent();
+}
+
 // Inicialização
 document.addEventListener('DOMContentLoaded', () => {
   setupEventListeners();
@@ -160,11 +237,16 @@ async function loadInitialData() {
       }
       const resResults = await fetch('/api/results');
       const data = await resResults.json();
-      currentActiveItems = data.items || [];
-      currentFavoriteItems = data.favorite_items || [];
-      currentEvaluationItems = data.evaluation_items || [];
-      currentDismissedItems = data.dismissed_items || [];
-      updateStats(data);
+      
+      const serverItems = [
+        ...(data.items || []),
+        ...(data.favorite_items || []),
+        ...(data.evaluation_items || []),
+        ...(data.dismissed_items || [])
+      ];
+
+      applyClientClassifications(serverItems);
+      updateCountsAfterChange();
       renderFilteredList();
     } else {
       lastUpdateText.textContent = "Pronto para pesquisar";
@@ -202,11 +284,15 @@ async function handleSearchClick() {
     }
 
     const data = await response.json();
-    currentActiveItems = data.items || [];
-    currentFavoriteItems = data.favorite_items || [];
-    currentEvaluationItems = data.evaluation_items || [];
-    currentDismissedItems = data.dismissed_items || [];
-    updateStats(data);
+    const serverItems = [
+      ...(data.items || []),
+      ...(data.favorite_items || []),
+      ...(data.evaluation_items || []),
+      ...(data.dismissed_items || [])
+    ];
+
+    applyClientClassifications(serverItems);
+    updateCountsAfterChange();
     renderFilteredList();
     lastUpdateText.textContent = `Última pesquisa: ${data.timestamp || deviceTimestamp}`;
   } catch (err) {
@@ -607,6 +693,8 @@ async function handleRestoreItem(itemId) {
 }
 
 function updateCountsAfterChange() {
+  syncClientStorageWithCurrent();
+
   let baseCount = 0;
   let tedCount = 0;
   currentActiveItems.forEach(it => {
