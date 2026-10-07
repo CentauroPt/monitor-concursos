@@ -145,7 +145,7 @@ class ProcurementAnalyzer:
                 logger.error(f"Erro ao restaurar {item_id}: {e}")
         return False
 
-    def run_full_search(self, ted_country: str = "PRT", max_base_items: int = 30) -> Dict[str, Any]:
+    def run_full_search(self, ted_country: str = "PRT", max_base_items: int = 30, client_timestamp: Optional[str] = None) -> Dict[str, Any]:
         """
         Executa pesquisa completa em ambas as fontes, processa os dados,
         gera resumos individuais e atualiza a cache local.
@@ -195,8 +195,10 @@ class ProcurementAnalyzer:
         for item in all_items:
             item['is_dismissed'] = item.get('id') in dismissed_ids
 
+        search_timestamp = client_timestamp if client_timestamp else datetime.now().strftime("%d-%m-%Y %H:%M:%S")
+
         result = {
-            'timestamp': datetime.now().strftime("%d-%m-%Y %H:%M:%S"),
+            'timestamp': search_timestamp,
             'total_raw_count': len(all_items),
             'ted_country': ted_country,
             'items': all_items,
