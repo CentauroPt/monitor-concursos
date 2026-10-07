@@ -182,10 +182,19 @@ async function handleSearchClick() {
 
   try {
     const tedCountry = tedScopeSelect.value;
+    
+    // Obter a data e hora exata do dispositivo do utilizador
+    const now = new Date();
+    const pad = (n) => String(n).padStart(2, '0');
+    const deviceTimestamp = `${pad(now.getDate())}-${pad(now.getMonth() + 1)}-${now.getFullYear()} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+
     const response = await fetch('/api/search', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ted_country: tedCountry })
+      body: JSON.stringify({ 
+        ted_country: tedCountry,
+        client_timestamp: deviceTimestamp 
+      })
     });
 
     if (!response.ok) {
@@ -199,7 +208,7 @@ async function handleSearchClick() {
     currentDismissedItems = data.dismissed_items || [];
     updateStats(data);
     renderFilteredList();
-    lastUpdateText.textContent = `Última pesquisa: ${data.timestamp}`;
+    lastUpdateText.textContent = `Última pesquisa: ${data.timestamp || deviceTimestamp}`;
   } catch (err) {
     console.error("Erro na pesquisa:", err);
     alert("Ocorreu um erro ao comunicar com os portais. Por favor tente novamente.");
