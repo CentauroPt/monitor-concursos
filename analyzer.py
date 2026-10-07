@@ -42,26 +42,13 @@ class ProcurementAnalyzer:
                 logger.error(f"Erro ao ler favoritos: {e}")
         return set()
 
-    def toggle_favorite(self, item_id: str) -> bool:
-        """Alterna o estado de favorito de um concurso (Adicionar / Remover)."""
-        favorites = self.get_favorite_ids()
-        evaluations = self.get_evaluation_ids()
-        if item_id in favorites:
-            favorites.remove(item_id)
-            is_fav = False
-        else:
-            favorites.add(item_id)
-            is_fav = True
-            # Se for marcado como favorito, remove da lista de avaliação
-            if item_id in evaluations:
-                evaluations.remove(item_id)
-                self._save_evaluation_ids(evaluations)
+    def _save_favorite_ids(self, favorites: Set[str]):
+        """Grava os IDs favoritos em JSON."""
         try:
             with open(FAVORITES_FILE, 'w', encoding='utf-8') as f:
-                json.dump(list(favorites), f, ensure_ascii=False, indent=2)
+                json.dump(sorted(list(favorites)), f, ensure_ascii=False, indent=2)
         except Exception as e:
             logger.error(f"Erro ao gravar favoritos: {e}")
-        return is_fav
 
     def get_evaluation_ids(self) -> Set[str]:
         """Devolve o conjunto de IDs de concursos marcados para avaliação."""
@@ -81,30 +68,9 @@ class ProcurementAnalyzer:
         """Grava os IDs em avaliação em JSON."""
         try:
             with open(EVALUATION_FILE, 'w', encoding='utf-8') as f:
-                json.dump(list(evaluations), f, ensure_ascii=False, indent=2)
+                json.dump(sorted(list(evaluations)), f, ensure_ascii=False, indent=2)
         except Exception as e:
             logger.error(f"Erro ao gravar avaliação: {e}")
-
-    def toggle_evaluation(self, item_id: str) -> bool:
-        """Alterna o estado de 'Para avaliação' de um concurso."""
-        evaluations = self.get_evaluation_ids()
-        favorites = self.get_favorite_ids()
-        if item_id in evaluations:
-            evaluations.remove(item_id)
-            is_eval = False
-        else:
-            evaluations.add(item_id)
-            is_eval = True
-            # Se for para avaliação, remove de favoritos
-            if item_id in favorites:
-                favorites.remove(item_id)
-                try:
-                    with open(FAVORITES_FILE, 'w', encoding='utf-8') as f:
-                        json.dump(list(favorites), f, ensure_ascii=False, indent=2)
-                except Exception as e:
-                    logger.error(f"Erro ao atualizar favoritos: {e}")
-        self._save_evaluation_ids(evaluations)
-        return is_eval
 
     def get_dismissed_ids(self) -> Set[str]:
         """Devolve o conjunto de IDs de concursos descartados pelo utilizador."""
@@ -120,38 +86,139 @@ class ProcurementAnalyzer:
                 logger.error(f"Erro ao ler descartados: {e}")
         return set()
 
+    def _save_dismissed_ids(self, dismissed: Set[str]):
+        """Grava os IDs descartados em JSON."""
+        try:
+            with open(DISMISSED_FILE, 'w', encoding='utf-8') as f:
+                json.dump(sorted(list(dismissed)), f, ensure_ascii=False, indent=2)
+        except Exception as e:
+            logger.error(f"Erro ao gravar descartados: {e}")
+
+    def sync_classifications(self, favorites: Optional[List[str]] = None, evaluations: Optional[List[str]] = None, dismissed: Optional[List[str]] = None) -> Dict[str, int]:
+        """
+        Sincroniza e funde classificações existentes no servidor com eventuais classificações
+        enviadas pelo cliente (garantindo persistência absoluta mesmo após reinício de contentor).
+        Assegura exclusividade mútua entre categorias.
+        """
+        current_favs = self.get_favorite_ids()
+        current_evals = self.get_evaluation_ids()
+        current_disms = self.get_dismissed_ids()
+
+        if favorites:
+            current_favs.update(favorites)
+        if evaluations:
+            current_evals.update(evaluations)
+        if dismissed:
+            current_disms.update(dismissed)
+
+        # Regras de precedência e exclusividade:
+        # Se um ID foi explicitamente descartado, não deve ser favorito nem avaliação
+        if dismissed:
+            current_favs.difference_update(dismissed)
+            current_evals.difference_update(dismissed)
+        # Se um ID é favorito, não deve ser avaliação nem descartado
+        if favorites:
+            current_evals.difference_update(favorites)
+            current_disms.difference_update(favorites)
+        # Se um ID é avaliação, não deve ser favorito nem descartado
+        if evaluations:
+            current_favs.difference_update(evaluations)
+            current_disms.difference_update(evaluations)
+
+        self._save_favorite_ids(current_favs)
+        self._save_evaluation_ids(current_evals)
+        self._save_dismissed_ids(current_disms)
+
+        logger.info(f"Classificações sincronizadas no servidor: {len(current_favs)} favoritos, {len(current_evals)} avaliação, {len(current_disms)} descartados.")
+        return {
+            'favorites': len(current_favs),
+            'evaluations': len(current_evals),
+            'dismissed': len(current_disms)
+        }
+
+    def toggle_favorite(self, item_id: str) -> bool:
+        """Alterna o estado de favorito de um concurso (Adicionar / Remover)."""
+        favorites = self.get_favorite_ids()
+        evaluations = self.get_evaluation_ids()
+        dismissed = self.get_dismissed_ids()
+
+        if item_id in favorites:
+            favorites.remove(item_id)
+            is_fav = False
+        else:
+            favorites.add(item_id)
+            is_fav = True
+            # Exclusividade: remove de avaliação e de descartados
+            evaluations.discard(item_id)
+            dismissed.discard(item_id)
+            self._save_evaluation_ids(evaluations)
+            self._save_dismissed_ids(dismissed)
+
+        self._save_favorite_ids(favorites)
+        return is_fav
+
+    def toggle_evaluation(self, item_id: str) -> bool:
+        """Alterna o estado de 'Para avaliação' de um concurso."""
+        evaluations = self.get_evaluation_ids()
+        favorites = self.get_favorite_ids()
+        dismissed = self.get_dismissed_ids()
+
+        if item_id in evaluations:
+            evaluations.remove(item_id)
+            is_eval = False
+        else:
+            evaluations.add(item_id)
+            is_eval = True
+            # Exclusividade: remove de favoritos e de descartados
+            favorites.discard(item_id)
+            dismissed.discard(item_id)
+            self._save_favorite_ids(favorites)
+            self._save_dismissed_ids(dismissed)
+
+        self._save_evaluation_ids(evaluations)
+        return is_eval
+
     def dismiss_item(self, item_id: str) -> bool:
         """Marca permanentemente um concurso como descartado."""
         dismissed = self.get_dismissed_ids()
+        favorites = self.get_favorite_ids()
+        evaluations = self.get_evaluation_ids()
+
         dismissed.add(item_id)
-        try:
-            with open(DISMISSED_FILE, 'w', encoding='utf-8') as f:
-                json.dump(list(dismissed), f, ensure_ascii=False, indent=2)
-            return True
-        except Exception as e:
-            logger.error(f"Erro ao gravar descartado {item_id}: {e}")
-            return False
+        # Exclusividade: remove de favoritos e de avaliação
+        favorites.discard(item_id)
+        evaluations.discard(item_id)
+
+        self._save_dismissed_ids(dismissed)
+        self._save_favorite_ids(favorites)
+        self._save_evaluation_ids(evaluations)
+        return True
 
     def restore_item(self, item_id: str) -> bool:
         """Restaura um concurso previamente descartado."""
         dismissed = self.get_dismissed_ids()
         if item_id in dismissed:
             dismissed.remove(item_id)
-            try:
-                with open(DISMISSED_FILE, 'w', encoding='utf-8') as f:
-                    json.dump(list(dismissed), f, ensure_ascii=False, indent=2)
-                return True
-            except Exception as e:
-                logger.error(f"Erro ao restaurar {item_id}: {e}")
+            self._save_dismissed_ids(dismissed)
+            return True
         return False
 
-    def run_full_search(self, ted_country: str = "PRT", max_base_items: int = 30, client_timestamp: Optional[str] = None) -> Dict[str, Any]:
+    def run_full_search(self, ted_country: str = "PRT", max_base_items: int = 30, client_timestamp: Optional[str] = None, client_classifications: Optional[Dict[str, List[str]]] = None) -> Dict[str, Any]:
         """
         Executa pesquisa completa em ambas as fontes, processa os dados,
-        gera resumos individuais e atualiza a cache local.
+        acumula concursos existentes, reconhece e preserva classificações
+        e atualiza a cache do servidor.
         """
         start_time = datetime.now()
         logger.info("A iniciar pesquisa agregada (BASE + TED)...")
+
+        # Se o cliente enviou classificações locais, consolida imediatamente no servidor
+        if client_classifications and isinstance(client_classifications, dict):
+            self.sync_classifications(
+                favorites=client_classifications.get('favorites'),
+                evaluations=client_classifications.get('evaluations'),
+                dismissed=client_classifications.get('dismissed')
+            )
 
         # 1. Obter dados do Portal BASE
         base_items = []
@@ -167,28 +234,42 @@ class ProcurementAnalyzer:
         except Exception as e:
             logger.error(f"Erro ao obter dados do TED: {e}")
 
-        # 3. Unificar e gerar resumos individuais
-        all_items = base_items + ted_items
-
-        for item in all_items:
+        # 3. Unificar dados novos e gerar resumos
+        fresh_items = base_items + ted_items
+        for item in fresh_items:
             item['summary'] = self._generate_summary(item)
 
-        # Preservar TODOS os concursos existentes em cache (acumulação incremental)
-        # Garantindo que nenhum concurso anterior, favorito, em avaliação ou descartado é alguma vez perdido
+        # 4. ACUMULAÇÃO E RECONHECIMENTO DE CONCURSOS EXISTENTES:
+        # Recupera todos os concursos armazenados na cache anterior para NUNCA perder nada
         existing_raw = self.get_raw_cache()
-        if existing_raw and 'items' in existing_raw:
-            new_ids = {it.get('id') for it in all_items if it.get('id')}
-            for old_it in existing_raw.get('items', []):
-                old_id = old_it.get('id')
-                if old_id and old_id not in new_ids:
-                    all_items.append(old_it)
-                    new_ids.add(old_id)
+        existing_items = existing_raw.get('items', []) if existing_raw else []
+
+        # Dicionário de todos os itens indexados por ID
+        items_map: Dict[str, Dict[str, Any]] = {}
+        for old_it in existing_items:
+            old_id = old_it.get('id')
+            if old_id:
+                items_map[old_id] = old_it
+
+        # Incorporar novos resultados raspados:
+        # Se o concurso já existir no sistema, atualiza campos frescos mantendo a sua identidade
+        for fresh_it in fresh_items:
+            fresh_id = fresh_it.get('id')
+            if not fresh_id:
+                continue
+            if fresh_id in items_map:
+                # Concurso já existe: atualiza campos não vazios sem perturbar
+                for k, v in fresh_it.items():
+                    if v not in (None, '', 'N/D'):
+                        items_map[fresh_id][k] = v
+            else:
+                # Novo concurso descoberto
+                items_map[fresh_id] = fresh_it
+
+        all_items = list(items_map.values())
 
         # Ordenar por data de publicação (mais recentes primeiro)
         all_items.sort(key=lambda x: self._parse_date_sort(x.get('publication_date')), reverse=True)
-
-        for item in all_items:
-            item['is_dismissed'] = item.get('id') in dismissed_ids
 
         search_timestamp = client_timestamp if client_timestamp else datetime.now().strftime("%d-%m-%Y %H:%M:%S")
 
@@ -200,12 +281,18 @@ class ProcurementAnalyzer:
             'duration_seconds': round((datetime.now() - start_time).total_seconds(), 2)
         }
 
-        # Guardar na cache
+        # Guardar permanentemente na cache do servidor
         self.save_cache(result)
         return self._format_results_payload(result)
 
     def _format_results_payload(self, raw_data: Dict[str, Any]) -> Dict[str, Any]:
-        """Separa os itens em 4 listas distintas: Ativos (Geral), Favoritos, Para avaliação e Descartados."""
+        """
+        Separa rigorosamente os itens segundo as suas classificações:
+        - Ativos (separador 'Todos'): APENAS os concursos NÃO classificados, prontos para triagem
+        - Favoritos: concursos marcados como favoritos
+        - Para avaliação: concursos em avaliação
+        - Descartados: concursos descartados
+        """
         dismissed_ids = self.get_dismissed_ids()
         favorite_ids = self.get_favorite_ids()
         evaluation_ids = self.get_evaluation_ids()
@@ -221,19 +308,26 @@ class ProcurementAnalyzer:
 
         for it in all_items:
             it_id = it.get('id')
-            it['is_favorite'] = it_id in favorite_ids
-            it['is_evaluation'] = it_id in evaluation_ids
             if it_id in dismissed_ids:
                 it['is_dismissed'] = True
+                it['is_favorite'] = False
+                it['is_evaluation'] = False
                 dismissed_items.append(it)
             elif it_id in favorite_ids:
                 it['is_dismissed'] = False
+                it['is_favorite'] = True
+                it['is_evaluation'] = False
                 favorite_items.append(it)
             elif it_id in evaluation_ids:
                 it['is_dismissed'] = False
+                it['is_favorite'] = False
+                it['is_evaluation'] = True
                 evaluation_items.append(it)
             else:
+                # Concurso não classificado -> Aparece no separador "Todos" para ser classificado
                 it['is_dismissed'] = False
+                it['is_favorite'] = False
+                it['is_evaluation'] = False
                 active_items.append(it)
                 if it.get('source') == 'Portal BASE':
                     base_active += 1
