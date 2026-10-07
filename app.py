@@ -97,14 +97,35 @@ class MonitorHandler(SimpleHTTPRequestHandler):
 
             ted_country = params.get('ted_country', 'PRT')
             client_timestamp = params.get('client_timestamp')
+            client_classifications = params.get('client_classifications')
             logger.info(f"A executar nova pesquisa a pedido do utilizador (País TED: {ted_country}, Hora cliente: {client_timestamp})...")
             
             try:
-                results = analyzer.run_full_search(ted_country=ted_country, max_base_items=25, client_timestamp=client_timestamp)
+                results = analyzer.run_full_search(
+                    ted_country=ted_country, 
+                    max_base_items=25, 
+                    client_timestamp=client_timestamp,
+                    client_classifications=client_classifications
+                )
                 return self._send_json(results)
             except Exception as e:
                 logger.error(f"Erro ao executar pesquisa: {e}")
                 return self._send_json({'error': str(e)}, status=500)
+
+        elif path == "/api/sync_classifications":
+            content_length = int(self.headers.get('Content-Length', 0))
+            body = self.rfile.read(content_length) if content_length > 0 else b'{}'
+            try:
+                payload = json.loads(body.decode('utf-8'))
+                counts = analyzer.sync_classifications(
+                    favorites=payload.get('favorites'),
+                    evaluations=payload.get('evaluations'),
+                    dismissed=payload.get('dismissed')
+                )
+                return self._send_json({'success': True, 'counts': counts})
+            except Exception as e:
+                logger.error(f"Erro ao sincronizar classificações: {e}")
+                return self._send_json({'success': False, 'error': str(e)}, status=500)
 
         elif path == "/api/dismiss":
             content_length = int(self.headers.get('Content-Length', 0))
