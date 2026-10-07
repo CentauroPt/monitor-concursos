@@ -19,6 +19,7 @@ CACHE_DIR = os.path.join(os.path.dirname(__file__), "data")
 CACHE_FILE = os.path.join(CACHE_DIR, "cache.json")
 DISMISSED_FILE = os.path.join(CACHE_DIR, "dismissed.json")
 FAVORITES_FILE = os.path.join(CACHE_DIR, "favorites.json")
+EVALUATION_FILE = os.path.join(CACHE_DIR, "evaluation.json")
 
 
 class ProcurementAnalyzer:
@@ -44,18 +45,66 @@ class ProcurementAnalyzer:
     def toggle_favorite(self, item_id: str) -> bool:
         """Alterna o estado de favorito de um concurso (Adicionar / Remover)."""
         favorites = self.get_favorite_ids()
+        evaluations = self.get_evaluation_ids()
         if item_id in favorites:
             favorites.remove(item_id)
             is_fav = False
         else:
             favorites.add(item_id)
             is_fav = True
+            # Se for marcado como favorito, remove da lista de avaliação
+            if item_id in evaluations:
+                evaluations.remove(item_id)
+                self._save_evaluation_ids(evaluations)
         try:
             with open(FAVORITES_FILE, 'w', encoding='utf-8') as f:
                 json.dump(list(favorites), f, ensure_ascii=False, indent=2)
         except Exception as e:
             logger.error(f"Erro ao gravar favoritos: {e}")
         return is_fav
+
+    def get_evaluation_ids(self) -> Set[str]:
+        """Devolve o conjunto de IDs de concursos marcados para avaliação."""
+        if os.path.exists(EVALUATION_FILE):
+            try:
+                with open(EVALUATION_FILE, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                    if isinstance(data, list):
+                        return set(data)
+                    elif isinstance(data, dict):
+                        return set(data.keys())
+            except Exception as e:
+                logger.error(f"Erro ao ler itens em avaliação: {e}")
+        return set()
+
+    def _save_evaluation_ids(self, evaluations: Set[str]):
+        """Grava os IDs em avaliação em JSON."""
+        try:
+            with open(EVALUATION_FILE, 'w', encoding='utf-8') as f:
+                json.dump(list(evaluations), f, ensure_ascii=False, indent=2)
+        except Exception as e:
+            logger.error(f"Erro ao gravar avaliação: {e}")
+
+    def toggle_evaluation(self, item_id: str) -> bool:
+        """Alterna o estado de 'Para avaliação' de um concurso."""
+        evaluations = self.get_evaluation_ids()
+        favorites = self.get_favorite_ids()
+        if item_id in evaluations:
+            evaluations.remove(item_id)
+            is_eval = False
+        else:
+            evaluations.add(item_id)
+            is_eval = True
+            # Se for para avaliação, remove de favoritos
+            if item_id in favorites:
+                favorites.remove(item_id)
+                try:
+                    with open(FAVORITES_FILE, 'w', encoding='utf-8') as f:
+                        json.dump(list(favorites), f, ensure_ascii=False, indent=2)
+                except Exception as e:
+                    logger.error(f"Erro ao atualizar favoritos: {e}")
+        self._save_evaluation_ids(evaluations)
+        return is_eval
 
     def get_dismissed_ids(self) -> Set[str]:
         """Devolve o conjunto de IDs de concursos descartados pelo utilizador."""
@@ -144,13 +193,15 @@ class ProcurementAnalyzer:
         return self._format_results_payload(result)
 
     def _format_results_payload(self, raw_data: Dict[str, Any]) -> Dict[str, Any]:
-        """Separa os itens em 3 listas distintas: Ativos (Geral), Favoritos e Descartados."""
+        """Separa os itens em 4 listas distintas: Ativos (Geral), Favoritos, Para avaliação e Descartados."""
         dismissed_ids = self.get_dismissed_ids()
         favorite_ids = self.get_favorite_ids()
+        evaluation_ids = self.get_evaluation_ids()
         all_items = raw_data.get('items', [])
 
         active_items = []
         favorite_items = []
+        evaluation_items = []
         dismissed_items = []
 
         base_active = 0
@@ -159,12 +210,16 @@ class ProcurementAnalyzer:
         for it in all_items:
             it_id = it.get('id')
             it['is_favorite'] = it_id in favorite_ids
+            it['is_evaluation'] = it_id in evaluation_ids
             if it_id in dismissed_ids:
                 it['is_dismissed'] = True
                 dismissed_items.append(it)
             elif it_id in favorite_ids:
                 it['is_dismissed'] = False
                 favorite_items.append(it)
+            elif it_id in evaluation_ids:
+                it['is_dismissed'] = False
+                evaluation_items.append(it)
             else:
                 it['is_dismissed'] = False
                 active_items.append(it)
@@ -179,10 +234,12 @@ class ProcurementAnalyzer:
             'base_count': base_active,
             'ted_count': ted_active,
             'favorite_count': len(favorite_items),
+            'evaluation_count': len(evaluation_items),
             'dismissed_count': len(dismissed_items),
             'ted_country': raw_data.get('ted_country', 'PRT'),
             'items': active_items,
             'favorite_items': favorite_items,
+            'evaluation_items': evaluation_items,
             'dismissed_items': dismissed_items,
             'duration_seconds': raw_data.get('duration_seconds', 0)
         }
@@ -241,8 +298,8 @@ class ProcurementAnalyzer:
         if not cached:
             return ""
 
-        # Obter todos os itens (ativos, favoritos ou descartados)
-        candidate_items = cached.get('items', []) + cached.get('favorite_items', []) + cached.get('dismissed_items', [])
+        # Obter todos os itens (ativos, favoritos, avaliação ou descartados)
+        candidate_items = cached.get('items', []) + cached.get('favorite_items', []) + cached.get('evaluation_items', []) + cached.get('dismissed_items', [])
 
         if selected_ids and len(selected_ids) > 0:
             ids_set = set(selected_ids)
