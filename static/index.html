@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Monitor de Concursos Públicos - Portal BASE & TED</title>
-  <link rel="stylesheet" href="/styles.css?v=2.5">
+  <link rel="stylesheet" href="/styles.css?v=2.6">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -79,6 +79,7 @@
         <div class="source-tabs">
           <button class="tab-btn active" data-filter="all">Todos (<span id="count-all">0</span>)</button>
           <button class="tab-btn tab-favorites" data-filter="favorites">⭐ Favoritos (<span id="count-favorites">0</span>)</button>
+          <button class="tab-btn tab-evaluation" data-filter="evaluation">📝 Para avaliação (<span id="count-evaluation">0</span>)</button>
           <button class="tab-btn" data-filter="Portal BASE">🇵🇹 Portal BASE (<span id="count-base">0</span>)</button>
           <button class="tab-btn" data-filter="TED Europa">🇪🇺 TED Europa (<span id="count-ted">0</span>)</button>
           <button class="tab-btn tab-dismissed" data-filter="dismissed">🗑️ Descartados (<span id="count-dismissed">0</span>)</button>
@@ -196,6 +197,7 @@
         <div class="modal-footer">
           <div class="modal-footer-actions-left">
             <button type="button" id="modal-btn-star" class="btn-star" title="Marcar como favorito">☆</button>
+            <button type="button" id="modal-btn-eval" class="btn btn-card-evaluation" title="Marcar para avaliação">📝 Para avaliação</button>
             <button type="button" id="modal-btn-dismiss" class="btn btn-card-dismiss">🗑️ Descartar</button>
           </div>
           <div class="modal-footer-actions-right">
@@ -212,6 +214,6 @@
     </footer>
   </div>
 
-  <script src="/app.js?v=2.5"></script>
+  <script src="/app.js?v=2.6"></script>
 </body>
 </html>
