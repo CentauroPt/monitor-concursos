@@ -96,10 +96,11 @@ class MonitorHandler(SimpleHTTPRequestHandler):
                 params = {}
 
             ted_country = params.get('ted_country', 'PRT')
-            logger.info(f"A executar nova pesquisa a pedido do utilizador (País TED: {ted_country})...")
+            client_timestamp = params.get('client_timestamp')
+            logger.info(f"A executar nova pesquisa a pedido do utilizador (País TED: {ted_country}, Hora cliente: {client_timestamp})...")
             
             try:
-                results = analyzer.run_full_search(ted_country=ted_country, max_base_items=25)
+                results = analyzer.run_full_search(ted_country=ted_country, max_base_items=25, client_timestamp=client_timestamp)
                 return self._send_json(results)
             except Exception as e:
                 logger.error(f"Erro ao executar pesquisa: {e}")
