@@ -28,6 +28,14 @@ class ProcurementAnalyzer:
         self.ted_scraper = TedScraper()
         os.makedirs(CACHE_DIR, exist_ok=True)
 
+    def _get_current_time(self) -> datetime:
+        """Devolve a data e hora atual ajustada para o fuso horário de Portugal (Europe/Lisbon)."""
+        try:
+            from zoneinfo import ZoneInfo
+            return datetime.now(ZoneInfo("Europe/Lisbon"))
+        except Exception:
+            return datetime.now()
+
     def get_favorite_ids(self) -> Set[str]:
         """Devolve o conjunto de IDs de concursos marcados como favoritos."""
         if os.path.exists(FAVORITES_FILE):
@@ -195,12 +203,13 @@ class ProcurementAnalyzer:
         for item in all_items:
             item['is_dismissed'] = item.get('id') in dismissed_ids
 
+        now_dt = self._get_current_time()
         result = {
-            'timestamp': datetime.now().strftime("%d-%m-%Y %H:%M:%S"),
+            'timestamp': now_dt.strftime("%d-%m-%Y %H:%M:%S"),
             'total_raw_count': len(all_items),
             'ted_country': ted_country,
             'items': all_items,
-            'duration_seconds': round((datetime.now() - start_time).total_seconds(), 2)
+            'duration_seconds': round((now_dt - start_time).total_seconds(), 2)
         }
 
         # Guardar na cache
