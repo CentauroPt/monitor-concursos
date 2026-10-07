@@ -697,10 +697,60 @@ body {
   font-weight: 600;
 }
 
+.tab-evaluation.active {
+  background-color: #e0f2fe;
+  color: #0369a1;
+  border-color: #7dd3fc;
+  font-weight: 600;
+}
+
 .tab-dismissed.active {
   background-color: #fee2e2;
   color: #b91c1c;
   border-color: #fca5a5;
+}
+
+.btn-card-evaluation {
+  background: #f0f9ff;
+  color: #0284c7;
+  border: 1px solid #bae6fd;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 500;
+  transition: all 0.15s ease-in-out;
+}
+
+.btn-card-evaluation:hover {
+  background: #e0f2fe;
+  border-color: #38bdf8;
+  color: #0369a1;
+}
+
+.btn-card-evaluation.active {
+  background: #0284c7;
+  color: #ffffff;
+  border-color: #0284c7;
+  font-weight: 600;
+}
+
+.btn-card-evaluation.active:hover {
+  background: #0369a1;
+  border-color: #0369a1;
+}
+
+.eval-badge {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #0284c7;
+  background: #e0f2fe;
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid #bae6fd;
 }
 
 /* Card Selection Checkbox */
