@@ -81,52 +81,21 @@ function syncClientStorageWithCurrent() {
   saveLocalIds(STORAGE_DISMS, dismIds);
 }
 
-function applyClientClassifications(allItems) {
-  const localFavs = getLocalIds(STORAGE_FAVS);
-  const localEvals = getLocalIds(STORAGE_EVALS);
-  const localDisms = getLocalIds(STORAGE_DISMS);
+function applyServerResults(data) {
+  currentActiveItems = data.items || [];
+  currentFavoriteItems = data.favorite_items || [];
+  currentEvaluationItems = data.evaluation_items || [];
+  currentDismissedItems = data.dismissed_items || [];
 
-  // Se o cliente tem IDs locais guardados, garante que são fundidos com os do servidor
-  const allCandidates = [...allItems, ...currentActiveItems, ...currentFavoriteItems, ...currentEvaluationItems, ...currentDismissedItems];
-  const uniqueItemsMap = new Map();
-  allCandidates.forEach(it => {
-    if (it && it.id && !uniqueItemsMap.has(it.id)) {
-      uniqueItemsMap.set(it.id, it);
-    }
-  });
-
-  const active = [];
-  const favorites = [];
-  const evaluations = [];
-  const dismissed = [];
-
-  uniqueItemsMap.forEach(item => {
-    const itId = item.id;
-    const isDismissed = localDisms.has(itId) || !!item.is_dismissed;
-    const isFavorite = localFavs.has(itId) || !!item.is_favorite;
-    const isEvaluation = localEvals.has(itId) || !!item.is_evaluation;
-
-    item.is_dismissed = isDismissed;
-    item.is_favorite = isFavorite;
-    item.is_evaluation = isEvaluation;
-
-    if (isDismissed) {
-      dismissed.push(item);
-    } else if (isFavorite) {
-      favorites.push(item);
-    } else if (isEvaluation) {
-      evaluations.push(item);
-    } else {
-      active.push(item);
-    }
-  });
-
-  currentActiveItems = active;
-  currentFavoriteItems = favorites;
-  currentEvaluationItems = evaluations;
-  currentDismissedItems = dismissed;
+  // Marcar flags booleanas explicitamente para renderização fiável
+  currentActiveItems.forEach(it => { it.is_favorite = false; it.is_evaluation = false; it.is_dismissed = false; });
+  currentFavoriteItems.forEach(it => { it.is_favorite = true; it.is_evaluation = false; it.is_dismissed = false; });
+  currentEvaluationItems.forEach(it => { it.is_favorite = false; it.is_evaluation = true; it.is_dismissed = false; });
+  currentDismissedItems.forEach(it => { it.is_favorite = false; it.is_evaluation = false; it.is_dismissed = true; });
 
   syncClientStorageWithCurrent();
+  updateCountsAfterChange();
+  renderFilteredList();
 }
 
 // Inicialização
@@ -227,6 +196,26 @@ function setupEventListeners() {
 // Carregar dados da cache no arranque
 async function loadInitialData() {
   try {
+    // Sincronizar classificações locais do navegador para o servidor se existirem
+    const localFavs = Array.from(getLocalIds(STORAGE_FAVS));
+    const localEvals = Array.from(getLocalIds(STORAGE_EVALS));
+    const localDisms = Array.from(getLocalIds(STORAGE_DISMS));
+    if (localFavs.length > 0 || localEvals.length > 0 || localDisms.length > 0) {
+      try {
+        await fetch('/api/sync_classifications', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            favorites: localFavs,
+            evaluations: localEvals,
+            dismissed: localDisms
+          })
+        });
+      } catch (e) {
+        console.warn("Aviso ao sincronizar classificações locais:", e);
+      }
+    }
+
     const res = await fetch('/api/status');
     const status = await res.json();
 
@@ -237,17 +226,7 @@ async function loadInitialData() {
       }
       const resResults = await fetch('/api/results');
       const data = await resResults.json();
-      
-      const serverItems = [
-        ...(data.items || []),
-        ...(data.favorite_items || []),
-        ...(data.evaluation_items || []),
-        ...(data.dismissed_items || [])
-      ];
-
-      applyClientClassifications(serverItems);
-      updateCountsAfterChange();
-      renderFilteredList();
+      applyServerResults(data);
     } else {
       lastUpdateText.textContent = "Pronto para pesquisar";
       emptyState.classList.remove('hidden');
@@ -270,34 +249,36 @@ async function handleSearchClick() {
     const pad = (n) => String(n).padStart(2, '0');
     const deviceTimestamp = `${pad(now.getDate())}-${pad(now.getMonth() + 1)}-${now.getFullYear()} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
 
+    // Enviar classificações ativas para garantir reconhecimento absoluto no servidor
+    const localFavs = Array.from(getLocalIds(STORAGE_FAVS));
+    const localEvals = Array.from(getLocalIds(STORAGE_EVALS));
+    const localDisms = Array.from(getLocalIds(STORAGE_DISMS));
+
     const response = await fetch('/api/search', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ 
         ted_country: tedCountry,
-        client_timestamp: deviceTimestamp 
+        client_timestamp: deviceTimestamp,
+        client_classifications: {
+          favorites: localFavs,
+          evaluations: localEvals,
+          dismissed: localDisms
+        }
       })
     });
 
     if (!response.ok) {
-      throw new Error(`Erro na pesquisa: ${response.statusText}`);
+      const errData = await response.json().catch(() => ({}));
+      throw new Error(errData.error || `Erro na pesquisa: ${response.statusText}`);
     }
 
     const data = await response.json();
-    const serverItems = [
-      ...(data.items || []),
-      ...(data.favorite_items || []),
-      ...(data.evaluation_items || []),
-      ...(data.dismissed_items || [])
-    ];
-
-    applyClientClassifications(serverItems);
-    updateCountsAfterChange();
-    renderFilteredList();
+    applyServerResults(data);
     lastUpdateText.textContent = `Última pesquisa: ${data.timestamp || deviceTimestamp}`;
   } catch (err) {
     console.error("Erro na pesquisa:", err);
-    alert("Ocorreu um erro ao comunicar com os portais. Por favor tente novamente.");
+    alert("Ocorreu um erro ao comunicar com os portais: " + (err.message || err));
   } finally {
     setLoading(false);
   }
