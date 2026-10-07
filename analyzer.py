@@ -173,10 +173,25 @@ class ProcurementAnalyzer:
         for item in all_items:
             item['summary'] = self._generate_summary(item)
 
+        # Garantir que todos os itens guardados (favoritos, avaliação, descartados)
+        # são preservados na cache mesmo que não surjam nos primeiros resultados da nova pesquisa
+        dismissed_ids = self.get_dismissed_ids()
+        favorite_ids = self.get_favorite_ids()
+        evaluation_ids = self.get_evaluation_ids()
+        classified_ids = dismissed_ids | favorite_ids | evaluation_ids
+
+        existing_raw = self.get_raw_cache()
+        if existing_raw and 'items' in existing_raw:
+            new_ids = {it.get('id') for it in all_items if it.get('id')}
+            for old_it in existing_raw.get('items', []):
+                old_id = old_it.get('id')
+                if old_id in classified_ids and old_id not in new_ids:
+                    all_items.append(old_it)
+                    new_ids.add(old_id)
+
         # Ordenar por data de publicação (mais recentes primeiro)
         all_items.sort(key=lambda x: self._parse_date_sort(x.get('publication_date')), reverse=True)
 
-        dismissed_ids = self.get_dismissed_ids()
         for item in all_items:
             item['is_dismissed'] = item.get('id') in dismissed_ids
 
@@ -269,15 +284,21 @@ class ProcurementAnalyzer:
             return f"{parts[2]}-{parts[1]}-{parts[0]}"
         return date_str
 
-    def get_cached_results(self) -> Optional[Dict[str, Any]]:
-        """Devolve os resultados em cache filtrando descartados."""
+    def get_raw_cache(self) -> Optional[Dict[str, Any]]:
+        """Devolve os dados brutos armazenados na cache."""
         if os.path.exists(CACHE_FILE):
             try:
                 with open(CACHE_FILE, 'r', encoding='utf-8') as f:
-                    raw_data = json.load(f)
-                    return self._format_results_payload(raw_data)
+                    return json.load(f)
             except Exception as e:
-                logger.error(f"Erro ao ler ficheiro de cache: {e}")
+                logger.error(f"Erro ao ler cache bruta: {e}")
+        return None
+
+    def get_cached_results(self) -> Optional[Dict[str, Any]]:
+        """Devolve os resultados em cache estruturados por categorias."""
+        raw_data = self.get_raw_cache()
+        if raw_data:
+            return self._format_results_payload(raw_data)
         return None
 
     def save_cache(self, data: Dict[str, Any]):
