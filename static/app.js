@@ -2,6 +2,7 @@
 
 let currentActiveItems = [];
 let currentFavoriteItems = [];
+let currentEvaluationItems = [];
 let currentDismissedItems = [];
 let activeSourceFilter = 'all';
 let currentModalItem = null;
@@ -34,6 +35,7 @@ const countAll = document.getElementById('count-all');
 const countBase = document.getElementById('count-base');
 const countTed = document.getElementById('count-ted');
 const countFavorites = document.getElementById('count-favorites');
+const countEvaluation = document.getElementById('count-evaluation');
 const countDismissed = document.getElementById('count-dismissed');
 
 // Elementos do Modal
@@ -160,6 +162,7 @@ async function loadInitialData() {
       const data = await resResults.json();
       currentActiveItems = data.items || [];
       currentFavoriteItems = data.favorite_items || [];
+      currentEvaluationItems = data.evaluation_items || [];
       currentDismissedItems = data.dismissed_items || [];
       updateStats(data);
       renderFilteredList();
@@ -192,6 +195,7 @@ async function handleSearchClick() {
     const data = await response.json();
     currentActiveItems = data.items || [];
     currentFavoriteItems = data.favorite_items || [];
+    currentEvaluationItems = data.evaluation_items || [];
     currentDismissedItems = data.dismissed_items || [];
     updateStats(data);
     renderFilteredList();
@@ -232,6 +236,9 @@ function updateStats(data) {
   if (countFavorites) {
     countFavorites.textContent = data.favorite_count || (currentFavoriteItems ? currentFavoriteItems.length : 0);
   }
+  if (countEvaluation) {
+    countEvaluation.textContent = data.evaluation_count || (currentEvaluationItems ? currentEvaluationItems.length : 0);
+  }
   if (countDismissed) {
     countDismissed.textContent = data.dismissed_count || (currentDismissedItems ? currentDismissedItems.length : 0);
   }
@@ -250,13 +257,15 @@ function getCurrentlyFilteredItems() {
   let sourceList = currentActiveItems;
   if (activeSourceFilter === 'favorites') {
     sourceList = currentFavoriteItems;
+  } else if (activeSourceFilter === 'evaluation') {
+    sourceList = currentEvaluationItems;
   } else if (activeSourceFilter === 'dismissed') {
     sourceList = currentDismissedItems;
   }
 
   return sourceList.filter(item => {
     // Filtro de Fonte (Portal BASE / TED Europa) apenas quando na lista geral
-    if (activeSourceFilter !== 'all' && activeSourceFilter !== 'favorites' && activeSourceFilter !== 'dismissed' && item.source !== activeSourceFilter) {
+    if (activeSourceFilter !== 'all' && activeSourceFilter !== 'favorites' && activeSourceFilter !== 'evaluation' && activeSourceFilter !== 'dismissed' && item.source !== activeSourceFilter) {
       return false;
     }
 
@@ -282,6 +291,9 @@ function renderFilteredList() {
     if (activeSourceFilter === 'favorites') {
       emptyState.querySelector('h3').textContent = "Nenhum concurso nos favoritos";
       emptyState.querySelector('p').textContent = "Clique na estrela (☆) em qualquer concurso para o mover para a sua lista de favoritos.";
+    } else if (activeSourceFilter === 'evaluation') {
+      emptyState.querySelector('h3').textContent = "Nenhum concurso em avaliação";
+      emptyState.querySelector('p').textContent = "Clique no botão '📝 Para avaliação' em qualquer concurso para o adicionar a esta pasta.";
     } else if (activeSourceFilter === 'dismissed') {
       emptyState.querySelector('h3').textContent = "Nenhum concurso descartado";
       emptyState.querySelector('p').textContent = "Os concursos que descartar aparecerão aqui, caso queira recuperá-los mais tarde.";
@@ -309,13 +321,14 @@ function createTenderCardHtml(item) {
   const isSelected = selectedItemIds.has(item.id);
   const isDismissed = activeSourceFilter === 'dismissed';
   const isFav = !!item.is_favorite;
+  const isEval = !!item.is_evaluation;
 
   const matchedHtml = (item.matched_terms || []).map(t => `<span class="tag">${escapeHtml(t)}</span>`).join('');
 
   return `
     <article class="tender-card ${isSelected ? 'selected-card' : ''} ${isDismissed ? 'dismissed-card' : ''}" data-id="${escapeHtml(item.id)}">
       <div class="card-top">
-        <div style="display: flex; align-items: center; gap: 8px;">
+        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
           <label class="card-select-label" title="Selecionar este concurso para exportar">
             <input type="checkbox" class="item-checkbox" data-id="${escapeHtml(item.id)}" ${isSelected ? 'checked' : ''} />
           </label>
@@ -324,6 +337,7 @@ function createTenderCardHtml(item) {
           </button>
           <span class="source-badge ${badgeClass}">${sourceIcon} ${escapeHtml(item.source)}</span>
           <span class="procedure-type-badge">${escapeHtml(item.procedure_type || 'Concurso')}</span>
+          ${isEval ? '<span class="eval-badge">📝 Em avaliação</span>' : ''}
         </div>
         <span class="card-date">Publicado a: <strong>${escapeHtml(item.publication_date || 'N/D')}</strong></span>
       </div>
@@ -354,7 +368,10 @@ function createTenderCardHtml(item) {
         <div class="card-actions">
           ${isDismissed ? 
             `<button class="btn btn-card-restore" data-id="${escapeHtml(item.id)}" title="Recuperar este concurso para a lista ativa">↩️ Recuperar</button>` :
-            `<button class="btn btn-card-dismiss" data-id="${escapeHtml(item.id)}" title="Descartar este concurso para não voltar a ver">🗑️ Descartar</button>`
+            `<button class="btn btn-card-dismiss" data-id="${escapeHtml(item.id)}" title="Descartar este concurso para não voltar a ver">🗑️ Descartar</button>
+             <button class="btn btn-card-evaluation ${isEval ? 'active' : ''}" data-id="${escapeHtml(item.id)}" title="${isEval ? 'Remover de avaliação (devolver à lista geral)' : 'Mover para avaliação'}">
+               ${isEval ? '📝 Em avaliação' : '📝 Para avaliação'}
+             </button>`
           }
           <button class="btn btn-card-summary" data-id="${escapeHtml(item.id)}">📋 Ver Resumo</button>
           <a href="${escapeHtml(getSpecificDirectUrl(item.direct_url))}" target="_blank" rel="noopener noreferrer" class="btn btn-card-link">
@@ -393,6 +410,14 @@ function attachCardEvents() {
     });
   });
 
+  // Botões de Para Avaliação
+  document.querySelectorAll('.btn-card-evaluation').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      handleToggleEvaluation(btn.dataset.id);
+    });
+  });
+
   // Botões de Descarte
   document.querySelectorAll('.btn-card-dismiss').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -411,14 +436,14 @@ function attachCardEvents() {
   document.querySelectorAll('.btn-card-summary').forEach(btn => {
     btn.addEventListener('click', () => {
       const itemId = btn.dataset.id;
-      const allCandidates = [...currentActiveItems, ...currentFavoriteItems, ...currentDismissedItems];
+      const allCandidates = [...currentActiveItems, ...currentFavoriteItems, ...currentEvaluationItems, ...currentDismissedItems];
       const found = allCandidates.find(it => it.id === itemId);
       if (found) openModal(found);
     });
   });
 }
 
-// Alternar Favorito (Mover entre Lista Geral e Favoritos)
+// Alternar Favorito (Mover entre Lista Geral/Avaliação e Favoritos)
 async function handleToggleFavorite(itemId) {
   // Verificar se já está nos favoritos
   const favIndex = currentFavoriteItems.findIndex(it => it.id === itemId);
@@ -428,10 +453,19 @@ async function handleToggleFavorite(itemId) {
     item.is_favorite = false;
     currentActiveItems.unshift(item);
   } else {
-    // Está na lista geral -> Marcar e mover para a lista de favoritos
+    // Pode estar na lista geral ou em avaliação -> Marcar e mover para favoritos
+    let item = null;
     const activeIndex = currentActiveItems.findIndex(it => it.id === itemId);
     if (activeIndex !== -1) {
-      const item = currentActiveItems.splice(activeIndex, 1)[0];
+      item = currentActiveItems.splice(activeIndex, 1)[0];
+    } else {
+      const evalIndex = currentEvaluationItems.findIndex(it => it.id === itemId);
+      if (evalIndex !== -1) {
+        item = currentEvaluationItems.splice(evalIndex, 1)[0];
+        item.is_evaluation = false;
+      }
+    }
+    if (item) {
       item.is_favorite = true;
       currentFavoriteItems.unshift(item);
     }
@@ -452,6 +486,49 @@ async function handleToggleFavorite(itemId) {
   }
 }
 
+// Alternar Para Avaliação (Mover entre Lista Geral e Para Avaliação)
+async function handleToggleEvaluation(itemId) {
+  // Verificar se já está em avaliação
+  const evalIndex = currentEvaluationItems.findIndex(it => it.id === itemId);
+  if (evalIndex !== -1) {
+    // Já está em avaliação -> Retirar de avaliação e devolver à lista geral
+    const item = currentEvaluationItems.splice(evalIndex, 1)[0];
+    item.is_evaluation = false;
+    currentActiveItems.unshift(item);
+  } else {
+    // Pode estar na lista geral ou em favoritos
+    let item = null;
+    const activeIndex = currentActiveItems.findIndex(it => it.id === itemId);
+    if (activeIndex !== -1) {
+      item = currentActiveItems.splice(activeIndex, 1)[0];
+    } else {
+      const favIndex = currentFavoriteItems.findIndex(it => it.id === itemId);
+      if (favIndex !== -1) {
+        item = currentFavoriteItems.splice(favIndex, 1)[0];
+        item.is_favorite = false;
+      }
+    }
+    if (item) {
+      item.is_evaluation = true;
+      currentEvaluationItems.unshift(item);
+    }
+  }
+
+  updateCountsAfterChange();
+  renderFilteredList();
+
+  // Persistir no servidor
+  try {
+    await fetch('/api/evaluate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: itemId })
+    });
+  } catch (e) {
+    console.error("Erro ao persistir avaliação:", e);
+  }
+}
+
 // Descartar concurso
 async function handleDismissItem(itemId) {
   let item = null;
@@ -462,6 +539,11 @@ async function handleDismissItem(itemId) {
     let favIndex = currentFavoriteItems.findIndex(it => it.id === itemId);
     if (favIndex !== -1) {
       item = currentFavoriteItems.splice(favIndex, 1)[0];
+    } else {
+      let evalIndex = currentEvaluationItems.findIndex(it => it.id === itemId);
+      if (evalIndex !== -1) {
+        item = currentEvaluationItems.splice(evalIndex, 1)[0];
+      }
     }
   }
   if (!item) return;
@@ -494,6 +576,8 @@ async function handleRestoreItem(itemId) {
   item.is_dismissed = false;
   if (item.is_favorite) {
     currentFavoriteItems.unshift(item);
+  } else if (item.is_evaluation) {
+    currentEvaluationItems.unshift(item);
   } else {
     currentActiveItems.unshift(item);
   }
@@ -530,6 +614,9 @@ function updateCountsAfterChange() {
   countTed.textContent = tedCount;
   if (countFavorites) {
     countFavorites.textContent = currentFavoriteItems.length;
+  }
+  if (countEvaluation) {
+    countEvaluation.textContent = currentEvaluationItems.length;
   }
   if (countDismissed) {
     countDismissed.textContent = currentDismissedItems.length;
@@ -646,6 +733,31 @@ function openModal(item) {
       modalBtnStar.textContent = newFav ? '★' : '☆';
       modalBtnStar.className = `btn-star ${newFav ? 'favorited' : ''}`;
       modalBtnStar.title = newFav ? 'Remover dos favoritos (devolver à lista geral)' : 'Mover para os favoritos';
+      if (modalBtnEval) {
+        modalBtnEval.className = `btn btn-card-evaluation ${item.is_evaluation ? 'active' : ''}`;
+      }
+    };
+  }
+
+  // Configurar botão de avaliação no rodapé do modal
+  const modalBtnEval = document.getElementById('modal-btn-eval');
+  if (modalBtnEval) {
+    const isEval = !!item.is_evaluation;
+    modalBtnEval.className = `btn btn-card-evaluation ${isEval ? 'active' : ''}`;
+    modalBtnEval.textContent = isEval ? '📝 Em avaliação' : '📝 Para avaliação';
+    modalBtnEval.title = isEval ? 'Remover de avaliação (devolver à lista geral)' : 'Mover para avaliação';
+    modalBtnEval.onclick = async (e) => {
+      e.stopPropagation();
+      await handleToggleEvaluation(item.id);
+      const newEval = !!item.is_evaluation;
+      modalBtnEval.className = `btn btn-card-evaluation ${newEval ? 'active' : ''}`;
+      modalBtnEval.textContent = newEval ? '📝 Em avaliação' : '📝 Para avaliação';
+      modalBtnEval.title = newEval ? 'Remover de avaliação (devolver à lista geral)' : 'Mover para avaliação';
+      if (modalBtnStar) {
+        const isFav = !!item.is_favorite;
+        modalBtnStar.textContent = isFav ? '★' : '☆';
+        modalBtnStar.className = `btn-star ${isFav ? 'favorited' : ''}`;
+      }
     };
   }
 
