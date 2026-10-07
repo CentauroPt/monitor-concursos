@@ -173,19 +173,14 @@ class ProcurementAnalyzer:
         for item in all_items:
             item['summary'] = self._generate_summary(item)
 
-        # Garantir que todos os itens guardados (favoritos, avaliação, descartados)
-        # são preservados na cache mesmo que não surjam nos primeiros resultados da nova pesquisa
-        dismissed_ids = self.get_dismissed_ids()
-        favorite_ids = self.get_favorite_ids()
-        evaluation_ids = self.get_evaluation_ids()
-        classified_ids = dismissed_ids | favorite_ids | evaluation_ids
-
+        # Preservar TODOS os concursos existentes em cache (acumulação incremental)
+        # Garantindo que nenhum concurso anterior, favorito, em avaliação ou descartado é alguma vez perdido
         existing_raw = self.get_raw_cache()
         if existing_raw and 'items' in existing_raw:
             new_ids = {it.get('id') for it in all_items if it.get('id')}
             for old_it in existing_raw.get('items', []):
                 old_id = old_it.get('id')
-                if old_id in classified_ids and old_id not in new_ids:
+                if old_id and old_id not in new_ids:
                     all_items.append(old_it)
                     new_ids.add(old_id)
 
