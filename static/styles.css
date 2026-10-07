@@ -389,6 +389,12 @@ body {
   line-height: 1.2;
 }
 
+.stat-value.text-sm {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--primary);
+}
+
 .stat-label {
   font-size: 0.82rem;
   color: var(--text-muted);
