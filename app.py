@@ -48,6 +48,7 @@ class MonitorHandler(SimpleHTTPRequestHandler):
                     'base_count': cached.get('base_count', 0),
                     'ted_count': cached.get('ted_count', 0),
                     'favorite_count': cached.get('favorite_count', 0),
+                    'evaluation_count': cached.get('evaluation_count', 0),
                     'dismissed_count': cached.get('dismissed_count', 0),
                     'ted_country': cached.get('ted_country', 'PRT')
                 }
@@ -140,6 +141,19 @@ class MonitorHandler(SimpleHTTPRequestHandler):
                     return self._send_json({'success': True, 'id': item_id, 'is_favorite': is_fav})
             except Exception as e:
                 logger.error(f"Erro ao alternar favorito: {e}")
+            return self._send_json({'success': False}, status=400)
+
+        elif path == "/api/evaluate":
+            content_length = int(self.headers.get('Content-Length', 0))
+            body = self.rfile.read(content_length) if content_length > 0 else b'{}'
+            try:
+                payload = json.loads(body.decode('utf-8'))
+                item_id = payload.get('id')
+                if item_id:
+                    is_eval = analyzer.toggle_evaluation(item_id)
+                    return self._send_json({'success': True, 'id': item_id, 'is_evaluation': is_eval})
+            except Exception as e:
+                logger.error(f"Erro ao alternar avaliação: {e}")
             return self._send_json({'success': False}, status=400)
 
         elif path == "/api/export":
