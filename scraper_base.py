@@ -8,6 +8,8 @@ import json
 import logging
 import re
 import requests
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 from typing import List, Dict, Any, Optional
 from concurrent.futures import ThreadPoolExecutor
 
@@ -40,6 +42,7 @@ DEFAULT_HEADERS = {
 class BaseScraper:
     def __init__(self, timeout: int = 15):
         self.session = requests.Session()
+        self.session.verify = False
         self.session.headers.update(DEFAULT_HEADERS)
         self.timeout = timeout
         self.version = "87.0"  # Versão de fallback testada com sucesso

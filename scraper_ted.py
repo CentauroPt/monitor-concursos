@@ -7,6 +7,8 @@ por palavras-chave e códigos CPV 3414*.
 import json
 import logging
 import requests
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 from datetime import datetime
 from typing import List, Dict, Any, Optional
 
@@ -36,6 +38,7 @@ DEFAULT_HEADERS = {
 class TedScraper:
     def __init__(self, timeout: int = 20):
         self.session = requests.Session()
+        self.session.verify = False
         self.session.headers.update(DEFAULT_HEADERS)
         self.timeout = timeout
 

@@ -1,7 +1,8 @@
 """
 Módulo de análise, síntese, agregação e cache de concursos públicos
 recolhidos a partir do Portal BASE e do TED Europa.
-Suporta persistência de concursos descartados e exportação seletiva.
+Suporta persistência central no servidor de pastas e favoritos,
+garantindo compatibilidade multi-computador e preservação absoluta de classificações.
 """
 
 import os
@@ -17,6 +18,9 @@ logger = logging.getLogger(__name__)
 
 CACHE_DIR = os.path.join(os.path.dirname(__file__), "data")
 CACHE_FILE = os.path.join(CACHE_DIR, "cache.json")
+ASSIGNMENTS_FILE = os.path.join(CACHE_DIR, "assignments.json")
+
+# Ficheiros legados para retrocompatibilidade
 DISMISSED_FILE = os.path.join(CACHE_DIR, "dismissed.json")
 FAVORITES_FILE = os.path.join(CACHE_DIR, "favorites.json")
 EVALUATION_FILE = os.path.join(CACHE_DIR, "evaluation.json")
@@ -27,198 +31,234 @@ class ProcurementAnalyzer:
         self.base_scraper = BaseScraper()
         self.ted_scraper = TedScraper()
         os.makedirs(CACHE_DIR, exist_ok=True)
+        self._ensure_assignments_initialized()
 
-    def get_favorite_ids(self) -> Set[str]:
-        """Devolve o conjunto de IDs de concursos marcados como favoritos."""
-        if os.path.exists(FAVORITES_FILE):
+    def _ensure_assignments_initialized(self):
+        """Inicializa e migra dados existentes para a estrutura central de assignments."""
+        if not os.path.exists(ASSIGNMENTS_FILE):
+            data = {
+                "last_search": "",
+                "assignments": {}
+            }
+            # Migrar data de pesquisa anterior do cache.json se existir
+            if os.path.exists(CACHE_FILE):
+                try:
+                    with open(CACHE_FILE, 'r', encoding='utf-8') as f:
+                        c = json.load(f)
+                        data["last_search"] = c.get("timestamp", "")
+                except Exception as e:
+                    logger.error(f"Erro ao ler timestamp de cache.json: {e}")
+
+            # Migrar descartados existentes
+            if os.path.exists(DISMISSED_FILE):
+                try:
+                    with open(DISMISSED_FILE, 'r', encoding='utf-8') as f:
+                        disms = json.load(f)
+                        if isinstance(disms, list):
+                            for did in disms:
+                                data["assignments"][str(did)] = {"folder": "dismissed", "is_favorite": False}
+                        elif isinstance(disms, dict):
+                            for did in disms.keys():
+                                data["assignments"][str(did)] = {"folder": "dismissed", "is_favorite": False}
+                except Exception as e:
+                    logger.error(f"Erro ao migrar descartados: {e}")
+
+            # Migrar avaliações existentes
+            if os.path.exists(EVALUATION_FILE):
+                try:
+                    with open(EVALUATION_FILE, 'r', encoding='utf-8') as f:
+                        evals = json.load(f)
+                        if isinstance(evals, list):
+                            for eid in evals:
+                                if str(eid) not in data["assignments"]:
+                                    data["assignments"][str(eid)] = {"folder": "evaluation", "is_favorite": False}
+                                else:
+                                    data["assignments"][str(eid)]["folder"] = "evaluation"
+                except Exception as e:
+                    logger.error(f"Erro ao migrar avaliações: {e}")
+
+            # Migrar favoritos existentes
+            if os.path.exists(FAVORITES_FILE):
+                try:
+                    with open(FAVORITES_FILE, 'r', encoding='utf-8') as f:
+                        favs = json.load(f)
+                        if isinstance(favs, list):
+                            for fid in favs:
+                                fid_str = str(fid)
+                                if fid_str not in data["assignments"]:
+                                    data["assignments"][fid_str] = {"folder": "favorites", "is_favorite": True}
+                                else:
+                                    data["assignments"][fid_str]["is_favorite"] = True
+                except Exception as e:
+                    logger.error(f"Erro ao migrar favoritos: {e}")
+
+            self._save_assignments_file(data)
+            logger.info(f"Assignments inicializados e migrados com {len(data['assignments'])} registos.")
+
+    def get_assignments_data(self) -> Dict[str, Any]:
+        """Devolve o dicionário completo de assignments do servidor."""
+        if os.path.exists(ASSIGNMENTS_FILE):
             try:
-                with open(FAVORITES_FILE, 'r', encoding='utf-8') as f:
-                    data = json.load(f)
-                    if isinstance(data, list):
-                        return set(data)
-                    elif isinstance(data, dict):
-                        return set(data.keys())
+                with open(ASSIGNMENTS_FILE, 'r', encoding='utf-8') as f:
+                    return json.load(f)
             except Exception as e:
-                logger.error(f"Erro ao ler favoritos: {e}")
-        return set()
+                logger.error(f"Erro ao ler assignments: {e}")
+        return {"last_search": "", "assignments": {}}
 
-    def _save_favorite_ids(self, favorites: Set[str]):
-        """Grava os IDs favoritos em JSON."""
+    def _save_assignments_file(self, data: Dict[str, Any]):
+        """Grava assignments e espelha em ficheiros legados para retrocompatibilidade."""
         try:
+            with open(ASSIGNMENTS_FILE, 'w', encoding='utf-8') as f:
+                json.dump(data, f, ensure_ascii=False, indent=2)
+
+            # Sincronizar ficheiros legados
+            fav_list = []
+            eval_list = []
+            dism_list = []
+            for item_id, asg in data.get("assignments", {}).items():
+                if asg.get("is_favorite"):
+                    fav_list.append(item_id)
+                folder = asg.get("folder")
+                if folder == "evaluation":
+                    eval_list.append(item_id)
+                elif folder == "dismissed":
+                    dism_list.append(item_id)
+
             with open(FAVORITES_FILE, 'w', encoding='utf-8') as f:
-                json.dump(sorted(list(favorites)), f, ensure_ascii=False, indent=2)
-        except Exception as e:
-            logger.error(f"Erro ao gravar favoritos: {e}")
-
-    def get_evaluation_ids(self) -> Set[str]:
-        """Devolve o conjunto de IDs de concursos marcados para avaliação."""
-        if os.path.exists(EVALUATION_FILE):
-            try:
-                with open(EVALUATION_FILE, 'r', encoding='utf-8') as f:
-                    data = json.load(f)
-                    if isinstance(data, list):
-                        return set(data)
-                    elif isinstance(data, dict):
-                        return set(data.keys())
-            except Exception as e:
-                logger.error(f"Erro ao ler itens em avaliação: {e}")
-        return set()
-
-    def _save_evaluation_ids(self, evaluations: Set[str]):
-        """Grava os IDs em avaliação em JSON."""
-        try:
+                json.dump(sorted(fav_list), f, ensure_ascii=False, indent=2)
             with open(EVALUATION_FILE, 'w', encoding='utf-8') as f:
-                json.dump(sorted(list(evaluations)), f, ensure_ascii=False, indent=2)
-        except Exception as e:
-            logger.error(f"Erro ao gravar avaliação: {e}")
-
-    def get_dismissed_ids(self) -> Set[str]:
-        """Devolve o conjunto de IDs de concursos descartados pelo utilizador."""
-        if os.path.exists(DISMISSED_FILE):
-            try:
-                with open(DISMISSED_FILE, 'r', encoding='utf-8') as f:
-                    data = json.load(f)
-                    if isinstance(data, list):
-                        return set(data)
-                    elif isinstance(data, dict):
-                        return set(data.keys())
-            except Exception as e:
-                logger.error(f"Erro ao ler descartados: {e}")
-        return set()
-
-    def _save_dismissed_ids(self, dismissed: Set[str]):
-        """Grava os IDs descartados em JSON."""
-        try:
+                json.dump(sorted(eval_list), f, ensure_ascii=False, indent=2)
             with open(DISMISSED_FILE, 'w', encoding='utf-8') as f:
-                json.dump(sorted(list(dismissed)), f, ensure_ascii=False, indent=2)
+                json.dump(sorted(dism_list), f, ensure_ascii=False, indent=2)
         except Exception as e:
-            logger.error(f"Erro ao gravar descartados: {e}")
+            logger.error(f"Erro ao gravar assignments: {e}")
 
-    def sync_classifications(self, favorites: Optional[List[str]] = None, evaluations: Optional[List[str]] = None, dismissed: Optional[List[str]] = None) -> Dict[str, int]:
+    def get_item_assignment(self, item_id: str) -> Dict[str, Any]:
+        """Obtém a pasta e o estado de favorito de um concurso específico."""
+        data = self.get_assignments_data()
+        return data.get("assignments", {}).get(str(item_id), {"folder": "inbox", "is_favorite": False})
+
+    def set_item_folder(self, item_id: str, target_folder: str) -> Dict[str, Any]:
         """
-        Sincroniza e funde classificações existentes no servidor com eventuais classificações
-        enviadas pelo cliente (garantindo persistência absoluta mesmo após reinício de contentor).
-        Assegura exclusividade mútua entre categorias.
+        Move o concurso para a pasta pretendida ('inbox', 'evaluation', 'dismissed', 'favorites').
+        REGRA: Mudar de pasta NUNCA retira a marca de favorito (a menos que a pasta seja 'inbox' e não seja favorito).
         """
-        current_favs = self.get_favorite_ids()
-        current_evals = self.get_evaluation_ids()
-        current_disms = self.get_dismissed_ids()
+        data = self.get_assignments_data()
+        assignments = data.setdefault("assignments", {})
+        item_id_str = str(item_id)
+        current = assignments.get(item_id_str, {"folder": "inbox", "is_favorite": False})
 
-        if favorites:
-            current_favs.update(favorites)
-        if evaluations:
-            current_evals.update(evaluations)
-        if dismissed:
-            current_disms.update(dismissed)
+        is_fav = current.get("is_favorite", False)
 
-        # Regras de precedência e exclusividade:
-        # Se um ID foi explicitamente descartado, não deve ser favorito nem avaliação
-        if dismissed:
-            current_favs.difference_update(dismissed)
-            current_evals.difference_update(dismissed)
-        # Se um ID é favorito, não deve ser avaliação nem descartado
-        if favorites:
-            current_evals.difference_update(favorites)
-            current_disms.difference_update(favorites)
-        # Se um ID é avaliação, não deve ser favorito nem descartado
-        if evaluations:
-            current_favs.difference_update(evaluations)
-            current_disms.difference_update(evaluations)
-
-        self._save_favorite_ids(current_favs)
-        self._save_evaluation_ids(current_evals)
-        self._save_dismissed_ids(current_disms)
-
-        logger.info(f"Classificações sincronizadas no servidor: {len(current_favs)} favoritos, {len(current_evals)} avaliação, {len(current_disms)} descartados.")
-        return {
-            'favorites': len(current_favs),
-            'evaluations': len(current_evals),
-            'dismissed': len(current_disms)
-        }
-
-    def toggle_favorite(self, item_id: str) -> bool:
-        """Alterna o estado de favorito de um concurso (Adicionar / Remover)."""
-        favorites = self.get_favorite_ids()
-        evaluations = self.get_evaluation_ids()
-        dismissed = self.get_dismissed_ids()
-
-        if item_id in favorites:
-            favorites.remove(item_id)
-            is_fav = False
-        else:
-            favorites.add(item_id)
+        if target_folder == "favorites":
+            # Ao mover expressamente para favoritos, ativa a estrela
             is_fav = True
-            # Exclusividade: remove de avaliação e de descartados
-            evaluations.discard(item_id)
-            dismissed.discard(item_id)
-            self._save_evaluation_ids(evaluations)
-            self._save_dismissed_ids(dismissed)
-
-        self._save_favorite_ids(favorites)
-        return is_fav
-
-    def toggle_evaluation(self, item_id: str) -> bool:
-        """Alterna o estado de 'Para avaliação' de um concurso."""
-        evaluations = self.get_evaluation_ids()
-        favorites = self.get_favorite_ids()
-        dismissed = self.get_dismissed_ids()
-
-        if item_id in evaluations:
-            evaluations.remove(item_id)
-            is_eval = False
+            # Se já estava em avaliação, mantém a pasta evaluation mas com is_favorite = True
+            if current.get("folder") == "evaluation":
+                new_folder = "evaluation"
+            else:
+                new_folder = "favorites"
+        elif target_folder in ("evaluation", "dismissed", "inbox"):
+            new_folder = target_folder
+            # O estado is_fav mantém-se exatamente como está!
         else:
-            evaluations.add(item_id)
-            is_eval = True
-            # Exclusividade: remove de favoritos e de descartados
-            favorites.discard(item_id)
-            dismissed.discard(item_id)
-            self._save_favorite_ids(favorites)
-            self._save_dismissed_ids(dismissed)
+            new_folder = current.get("folder", "inbox")
 
-        self._save_evaluation_ids(evaluations)
-        return is_eval
+        assignments[item_id_str] = {
+            "folder": new_folder,
+            "is_favorite": is_fav
+        }
+        self._save_assignments_file(data)
+        logger.info(f"Concurso {item_id} atualizado: pasta={new_folder}, favorito={is_fav}")
+        return {"id": item_id, "folder": new_folder, "is_favorite": is_fav}
+
+    def toggle_favorite(self, item_id: str) -> Dict[str, Any]:
+        """
+        Alterna a marca de favorito (☆ <-> ★) de um concurso.
+        REGRAS:
+        1. Se estava em 'inbox' (Todos) e ganha estrela -> Move-se para a pasta 'favorites' (sai de Todos).
+        2. Se estava em 'evaluation' e ganha/perde estrela -> Mantém-se na pasta 'evaluation'! Apenas o símbolo muda.
+        3. Se estava em 'dismissed' e ganha/perde estrela -> Mantém-se na pasta 'dismissed'! Apenas o símbolo muda.
+        4. Se estava na pasta 'favorites' e perde a estrela -> Como já não é favorito e não estava em avaliação, volta para 'inbox' (Todos).
+        """
+        data = self.get_assignments_data()
+        assignments = data.setdefault("assignments", {})
+        item_id_str = str(item_id)
+        current = assignments.get(item_id_str, {"folder": "inbox", "is_favorite": False})
+
+        cur_fav = current.get("is_favorite", False)
+        cur_folder = current.get("folder", "inbox")
+
+        new_fav = not cur_fav
+
+        if new_fav:
+            # Ganhou a marca de favorito
+            if cur_folder == "inbox":
+                # Sai de Todos e vai para favoritos
+                new_folder = "favorites"
+            else:
+                # Mantém a pasta onde estava (ex: evaluation ou dismissed)
+                new_folder = cur_folder
+        else:
+            # Perdeu a marca de favorito por clique direto na estrela
+            if cur_folder == "favorites":
+                # Como a pasta era apenas 'favorites', retorna à caixa de entrada 'inbox'
+                new_folder = "inbox"
+            else:
+                # Permanece na sua pasta (evaluation, dismissed, etc.)
+                new_folder = cur_folder
+
+        assignments[item_id_str] = {
+            "folder": new_folder,
+            "is_favorite": new_fav
+        }
+        self._save_assignments_file(data)
+        logger.info(f"Concurso {item_id} alternou favorito: is_favorite={new_fav}, pasta={new_folder}")
+        return {"id": item_id, "is_favorite": new_fav, "folder": new_folder}
+
+    def toggle_evaluation(self, item_id: str) -> Dict[str, Any]:
+        """
+        Move o concurso para a pasta 'Para avaliação' ou retira-o de lá se já estiver.
+        REGRA: A marca de favoritos NUNCA é removida!
+        """
+        current = self.get_item_assignment(item_id)
+        cur_folder = current.get("folder", "inbox")
+        is_fav = current.get("is_favorite", False)
+
+        if cur_folder == "evaluation":
+            # Já está em avaliação -> Retirar de avaliação
+            # Se for favorito, passa para a pasta 'favorites'; senão, volta para 'inbox' (Todos)
+            target = "favorites" if is_fav else "inbox"
+        else:
+            # Não está em avaliação -> Colocar na pasta 'evaluation'
+            target = "evaluation"
+
+        return self.set_item_folder(item_id, target)
 
     def dismiss_item(self, item_id: str) -> bool:
-        """Marca permanentemente um concurso como descartado."""
-        dismissed = self.get_dismissed_ids()
-        favorites = self.get_favorite_ids()
-        evaluations = self.get_evaluation_ids()
-
-        dismissed.add(item_id)
-        # Exclusividade: remove de favoritos e de avaliação
-        favorites.discard(item_id)
-        evaluations.discard(item_id)
-
-        self._save_dismissed_ids(dismissed)
-        self._save_favorite_ids(favorites)
-        self._save_evaluation_ids(evaluations)
+        """Marca um concurso como descartado."""
+        self.set_item_folder(item_id, "dismissed")
         return True
 
     def restore_item(self, item_id: str) -> bool:
-        """Restaura um concurso previamente descartado."""
-        dismissed = self.get_dismissed_ids()
-        if item_id in dismissed:
-            dismissed.remove(item_id)
-            self._save_dismissed_ids(dismissed)
-            return True
-        return False
+        """Restaura um concurso descartado para a sua pasta de trabalho (favorites se for favorito, senão inbox)."""
+        current = self.get_item_assignment(item_id)
+        is_fav = current.get("is_favorite", False)
+        target = "favorites" if is_fav else "inbox"
+        self.set_item_folder(item_id, target)
+        return True
 
-    def run_full_search(self, ted_country: str = "PRT", max_base_items: int = 30, client_timestamp: Optional[str] = None, client_classifications: Optional[Dict[str, List[str]]] = None) -> Dict[str, Any]:
+    def run_full_search(self, ted_country: str = "PRT", max_base_items: int = 30, client_timestamp: Optional[str] = None, client_classifications: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         """
         Executa pesquisa completa em ambas as fontes, processa os dados,
-        acumula concursos existentes, reconhece e preserva classificações
-        e atualiza a cache do servidor.
+        acumula concursos existentes, preserva rigorosamente as pastas e favoritos
+        onde foram colocados pelo utilizador, e coloca APENAS concursos inéditos na pasta 'Todos'.
+        A data e hora registada é a da última pesquisa feita.
         """
         start_time = datetime.now()
-        logger.info("A iniciar pesquisa agregada (BASE + TED)...")
-
-        # Se o cliente enviou classificações locais, consolida imediatamente no servidor
-        if client_classifications and isinstance(client_classifications, dict):
-            self.sync_classifications(
-                favorites=client_classifications.get('favorites'),
-                evaluations=client_classifications.get('evaluations'),
-                dismissed=client_classifications.get('dismissed')
-            )
+        # Data e hora exata da última pesquisa realizada agora no servidor
+        search_timestamp = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
+        logger.info(f"A iniciar pesquisa agregada (BASE + TED) às {search_timestamp}...")
 
         # 1. Obter dados do Portal BASE
         base_items = []
@@ -240,38 +280,51 @@ class ProcurementAnalyzer:
             item['summary'] = self._generate_summary(item)
 
         # 4. ACUMULAÇÃO E RECONHECIMENTO DE CONCURSOS EXISTENTES:
-        # Recupera todos os concursos armazenados na cache anterior para NUNCA perder nada
+        # Recupera todos os concursos armazenados no histórico anterior
         existing_raw = self.get_raw_cache()
         existing_items = existing_raw.get('items', []) if existing_raw else []
 
-        # Dicionário de todos os itens indexados por ID
         items_map: Dict[str, Dict[str, Any]] = {}
         for old_it in existing_items:
             old_id = old_it.get('id')
             if old_id:
-                items_map[old_id] = old_it
+                items_map[str(old_id)] = old_it
 
-        # Incorporar novos resultados raspados:
-        # Se o concurso já existir no sistema, atualiza campos frescos mantendo a sua identidade
+        # Obter assignments existentes no servidor
+        asg_data = self.get_assignments_data()
+        assignments = asg_data.setdefault("assignments", {})
+
+        # Processar concursos recolhidos
         for fresh_it in fresh_items:
             fresh_id = fresh_it.get('id')
             if not fresh_id:
                 continue
-            if fresh_id in items_map:
-                # Concurso já existe: atualiza campos não vazios sem perturbar
+            fresh_id_str = str(fresh_id)
+
+            if fresh_id_str in items_map:
+                # O concurso JÁ EXISTE no sistema:
+                # Atualiza campos informativos frescos sem nunca perturbar a pasta nem o favorito
                 for k, v in fresh_it.items():
                     if v not in (None, '', 'N/D'):
-                        items_map[fresh_id][k] = v
+                        items_map[fresh_id_str][k] = v
             else:
-                # Novo concurso descoberto
-                items_map[fresh_id] = fresh_it
+                # NOVO CONCURSO DESCOBERTO:
+                # Entra como inédito na pasta 'inbox' (Todos) para triagem pelo utilizador
+                items_map[fresh_id_str] = fresh_it
+                if fresh_id_str not in assignments:
+                    assignments[fresh_id_str] = {
+                        "folder": "inbox",
+                        "is_favorite": False
+                    }
 
         all_items = list(items_map.values())
 
         # Ordenar por data de publicação (mais recentes primeiro)
         all_items.sort(key=lambda x: self._parse_date_sort(x.get('publication_date')), reverse=True)
 
-        search_timestamp = client_timestamp if client_timestamp else datetime.now().strftime("%d-%m-%Y %H:%M:%S")
+        # Atualizar carimbo da última pesquisa no servidor
+        asg_data["last_search"] = search_timestamp
+        self._save_assignments_file(asg_data)
 
         result = {
             'timestamp': search_timestamp,
@@ -287,15 +340,16 @@ class ProcurementAnalyzer:
 
     def _format_results_payload(self, raw_data: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Separa rigorosamente os itens segundo as suas classificações:
-        - Ativos (separador 'Todos'): APENAS os concursos NÃO classificados, prontos para triagem
-        - Favoritos: concursos marcados como favoritos
-        - Para avaliação: concursos em avaliação
-        - Descartados: concursos descartados
+        Separa rigorosamente os itens segundo as suas pastas e marca de favoritos:
+        - Ativos (separador 'Todos'): APENAS os concursos NÃO classificados ('inbox')
+        - Favoritos (separador 'Favoritos'): TODOS os concursos com marca de favorito (★)
+        - Para avaliação (separador 'Para avaliação'): concursos colocados na pasta 'evaluation'
+        - Descartados (separador 'Descartados'): concursos colocados na pasta 'dismissed'
         """
-        dismissed_ids = self.get_dismissed_ids()
-        favorite_ids = self.get_favorite_ids()
-        evaluation_ids = self.get_evaluation_ids()
+        asg_data = self.get_assignments_data()
+        assignments = asg_data.get("assignments", {})
+        last_search = asg_data.get("last_search") or raw_data.get("timestamp") or datetime.now().strftime("%d-%m-%Y %H:%M:%S")
+
         all_items = raw_data.get('items', [])
 
         active_items = []
@@ -307,35 +361,38 @@ class ProcurementAnalyzer:
         ted_active = 0
 
         for it in all_items:
-            it_id = it.get('id')
-            if it_id in dismissed_ids:
-                it['is_dismissed'] = True
-                it['is_favorite'] = False
-                it['is_evaluation'] = False
-                dismissed_items.append(it)
-            elif it_id in favorite_ids:
-                it['is_dismissed'] = False
-                it['is_favorite'] = True
-                it['is_evaluation'] = False
-                favorite_items.append(it)
-            elif it_id in evaluation_ids:
-                it['is_dismissed'] = False
-                it['is_favorite'] = False
-                it['is_evaluation'] = True
-                evaluation_items.append(it)
-            else:
-                # Concurso não classificado -> Aparece no separador "Todos" para ser classificado
-                it['is_dismissed'] = False
-                it['is_favorite'] = False
-                it['is_evaluation'] = False
+            it_id = str(it.get('id'))
+            item_asg = assignments.get(it_id, {"folder": "inbox", "is_favorite": False})
+            folder = item_asg.get("folder", "inbox")
+            is_fav = bool(item_asg.get("is_favorite", False))
+
+            it['folder'] = folder
+            it['is_favorite'] = is_fav
+            it['is_evaluation'] = (folder == "evaluation")
+            it['is_dismissed'] = (folder == "dismissed")
+
+            # 1. Separador 'Todos' -> Apenas e só os que aguardam triagem (inbox)
+            if folder == "inbox":
                 active_items.append(it)
                 if it.get('source') == 'Portal BASE':
                     base_active += 1
                 else:
                     ted_active += 1
 
+            # 2. Separador 'Favoritos' -> Todos os que têm estrela de favorito ativa!
+            if is_fav:
+                favorite_items.append(it)
+
+            # 3. Separador 'Para avaliação' -> Todos os que estão na pasta de avaliação
+            if folder == "evaluation":
+                evaluation_items.append(it)
+
+            # 4. Separador 'Descartados' -> Todos os que estão na pasta de descartados
+            if folder == "dismissed":
+                dismissed_items.append(it)
+
         return {
-            'timestamp': raw_data.get('timestamp'),
+            'timestamp': last_search,
             'total_count': len(active_items),
             'base_count': base_active,
             'ted_count': ted_active,
@@ -351,7 +408,7 @@ class ProcurementAnalyzer:
         }
 
     def _generate_summary(self, item: Dict[str, Any]) -> str:
-        """Gera um resumo claro e estruturado dos 3 pilares requeridos."""
+        """Gera um resumo claro e estruturado dos pilares requeridos."""
         title = item.get('title', 'Não especificado')
         deadline = item.get('deadline', 'Consulte o anúncio')
         value = item.get('value', 'Não especificado')
@@ -404,20 +461,25 @@ class ProcurementAnalyzer:
         """
         Exporta resultados para CSV legível no Excel (UTF-8 com BOM).
         Se selected_ids for fornecido, exporta APENAS esses concursos.
-        Caso contrário, exporta todos os concursos ativos (não descartados).
+        Caso contrário, exporta todos os concursos da lista ativa.
         """
         cached = self.get_cached_results()
         if not cached:
             return ""
 
-        # Obter todos os itens (ativos, favoritos, avaliação ou descartados)
         candidate_items = cached.get('items', []) + cached.get('favorite_items', []) + cached.get('evaluation_items', []) + cached.get('dismissed_items', [])
+        seen_ids = set()
+        unique_candidates = []
+        for it in candidate_items:
+            it_id = it.get('id')
+            if it_id not in seen_ids:
+                seen_ids.add(it_id)
+                unique_candidates.append(it)
 
         if selected_ids and len(selected_ids) > 0:
             ids_set = set(selected_ids)
-            export_list = [it for it in candidate_items if it.get('id') in ids_set]
+            export_list = [it for it in unique_candidates if it.get('id') in ids_set]
         else:
-            # Por defeito: apenas os ativos
             export_list = cached.get('items', [])
 
         if not export_list:
@@ -447,4 +509,5 @@ if __name__ == "__main__":
     analyzer = ProcurementAnalyzer()
     cached = analyzer.get_cached_results()
     if cached:
-        print(f"Ativos: {cached['total_count']}, Descartados: {cached['dismissed_count']}")
+        print(f"Data última pesquisa: {cached['timestamp']}")
+        print(f"Ativos (Todos): {cached['total_count']}, Favoritos: {cached['favorite_count']}, Avaliação: {cached['evaluation_count']}, Descartados: {cached['dismissed_count']}")

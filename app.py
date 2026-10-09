@@ -1,7 +1,7 @@
 """
 Servidor Web Local do Monitor de Concursos Públicos (Portal BASE & TED).
 Executa na porta 8080 com interface moderna e API REST integrada.
-Não requer instalação de frameworks externos (utiliza biblioteca padrão do Python).
+Garante persistência central no servidor de pastas, favoritos e data/hora da última pesquisa.
 """
 
 import os
@@ -9,9 +9,9 @@ import json
 import logging
 import mimetypes
 from datetime import datetime
+from typing import Any
 from urllib.parse import urlparse, parse_qs
 from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
-import webbrowser
 
 from analyzer import ProcurementAnalyzer
 
@@ -39,11 +39,13 @@ class MonitorHandler(SimpleHTTPRequestHandler):
             return self._serve_file(os.path.join(STATIC_DIR, "app.js"), "application/javascript; charset=utf-8")
 
         elif path == "/api/status":
+            asg_data = analyzer.get_assignments_data()
+            last_search = asg_data.get("last_search", "")
             cached = analyzer.get_cached_results()
             if cached:
                 resp = {
                     'has_data': True,
-                    'timestamp': cached.get('timestamp'),
+                    'timestamp': cached.get('timestamp') or last_search,
                     'total_count': cached.get('total_count', 0),
                     'base_count': cached.get('base_count', 0),
                     'ted_count': cached.get('ted_count', 0),
@@ -53,7 +55,10 @@ class MonitorHandler(SimpleHTTPRequestHandler):
                     'ted_country': cached.get('ted_country', 'PRT')
                 }
             else:
-                resp = {'has_data': False}
+                resp = {
+                    'has_data': False,
+                    'timestamp': last_search
+                }
             return self._send_json(resp)
 
         elif path == "/api/results":
@@ -96,71 +101,53 @@ class MonitorHandler(SimpleHTTPRequestHandler):
                 params = {}
 
             ted_country = params.get('ted_country', 'PRT')
-            client_timestamp = params.get('client_timestamp')
-            client_classifications = params.get('client_classifications')
-            logger.info(f"A executar nova pesquisa a pedido do utilizador (País TED: {ted_country}, Hora cliente: {client_timestamp})...")
+            logger.info(f"A executar nova pesquisa a pedido do utilizador (País TED: {ted_country})...")
             
             try:
                 results = analyzer.run_full_search(
                     ted_country=ted_country, 
-                    max_base_items=25, 
-                    client_timestamp=client_timestamp,
-                    client_classifications=client_classifications
+                    max_base_items=25
                 )
                 return self._send_json(results)
             except Exception as e:
                 logger.error(f"Erro ao executar pesquisa: {e}")
                 return self._send_json({'error': str(e)}, status=500)
 
-        elif path == "/api/sync_classifications":
-            content_length = int(self.headers.get('Content-Length', 0))
-            body = self.rfile.read(content_length) if content_length > 0 else b'{}'
-            try:
-                payload = json.loads(body.decode('utf-8'))
-                counts = analyzer.sync_classifications(
-                    favorites=payload.get('favorites'),
-                    evaluations=payload.get('evaluations'),
-                    dismissed=payload.get('dismissed')
-                )
-                return self._send_json({'success': True, 'counts': counts})
-            except Exception as e:
-                logger.error(f"Erro ao sincronizar classificações: {e}")
-                return self._send_json({'success': False, 'error': str(e)}, status=500)
-
-        elif path == "/api/dismiss":
+        elif path == "/api/set_folder":
             content_length = int(self.headers.get('Content-Length', 0))
             body = self.rfile.read(content_length) if content_length > 0 else b'{}'
             try:
                 payload = json.loads(body.decode('utf-8'))
                 item_id = payload.get('id')
-                if item_id:
-                    success = analyzer.dismiss_item(item_id)
-                    return self._send_json({'success': success, 'id': item_id})
+                folder = payload.get('folder')
+                if item_id and folder:
+                    res = analyzer.set_item_folder(item_id, folder)
+                    cached = analyzer.get_cached_results() or {}
+                    return self._send_json({
+                        'success': True,
+                        'item': res,
+                        'counts': self._extract_counts(cached)
+                    })
             except Exception as e:
-                logger.error(f"Erro ao descartar item: {e}")
+                logger.error(f"Erro ao alterar pasta: {e}")
             return self._send_json({'success': False}, status=400)
 
-        elif path == "/api/restore":
+        elif path == "/api/favorite" or path == "/api/toggle_favorite":
             content_length = int(self.headers.get('Content-Length', 0))
             body = self.rfile.read(content_length) if content_length > 0 else b'{}'
             try:
                 payload = json.loads(body.decode('utf-8'))
                 item_id = payload.get('id')
                 if item_id:
-                    success = analyzer.restore_item(item_id)
-            except Exception as e:
-                logger.error(f"Erro ao restaurar item: {e}")
-            return self._send_json({'success': False}, status=400)
-
-        elif path == "/api/favorite":
-            content_length = int(self.headers.get('Content-Length', 0))
-            body = self.rfile.read(content_length) if content_length > 0 else b'{}'
-            try:
-                payload = json.loads(body.decode('utf-8'))
-                item_id = payload.get('id')
-                if item_id:
-                    is_fav = analyzer.toggle_favorite(item_id)
-                    return self._send_json({'success': True, 'id': item_id, 'is_favorite': is_fav})
+                    res = analyzer.toggle_favorite(item_id)
+                    cached = analyzer.get_cached_results() or {}
+                    return self._send_json({
+                        'success': True,
+                        'id': item_id,
+                        'is_favorite': res.get('is_favorite'),
+                        'folder': res.get('folder'),
+                        'counts': self._extract_counts(cached)
+                    })
             except Exception as e:
                 logger.error(f"Erro ao alternar favorito: {e}")
             return self._send_json({'success': False}, status=400)
@@ -172,10 +159,58 @@ class MonitorHandler(SimpleHTTPRequestHandler):
                 payload = json.loads(body.decode('utf-8'))
                 item_id = payload.get('id')
                 if item_id:
-                    is_eval = analyzer.toggle_evaluation(item_id)
-                    return self._send_json({'success': True, 'id': item_id, 'is_evaluation': is_eval})
+                    res = analyzer.toggle_evaluation(item_id)
+                    cached = analyzer.get_cached_results() or {}
+                    return self._send_json({
+                        'success': True,
+                        'id': item_id,
+                        'is_evaluation': (res.get('folder') == 'evaluation'),
+                        'folder': res.get('folder'),
+                        'is_favorite': res.get('is_favorite'),
+                        'counts': self._extract_counts(cached)
+                    })
             except Exception as e:
                 logger.error(f"Erro ao alternar avaliação: {e}")
+            return self._send_json({'success': False}, status=400)
+
+        elif path == "/api/dismiss":
+            content_length = int(self.headers.get('Content-Length', 0))
+            body = self.rfile.read(content_length) if content_length > 0 else b'{}'
+            try:
+                payload = json.loads(body.decode('utf-8'))
+                item_id = payload.get('id')
+                if item_id:
+                    analyzer.dismiss_item(item_id)
+                    cached = analyzer.get_cached_results() or {}
+                    return self._send_json({
+                        'success': True,
+                        'id': item_id,
+                        'folder': 'dismissed',
+                        'counts': self._extract_counts(cached)
+                    })
+            except Exception as e:
+                logger.error(f"Erro ao descartar item: {e}")
+            return self._send_json({'success': False}, status=400)
+
+        elif path == "/api/restore":
+            content_length = int(self.headers.get('Content-Length', 0))
+            body = self.rfile.read(content_length) if content_length > 0 else b'{}'
+            try:
+                payload = json.loads(body.decode('utf-8'))
+                item_id = payload.get('id')
+                if item_id:
+                    analyzer.restore_item(item_id)
+                    cached = analyzer.get_cached_results() or {}
+                    asg = analyzer.get_item_assignment(item_id)
+                    return self._send_json({
+                        'success': True,
+                        'id': item_id,
+                        'folder': asg.get('folder', 'inbox'),
+                        'is_favorite': asg.get('is_favorite', False),
+                        'counts': self._extract_counts(cached)
+                    })
+            except Exception as e:
+                logger.error(f"Erro ao restaurar item: {e}")
             return self._send_json({'success': False}, status=400)
 
         elif path == "/api/export":
@@ -207,6 +242,16 @@ class MonitorHandler(SimpleHTTPRequestHandler):
         else:
             self.send_response(404)
             self.end_headers()
+
+    def _extract_counts(self, cached: Dict[str, Any]) -> Dict[str, int]:
+        return {
+            'total_count': cached.get('total_count', 0),
+            'base_count': cached.get('base_count', 0),
+            'ted_count': cached.get('ted_count', 0),
+            'favorite_count': cached.get('favorite_count', 0),
+            'evaluation_count': cached.get('evaluation_count', 0),
+            'dismissed_count': cached.get('dismissed_count', 0)
+        }
 
     def _send_json(self, data: Any, status: int = 200):
         body = json.dumps(data, ensure_ascii=False).encode('utf-8')
@@ -255,5 +300,4 @@ def run_server():
 
 
 if __name__ == "__main__":
-    from datetime import datetime
     run_server()
