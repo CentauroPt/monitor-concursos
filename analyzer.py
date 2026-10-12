@@ -13,6 +13,7 @@ from typing import List, Dict, Any, Optional, Set
 
 from scraper_base import BaseScraper
 from scraper_ted import TedScraper
+from cloud_storage import cloud_storage
 
 logger = logging.getLogger(__name__)
 
@@ -31,7 +32,31 @@ class ProcurementAnalyzer:
         self.base_scraper = BaseScraper()
         self.ted_scraper = TedScraper()
         os.makedirs(CACHE_DIR, exist_ok=True)
+        self._sync_cloud_on_startup()
         self._ensure_assignments_initialized()
+
+    def _sync_cloud_on_startup(self):
+        """
+        Ao iniciar o servidor (incluindo quando acorda de sleep no Render),
+        descarrega o estado persistente mais recente da nuvem (GitHub branch 'storage').
+        """
+        try:
+            cloud_bytes = cloud_storage.fetch_file("data/assignments.json")
+            if cloud_bytes:
+                with open(ASSIGNMENTS_FILE, 'wb') as f:
+                    f.write(cloud_bytes)
+                logger.info("Assignments atualizados da nuvem permanente com sucesso.")
+        except Exception as e:
+            logger.warning(f"Aviso ao descarregar assignments da nuvem no arranque: {e}")
+
+        try:
+            cache_bytes = cloud_storage.fetch_file("data/cache.json")
+            if cache_bytes:
+                with open(CACHE_FILE, 'wb') as f:
+                    f.write(cache_bytes)
+                logger.info("Cache de concursos atualizada da nuvem permanente com sucesso.")
+        except Exception as e:
+            logger.warning(f"Aviso ao descarregar cache da nuvem no arranque: {e}")
 
     def _ensure_assignments_initialized(self):
         """Inicializa e migra dados existentes para a estrutura central de assignments."""
@@ -96,7 +121,16 @@ class ProcurementAnalyzer:
             logger.info(f"Assignments inicializados e migrados com {len(data['assignments'])} registos.")
 
     def get_assignments_data(self) -> Dict[str, Any]:
-        """Devolve o dicionário completo de assignments do servidor."""
+        """Devolve o dicionário completo de assignments do servidor com fallback na nuvem se necessário."""
+        if not os.path.exists(ASSIGNMENTS_FILE):
+            try:
+                cloud_bytes = cloud_storage.fetch_file("data/assignments.json")
+                if cloud_bytes:
+                    with open(ASSIGNMENTS_FILE, 'wb') as f:
+                        f.write(cloud_bytes)
+            except Exception as e:
+                logger.debug(f"Aviso ao consultar assignments na nuvem: {e}")
+
         if os.path.exists(ASSIGNMENTS_FILE):
             try:
                 with open(ASSIGNMENTS_FILE, 'r', encoding='utf-8') as f:
@@ -106,10 +140,11 @@ class ProcurementAnalyzer:
         return {"last_search": "", "assignments": {}}
 
     def _save_assignments_file(self, data: Dict[str, Any]):
-        """Grava assignments e espelha em ficheiros legados para retrocompatibilidade."""
+        """Grava assignments localmente e espelha na nuvem permanente (GitHub storage branch)."""
         try:
+            serialized = json.dumps(data, ensure_ascii=False, indent=2)
             with open(ASSIGNMENTS_FILE, 'w', encoding='utf-8') as f:
-                json.dump(data, f, ensure_ascii=False, indent=2)
+                f.write(serialized)
 
             # Sincronizar ficheiros legados
             fav_list = []
@@ -130,6 +165,9 @@ class ProcurementAnalyzer:
                 json.dump(sorted(eval_list), f, ensure_ascii=False, indent=2)
             with open(DISMISSED_FILE, 'w', encoding='utf-8') as f:
                 json.dump(sorted(dism_list), f, ensure_ascii=False, indent=2)
+
+            # Persistência permanente em nuvem (sobrevive a sleeps e restarts do Render)
+            cloud_storage.push_file_async("data/assignments.json", serialized.encode('utf-8'))
         except Exception as e:
             logger.error(f"Erro ao gravar assignments: {e}")
 
@@ -433,7 +471,16 @@ class ProcurementAnalyzer:
         return date_str
 
     def get_raw_cache(self) -> Optional[Dict[str, Any]]:
-        """Devolve os dados brutos armazenados na cache."""
+        """Devolve os dados brutos armazenados na cache com fallback na nuvem se necessário."""
+        if not os.path.exists(CACHE_FILE):
+            try:
+                cloud_bytes = cloud_storage.fetch_file("data/cache.json")
+                if cloud_bytes:
+                    with open(CACHE_FILE, 'wb') as f:
+                        f.write(cloud_bytes)
+            except Exception as e:
+                logger.debug(f"Aviso ao consultar cache na nuvem: {e}")
+
         if os.path.exists(CACHE_FILE):
             try:
                 with open(CACHE_FILE, 'r', encoding='utf-8') as f:
@@ -450,10 +497,14 @@ class ProcurementAnalyzer:
         return None
 
     def save_cache(self, data: Dict[str, Any]):
-        """Grava os resultados brutos em cache JSON."""
+        """Grava os resultados brutos em cache JSON e sincroniza com a nuvem permanente."""
         try:
+            serialized = json.dumps(data, ensure_ascii=False, indent=2)
             with open(CACHE_FILE, 'w', encoding='utf-8') as f:
-                json.dump(data, f, ensure_ascii=False, indent=2)
+                f.write(serialized)
+
+            # Persistência permanente em nuvem
+            cloud_storage.push_file_async("data/cache.json", serialized.encode('utf-8'))
         except Exception as e:
             logger.error(f"Erro ao gravar cache: {e}")
 
