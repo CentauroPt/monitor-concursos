@@ -1024,6 +1024,10 @@
     "ted_686908-2026": {
       "folder": "inbox",
       "is_favorite": false
+    },
+    "test_tender_999": {
+      "folder": "favorites",
+      "is_favorite": true
     }
   }
 }
