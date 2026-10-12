@@ -1027,7 +1027,7 @@
     },
     "test_cloud_sync_tender_123": {
       "folder": "evaluation",
-      "is_favorite": false
+      "is_favorite": true
     }
   }
 }
