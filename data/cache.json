@@ -1,5 +1,5 @@
 {
-  "timestamp": "13-10-2026 11:24:32",
+  "timestamp": "13-10-2026 11:24:46",
   "total_raw_count": 384,
   "ted_country": "PRT",
   "items": [
@@ -6939,5 +6939,5 @@
       "is_dismissed": true
     }
   ],
-  "duration_seconds": 5.35
+  "duration_seconds": 4.5
 }
