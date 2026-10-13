@@ -1,5 +1,5 @@
 {
-  "last_search": "13-10-2026 01:26:00",
+  "last_search": "13-10-2026 08:28:57",
   "assignments": {
     "base_anuncio_10079": {
       "folder": "dismissed",
@@ -1022,6 +1022,250 @@
       "is_favorite": true
     },
     "ted_686908-2026": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_anuncio_458168": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_anuncio_458071": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_anuncio_458076": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_anuncio_458082": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_anuncio_457957": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_anuncio_457767": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_anuncio_456849": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_anuncio_457577": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_anuncio_457582": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_anuncio_457628": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_anuncio_457653": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_anuncio_457440": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_anuncio_457353": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_anuncio_457132": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_anuncio_457152": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_anuncio_457160": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_anuncio_457186": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_anuncio_456965": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_anuncio_456755": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_anuncio_456863": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_anuncio_456803": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_anuncio_454784": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_anuncio_457031": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_contrato_15760770": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_contrato_15754830": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_contrato_15737650": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_contrato_15736548": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_contrato_15736338": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_contrato_15734242": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_contrato_15731491": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_contrato_15730799": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_contrato_15730132": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_contrato_15730106": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_contrato_15728049": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_contrato_15727498": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_contrato_15727309": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_contrato_15724830": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_contrato_15724589": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_contrato_15723725": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_contrato_15721759": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_contrato_15720666": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_contrato_15716556": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_contrato_15715137": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_contrato_15713270": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_contrato_15712921": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_contrato_15710377": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_contrato_15710182": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_contrato_15708703": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_contrato_15758582": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_contrato_15644336": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_contrato_15637753": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_contrato_15670960": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "ted_705923-2026": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "ted_701357-2026": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "ted_698739-2026": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "ted_699841-2026": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "ted_698288-2026": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "ted_698101-2026": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "ted_698494-2026": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "ted_696867-2026": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "ted_694965-2026": {
       "folder": "inbox",
       "is_favorite": false
     }
