@@ -1488,6 +1488,10 @@
     "ted_581587-2026": {
       "folder": "dismissed",
       "is_favorite": false
+    },
+    "base_anuncio_454367": {
+      "folder": "evaluation",
+      "is_favorite": false
     }
   }
 }
