@@ -1098,7 +1098,7 @@
       "is_favorite": false
     },
     "base_anuncio_456755": {
-      "folder": "inbox",
+      "folder": "dismissed",
       "is_favorite": false
     },
     "base_anuncio_456863": {
@@ -1278,6 +1278,22 @@
       "is_favorite": false
     },
     "ted_676500-2026": {
+      "folder": "dismissed",
+      "is_favorite": false
+    },
+    "ted_664639-2026": {
+      "folder": "dismissed",
+      "is_favorite": false
+    },
+    "ted_665039-2026": {
+      "folder": "dismissed",
+      "is_favorite": false
+    },
+    "ted_663059-2026": {
+      "folder": "dismissed",
+      "is_favorite": false
+    },
+    "ted_662202-2026": {
       "folder": "dismissed",
       "is_favorite": false
     }
