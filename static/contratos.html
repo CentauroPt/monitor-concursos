@@ -74,11 +74,16 @@
           </div>
 
           <div class="form-field">
-            <label for="select-source">Fonte de Dados:</label>
+            <label for="select-source">Fonte / Plataforma:</label>
             <select id="select-source" class="form-select">
-              <option value="all" selected>🇵🇹 Portal BASE + 🇪🇺 TED Europa</option>
-              <option value="base">🇵🇹 Apenas Portal BASE</option>
-              <option value="ted">🇪🇺 Apenas TED Europa</option>
+              <option value="all" selected>🌐 Todas as Entidades & Plataformas Oficiais</option>
+              <option value="acingov">🏢 Acingov (acingov.pt)</option>
+              <option value="vortal">🌐 Vortal / VortalGov (vortal.biz)</option>
+              <option value="anogov">💼 AnoGov (anogov.com)</option>
+              <option value="compraspt">🛒 ComprasPT (compraspt.com)</option>
+              <option value="dre">📜 Diário da República Eletrónico (DRE)</option>
+              <option value="base">🇵🇹 Portal BASE (base.gov.pt)</option>
+              <option value="ted">🇪🇺 TED Europa (ted.europa.eu)</option>
             </select>
           </div>
 
@@ -181,6 +186,35 @@
               <input type="text" id="filter-inside-words" class="filter-input-field highlight-field" placeholder="Escreva um termo para ver as frases e locais exatos..." />
               <button type="button" id="btn-clear-words" class="btn-clear-input hidden" title="Limpar pesquisa de palavras">✕</button>
             </div>
+          </div>
+        <!-- Pílulas Rápidas de Plataformas e Entidades Oficiais -->
+        <div class="platform-pills-row" id="platform-pills-container">
+          <span class="platform-pills-label">🏛️ Entidades & Plataformas:</span>
+          <div class="platform-pills-group">
+            <button type="button" class="platform-pill active" data-platform="all">
+              <span>🌐 Todas</span> <span class="pill-count" id="count-pill-all">0</span>
+            </button>
+            <button type="button" class="platform-pill" data-platform="acingov">
+              <span>🏢 Acingov</span> <span class="pill-count" id="count-pill-acingov">0</span>
+            </button>
+            <button type="button" class="platform-pill" data-platform="vortal">
+              <span>🌐 VortalGov</span> <span class="pill-count" id="count-pill-vortal">0</span>
+            </button>
+            <button type="button" class="platform-pill" data-platform="anogov">
+              <span>💼 AnoGov</span> <span class="pill-count" id="count-pill-anogov">0</span>
+            </button>
+            <button type="button" class="platform-pill" data-platform="compraspt">
+              <span>🛒 ComprasPT</span> <span class="pill-count" id="count-pill-compraspt">0</span>
+            </button>
+            <button type="button" class="platform-pill" data-platform="dre">
+              <span>📜 DRE</span> <span class="pill-count" id="count-pill-dre">0</span>
+            </button>
+            <button type="button" class="platform-pill" data-platform="base">
+              <span>🇵🇹 BASE</span> <span class="pill-count" id="count-pill-base">0</span>
+            </button>
+            <button type="button" class="platform-pill" data-platform="ted">
+              <span>🇪🇺 TED</span> <span class="pill-count" id="count-pill-ted">0</span>
+            </button>
           </div>
         </div>
 
