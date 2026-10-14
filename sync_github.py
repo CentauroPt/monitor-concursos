@@ -56,7 +56,7 @@ def upload_file(rel_path, token):
         pass
 
     payload = {
-        'message': f"Adiciona campos de pesquisa entre datas para contratos assinados e publicados ({rel_path})",
+        'message': f"Apresenta ficha tecnica completa do contrato na lateral junto ao contrato ({rel_path})",
         'content': content_b64
     }
     if sha:
