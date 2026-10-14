@@ -33,10 +33,14 @@ class MonitorHandler(SimpleHTTPRequestHandler):
 
         if path == "/" or path == "/index.html":
             return self._serve_file(os.path.join(STATIC_DIR, "index.html"), "text/html; charset=utf-8")
+        elif path == "/contratos" or path == "/contratos.html":
+            return self._serve_file(os.path.join(STATIC_DIR, "contratos.html"), "text/html; charset=utf-8")
         elif path == "/styles.css":
             return self._serve_file(os.path.join(STATIC_DIR, "styles.css"), "text/css; charset=utf-8")
         elif path == "/app.js":
             return self._serve_file(os.path.join(STATIC_DIR, "app.js"), "application/javascript; charset=utf-8")
+        elif path == "/contratos.js":
+            return self._serve_file(os.path.join(STATIC_DIR, "contratos.js"), "application/javascript; charset=utf-8")
 
         elif path == "/api/status":
             asg_data = analyzer.get_assignments_data()
@@ -230,6 +234,60 @@ class MonitorHandler(SimpleHTTPRequestHandler):
                 return
 
             filename = f"concursos_{datetime.now().strftime('%Y%m%d_%H%M')}.csv"
+            data = csv_content.encode('utf-8')
+            self.send_response(200)
+            self.send_header('Content-Type', 'text/csv; charset=utf-8')
+            self.send_header('Content-Disposition', f'attachment; filename="{filename}"')
+            self.send_header('Content-Length', str(len(data)))
+            self.end_headers()
+            self.wfile.write(data)
+            return
+
+        elif path == "/api/contracts/search":
+            content_length = int(self.headers.get('Content-Length', 0))
+            body = self.rfile.read(content_length) if content_length > 0 else b'{}'
+            try:
+                params = json.loads(body.decode('utf-8'))
+            except Exception:
+                params = {}
+
+            nif = params.get('nif')
+            entity_name = params.get('entity_name')
+            source = params.get('source', 'all')
+            ted_country = params.get('ted_country', 'PRT')
+            limit = int(params.get('limit', 50))
+
+            logger.info(f"Pesquisa de contratos por entidade (NIF={nif}, Nome={entity_name}, Fonte={source}, Limite={limit})...")
+            try:
+                results = analyzer.search_entity_contracts(
+                    nif=nif,
+                    entity_name=entity_name,
+                    source=source,
+                    ted_country=ted_country,
+                    limit=limit
+                )
+                return self._send_json(results)
+            except Exception as e:
+                logger.error(f"Erro na pesquisa de contratos: {e}")
+                return self._send_json({'error': str(e)}, status=500)
+
+        elif path == "/api/contracts/export":
+            content_length = int(self.headers.get('Content-Length', 0))
+            body = self.rfile.read(content_length) if content_length > 0 else b'{}'
+            try:
+                payload = json.loads(body.decode('utf-8'))
+                contracts = payload.get('contracts', [])
+            except Exception:
+                contracts = []
+
+            csv_content = analyzer.export_contracts_csv(contracts)
+            if not csv_content:
+                self.send_response(404)
+                self.end_headers()
+                self.wfile.write(b"Sem contratos para exportar.")
+                return
+
+            filename = f"contratos_{datetime.now().strftime('%Y%m%d_%H%M')}.csv"
             data = csv_content.encode('utf-8')
             self.send_response(200)
             self.send_header('Content-Type', 'text/csv; charset=utf-8')
