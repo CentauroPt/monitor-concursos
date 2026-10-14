@@ -1,8 +1,42 @@
 {
-  "timestamp": "13-10-2026 11:24:46",
-  "total_raw_count": 384,
+  "timestamp": "14-10-2026 07:59:38",
+  "total_raw_count": 388,
   "ted_country": "PRT",
   "items": [
+    {
+      "id": "ted_708952-2026",
+      "source": "TED Europa",
+      "category": "Concurso Europeu (TED)",
+      "procedure_type": "Concurso Público Internacional",
+      "title": "Portugal – Veículos de combate a incêndios – Aquisição de Veículo Florestal de Combate a Incêndios",
+      "entity": "Associação Humanitária de Bombeiros Voluntários do Soito",
+      "value": "250.000,00 €",
+      "deadline": "29-10-2026 17:00",
+      "publication_date": "14-10-2026",
+      "direct_url": "https://ted.europa.eu/pt/notice/-/detail/708952-2026",
+      "pieces_url": null,
+      "matched_terms": [
+        "CPV 3414xxxx / Palavras-chave"
+      ],
+      "summary": "• Objeto do Concurso: Portugal – Veículos de combate a incêndios – Aquisição de Veículo Florestal de Combate a Incêndios\n• Prazo de Entrega da Proposta: 29-10-2026 17:00\n• Valor a Concurso: 250.000,00 €\n• Entidade Adjudicante: Associação Humanitária de Bombeiros Voluntários do Soito"
+    },
+    {
+      "id": "ted_710507-2026",
+      "source": "TED Europa",
+      "category": "Concurso Europeu (TED)",
+      "procedure_type": "Concurso Público Internacional",
+      "title": "Portugal – Veículos de combate a incêndios – Aquisição de um VAOP 8x4  Veículo de apoio operacional, com capacidade de combate a incêndios",
+      "entity": "Associação Humanitária de Bombeiros Voluntários de Alcobaça",
+      "value": "375.000,00 €",
+      "deadline": "11-11-2026 18:00",
+      "publication_date": "14-10-2026",
+      "direct_url": "https://ted.europa.eu/pt/notice/-/detail/710507-2026",
+      "pieces_url": null,
+      "matched_terms": [
+        "CPV 3414xxxx / Palavras-chave"
+      ],
+      "summary": "• Objeto do Concurso: Portugal – Veículos de combate a incêndios – Aquisição de um VAOP 8x4  Veículo de apoio operacional, com capacidade de combate a incêndios\n• Prazo de Entrega da Proposta: 11-11-2026 18:00\n• Valor a Concurso: 375.000,00 €\n• Entidade Adjudicante: Associação Humanitária de Bombeiros Voluntários de Alcobaça"
+    },
     {
       "id": "base_contrato_15760770",
       "source": "Portal BASE",
@@ -71,6 +105,42 @@
         "CPV 3414xxxx"
       ],
       "summary": "• Objeto do Concurso: Aquisição de veíuculo florestal de combate a incêndio - VFCI\n• Prazo de Entrega da Proposta: 08-11-2026\n• Valor a Concurso: 248.000,00 €\n• Entidade Adjudicante: Associação H. B. de Bombeiros Voluntários de Braga"
+    },
+    {
+      "id": "base_contrato_15766536",
+      "source": "Portal BASE",
+      "category": "Contrato / Ajuste Direto",
+      "procedure_type": "Ajuste Direto Regime Geral",
+      "title": "Serviços de Promoção e Comunicação do Alentejo Walking Festival.",
+      "entity": "Turismo do Alentejo, ERT",
+      "contracted": "DUAL UP CONSULTING",
+      "value": "8.000,00 €",
+      "deadline": "32 dias (Prazo de Execução)",
+      "publication_date": "13-10-2026",
+      "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=15766536",
+      "pieces_url": null,
+      "matched_terms": [
+        "CPV 3414xxxx"
+      ],
+      "summary": "• Objeto do Concurso: Serviços de Promoção e Comunicação do Alentejo Walking Festival.\n• Prazo de Entrega da Proposta: 32 dias (Prazo de Execução)\n• Valor a Concurso: 8.000,00 €\n• Entidade Adjudicante: Turismo do Alentejo, ERT"
+    },
+    {
+      "id": "base_contrato_15763004",
+      "source": "Portal BASE",
+      "category": "Contrato / Ajuste Direto",
+      "procedure_type": "Contratação excluída II",
+      "title": "Aquisição de serviços de realização de uma campanha publicitária do destino Porto Santo em estação de rádio do mercado nacional",
+      "entity": "Associação de Promoção da Região Autónoma da Madeira",
+      "contracted": "BMHAUDIO Portugal Holdings, Unipessoal Lda  Comandita",
+      "value": "14.935,60 €",
+      "deadline": "25 dias (Prazo de Execução)",
+      "publication_date": "13-10-2026",
+      "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=15763004",
+      "pieces_url": null,
+      "matched_terms": [
+        "CPV 3414xxxx"
+      ],
+      "summary": "• Objeto do Concurso: Aquisição de serviços de realização de uma campanha publicitária do destino Porto Santo em estação de rádio do mercado nacional\n• Prazo de Entrega da Proposta: 25 dias (Prazo de Execução)\n• Valor a Concurso: 14.935,60 €\n• Entidade Adjudicante: Associação de Promoção da Região Autónoma da Madeira"
     },
     {
       "id": "base_anuncio_458168",
@@ -3768,7 +3838,7 @@
       "category": "Anúncio de Concurso",
       "procedure_type": "Concurso público",
       "title": "Aquisição de Unidade Móvel (PRR)",
-      "entity": "Unidade Local de Saúde do Baixo Mondego, E. P. E.",
+      "entity": "Unidade Local de Saúde do Baixo Mondego, EPE",
       "value": "70.000,00 €",
       "deadline": "02-05-2026",
       "publication_date": "17-04-2026",
@@ -3777,7 +3847,7 @@
       "matched_terms": [
         "Unidade Móvel"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de Unidade Móvel (PRR)\n• Prazo de Entrega da Proposta: 02-05-2026\n• Valor a Concurso: 70.000,00 €\n• Entidade Adjudicante: Unidade Local de Saúde do Baixo Mondego, E. P. E.",
+      "summary": "• Objeto do Concurso: Aquisição de Unidade Móvel (PRR)\n• Prazo de Entrega da Proposta: 02-05-2026\n• Valor a Concurso: 70.000,00 €\n• Entidade Adjudicante: Unidade Local de Saúde do Baixo Mondego, EPE",
       "is_dismissed": true
     },
     {
@@ -4517,14 +4587,14 @@
       "entity": "Área Metropolitana de Lisboa",
       "contracted": "CPCECHO, Lda",
       "value": "10.416,75 €",
-      "deadline": "30 dias (Prazo de Execução)",
+      "deadline": "32 dias.",
       "publication_date": "01-11-2025",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=11875434",
       "pieces_url": null,
       "matched_terms": [
         "Biblioteca itinerante"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de Equipamentos informáticos (hardware e software), para a Rede de Bibliotecas Públicas, a distribuir pelos municípios da Área Metropolitana de Lisboa, no âmbito da candidatura à Componente ...\n• Prazo de Entrega da Proposta: 30 dias (Prazo de Execução)\n• Valor a Concurso: 10.416,75 €\n• Entidade Adjudicante: Área Metropolitana de Lisboa"
+      "summary": "• Objeto do Concurso: Aquisição de Equipamentos informáticos (hardware e software), para a Rede de Bibliotecas Públicas, a distribuir pelos municípios da Área Metropolitana de Lisboa, no âmbito da candidatura à Componente ...\n• Prazo de Entrega da Proposta: 32 dias.\n• Valor a Concurso: 10.416,75 €\n• Entidade Adjudicante: Área Metropolitana de Lisboa"
     },
     {
       "id": "base_contrato_11875433",
@@ -4586,7 +4656,7 @@
       "category": "Anúncio de Concurso",
       "procedure_type": "Concurso público",
       "title": "CP003225_Aquisição de duas carrinhas M1",
-      "entity": "Cascais Próxima - Gestão de Mobilidade, Espaços Urbanos e Energias, EM, SA",
+      "entity": "Cascais Próxima - Gestão de Mobilidade, Espaços Urbanos e Energias, E.M., S.A.",
       "value": "47.126,80 €",
       "deadline": "20-10-2025",
       "publication_date": "14-10-2025",
@@ -4595,7 +4665,7 @@
       "matched_terms": [
         "Carrinha"
       ],
-      "summary": "• Objeto do Concurso: CP003225_Aquisição de duas carrinhas M1\n• Prazo de Entrega da Proposta: 20-10-2025\n• Valor a Concurso: 47.126,80 €\n• Entidade Adjudicante: Cascais Próxima - Gestão de Mobilidade, Espaços Urbanos e Energias, EM, SA",
+      "summary": "• Objeto do Concurso: CP003225_Aquisição de duas carrinhas M1\n• Prazo de Entrega da Proposta: 20-10-2025\n• Valor a Concurso: 47.126,80 €\n• Entidade Adjudicante: Cascais Próxima - Gestão de Mobilidade, Espaços Urbanos e Energias, E.M., S.A.",
       "is_dismissed": true
     },
     {
@@ -4694,7 +4764,7 @@
       "category": "Anúncio de Concurso",
       "procedure_type": "Concurso público",
       "title": "CP/21/25/DCP - Aquisição de carrinha ligeira (N1) com caixa de carga e grua hidráulica para diversos serviços",
-      "entity": "Câmara Municipal de Braga",
+      "entity": "Município de Braga",
       "value": "194.000,00 €",
       "deadline": "12-07-2025",
       "publication_date": "01-07-2025",
@@ -4703,7 +4773,7 @@
       "matched_terms": [
         "Carrinha"
       ],
-      "summary": "• Objeto do Concurso: CP/21/25/DCP - Aquisição de carrinha ligeira (N1) com caixa de carga e grua hidráulica para diversos serviços\n• Prazo de Entrega da Proposta: 12-07-2025\n• Valor a Concurso: 194.000,00 €\n• Entidade Adjudicante: Câmara Municipal de Braga",
+      "summary": "• Objeto do Concurso: CP/21/25/DCP - Aquisição de carrinha ligeira (N1) com caixa de carga e grua hidráulica para diversos serviços\n• Prazo de Entrega da Proposta: 12-07-2025\n• Valor a Concurso: 194.000,00 €\n• Entidade Adjudicante: Município de Braga",
       "is_dismissed": true
     },
     {
@@ -5252,7 +5322,7 @@
       "category": "Anúncio de Concurso",
       "procedure_type": "Concurso público",
       "title": "Aquisição de três carrinhas a gasóleo",
-      "entity": "Município de Salvaterra de Magos",
+      "entity": "Municipio de Salvaterra de Magos",
       "value": "121.950,00 €",
       "deadline": "05-05-2024",
       "publication_date": "23-04-2024",
@@ -5261,7 +5331,7 @@
       "matched_terms": [
         "Carrinha"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de três carrinhas a gasóleo\n• Prazo de Entrega da Proposta: 05-05-2024\n• Valor a Concurso: 121.950,00 €\n• Entidade Adjudicante: Município de Salvaterra de Magos",
+      "summary": "• Objeto do Concurso: Aquisição de três carrinhas a gasóleo\n• Prazo de Entrega da Proposta: 05-05-2024\n• Valor a Concurso: 121.950,00 €\n• Entidade Adjudicante: Municipio de Salvaterra de Magos",
       "is_dismissed": true
     },
     {
@@ -6939,5 +7009,5 @@
       "is_dismissed": true
     }
   ],
-  "duration_seconds": 4.5
+  "duration_seconds": 40.14
 }
