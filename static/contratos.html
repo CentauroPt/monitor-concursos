@@ -90,6 +90,34 @@
               <option value="100">100</option>
             </select>
           </div>
+        </div>
+
+        <!-- Linha de Pesquisa Entre Datas (Assinados e/ou Publicados) -->
+        <div class="form-grid form-grid-dates">
+          <div class="form-field">
+            <label for="input-date-start">📅 Data Inicial (De):</label>
+            <div class="input-with-icon">
+              <span class="field-icon">📅</span>
+              <input type="date" id="input-date-start" class="form-input" title="Data inicial (contratos assinados e/ou publicados)" />
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label for="input-date-end">📅 Data Final (Até):</label>
+            <div class="input-with-icon">
+              <span class="field-icon">📅</span>
+              <input type="date" id="input-date-end" class="form-input" title="Data final (contratos assinados e/ou publicados)" />
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label for="select-date-type">Considerar Datas:</label>
+            <select id="select-date-type" class="form-select">
+              <option value="any" selected>📅 Assinados e/ou Publicados (Ambas)</option>
+              <option value="signing">✍️ Apenas Data de Assinatura (Celebração)</option>
+              <option value="publication">📢 Apenas Data de Publicação</option>
+            </select>
+          </div>
 
           <div class="form-field form-field-action">
             <button type="submit" id="btn-submit-search" class="btn btn-primary btn-search-wide">
@@ -97,6 +125,16 @@
               <span class="btn-text">Pesquisar Contratos</span>
             </button>
           </div>
+        </div>
+
+        <!-- Atalhos Rápidos de Datas -->
+        <div class="quick-dates-row">
+          <span class="quick-label">📅 Atalhos de datas:</span>
+          <button type="button" class="quick-date-btn" data-days="30">Últimos 30 dias</button>
+          <button type="button" class="quick-date-btn" data-days="180">Últimos 6 meses</button>
+          <button type="button" class="quick-date-btn" data-year="2026">Ano 2026</button>
+          <button type="button" class="quick-date-btn" data-year="2025">Ano 2025</button>
+          <button type="button" class="quick-date-btn quick-date-clear" data-clear="true">✕ Todas as datas</button>
         </div>
 
         <!-- Atalhos Rápidos para Teste Imediato -->
