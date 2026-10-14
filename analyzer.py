@@ -508,16 +508,32 @@ class ProcurementAnalyzer:
         except Exception as e:
             logger.error(f"Erro ao gravar cache: {e}")
 
+    def _parse_comparable_date(self, d_str: Optional[str]):
+        """Converte string de data para objeto date comparável."""
+        if not d_str or str(d_str).strip() in ("", "N/D"):
+            return None
+        cleaned = str(d_str).strip().split(" ")[0]
+        for fmt in ("%Y-%m-%d", "%d-%m-%Y", "%d/%m/%Y", "%Y/%m/%d", "%d.%m.%Y"):
+            try:
+                return datetime.strptime(cleaned[:10], fmt).date()
+            except ValueError:
+                pass
+        return None
+
     def search_entity_contracts(
         self,
         nif: Optional[str] = None,
         entity_name: Optional[str] = None,
         source: str = "all",
         ted_country: str = "PRT",
-        limit: int = 50
+        limit: int = 50,
+        date_start: Optional[str] = None,
+        date_end: Optional[str] = None,
+        date_mode: str = "any"
     ) -> Dict[str, Any]:
         """
         Pesquisa agregada de contratos assinados nos portais BASE e TED por NIF ou Nome de Entidade Adjudicante.
+        Suporta pesquisa entre datas para contratos assinados e/ou publicados nesse intervalo.
         Devolve lista unificada com detalhes completos e secções para pesquisa por palavras no texto.
         """
         start_time = datetime.now()
@@ -530,7 +546,10 @@ class ProcurementAnalyzer:
                 base_contracts = self.base_scraper.search_contracts_by_entity(
                     nif=nif,
                     entity_name=entity_name,
-                    max_items=limit
+                    max_items=limit,
+                    date_start=date_start,
+                    date_end=date_end,
+                    date_mode=date_mode
                 )
             except Exception as e:
                 logger.error(f"Erro ao pesquisar contratos por entidade no BASE: {e}")
@@ -542,12 +561,45 @@ class ProcurementAnalyzer:
                     nif=nif,
                     entity_name=entity_name,
                     country=ted_country,
-                    limit=limit
+                    limit=limit,
+                    date_start=date_start,
+                    date_end=date_end
                 )
             except Exception as e:
                 logger.error(f"Erro ao pesquisar contratos por entidade no TED: {e}")
 
         all_contracts = base_contracts + ted_contracts
+
+        # 3. Validação estrita de intervalo de datas (assinados e/ou publicados)
+        dt_start = self._parse_comparable_date(date_start)
+        dt_end = self._parse_comparable_date(date_end)
+
+        if dt_start or dt_end:
+            filtered = []
+            for c in all_contracts:
+                d_sign = self._parse_comparable_date(c.get('signing_date'))
+                d_pub = self._parse_comparable_date(c.get('publication_date'))
+
+                sign_in_range = False
+                if d_sign:
+                    sign_in_range = (not dt_start or d_sign >= dt_start) and (not dt_end or d_sign <= dt_end)
+
+                pub_in_range = False
+                if d_pub:
+                    pub_in_range = (not dt_start or d_pub >= dt_start) and (not dt_end or d_pub <= dt_end)
+
+                if date_mode == "signing":
+                    if sign_in_range:
+                        filtered.append(c)
+                elif date_mode == "publication":
+                    if pub_in_range:
+                        filtered.append(c)
+                else:
+                    # 'any': assinados e/ou publicados entre essas datas
+                    if sign_in_range or pub_in_range:
+                        filtered.append(c)
+
+            all_contracts = filtered
 
         # Ordenar contratos por data (mais recentes primeiro)
         all_contracts.sort(
@@ -560,10 +612,13 @@ class ProcurementAnalyzer:
         return {
             'contracts': all_contracts,
             'total_count': len(all_contracts),
-            'base_count': len(base_contracts),
-            'ted_count': len(ted_contracts),
+            'base_count': len([c for c in all_contracts if c.get('source') == 'Portal BASE']),
+            'ted_count': len([c for c in all_contracts if c.get('source') == 'TED Europa']),
             'searched_nif': nif,
             'searched_entity': entity_name,
+            'searched_date_start': date_start or '',
+            'searched_date_end': date_end or '',
+            'searched_date_mode': date_mode,
             'duration_seconds': elapsed
         }
 
