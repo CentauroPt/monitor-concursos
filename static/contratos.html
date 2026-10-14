@@ -225,24 +225,43 @@
         <div id="contracts-list" class="contracts-list"></div>
       </div>
 
-      <!-- JANELA VERTICAL LATERAL DIREITA: Ocorrências no Texto do Contrato -->
+      <!-- JANELA VERTICAL LATERAL DIREITA: Ficha do Contrato em Verificação e Ocorrências -->
       <aside id="words-sidebar-panel" class="right-sidebar-panel hidden">
         <div class="sidebar-header">
-          <div class="sidebar-title-group">
-            <div class="sidebar-badge">🔎 Ocorrências no Texto</div>
-            <h3 id="sidebar-query-title">Resultados da Pesquisa</h3>
-            <p id="sidebar-subtitle" class="sidebar-subtitle">A aguardar termo...</p>
+          <div class="sidebar-tabs-nav">
+            <button type="button" id="tab-sidebar-ficha" class="sidebar-tab-btn active" title="Ficha Técnica do Contrato em Verificação">
+              <span>📋</span> <span id="sidebar-tab-ficha-title">Ficha do Contrato</span>
+            </button>
+            <button type="button" id="tab-sidebar-words" class="sidebar-tab-btn" title="Ocorrências de Palavras no Texto">
+              <span>🔎</span> <span>Palavras no Texto</span>
+              <span id="sidebar-words-count-badge" class="tab-badge-pill hidden">0</span>
+            </button>
           </div>
           <button type="button" id="btn-close-sidebar" class="sidebar-close-btn" title="Fechar painel lateral">✕</button>
         </div>
 
-        <div class="sidebar-scrollable-body">
-          <div id="sidebar-empty-state" class="sidebar-empty">
-            <span class="sidebar-empty-icon">📝</span>
-            <p>Escreva qualquer palavra no campo <strong>"Procurar palavras (no texto do contrato)"</strong> para ver aqui a indicação de cada contrato e o local exato com o texto destacado.</p>
+        <!-- Vista 1: Ficha Detalhada do Contrato em Verificação Lado a Lado -->
+        <div id="sidebar-view-ficha" class="sidebar-tab-view">
+          <div id="sidebar-ficha-empty" class="sidebar-empty">
+            <span class="sidebar-empty-icon">📋</span>
+            <p>Selecione qualquer contrato na lista ao lado (clique em <strong>"📋 Ver Ficha Completa"</strong>) para analisar todos os dados detalhados lado a lado com o contrato.</p>
           </div>
+          <div id="sidebar-ficha-content" class="sidebar-ficha-container hidden"></div>
+        </div>
 
-          <div id="sidebar-matches-list" class="sidebar-matches-list"></div>
+        <!-- Vista 2: Ocorrências de Palavras no Texto -->
+        <div id="sidebar-view-words" class="sidebar-tab-view hidden">
+          <div class="sidebar-words-header">
+            <h4 id="sidebar-query-title">Resultados da Pesquisa</h4>
+            <p id="sidebar-subtitle" class="sidebar-subtitle">A aguardar termo...</p>
+          </div>
+          <div class="sidebar-scrollable-body">
+            <div id="sidebar-empty-state" class="sidebar-empty">
+              <span class="sidebar-empty-icon">📝</span>
+              <p>Escreva qualquer palavra no campo <strong>"Procurar palavras (no texto do contrato)"</strong> para ver aqui a indicação de cada contrato e o local exato com o texto destacado.</p>
+            </div>
+            <div id="sidebar-matches-list" class="sidebar-matches-list"></div>
+          </div>
         </div>
       </aside>
     </main>
