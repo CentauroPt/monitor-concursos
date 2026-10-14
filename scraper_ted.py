@@ -196,9 +196,31 @@ class TedScraper:
             'matched_terms': [f"CPV {CPV_PREFIX}xxxx / Palavras-chave"]
         }
 
-    def search_contracts_by_entity(self, nif: Optional[str] = None, entity_name: Optional[str] = None, country: str = "PRT", limit: int = 50) -> List[Dict[str, Any]]:
+    def _format_date_for_ted(self, d_str: Optional[str]) -> Optional[str]:
+        """Converte qualquer formato de data para YYYYMMDD exigido pela API do TED Europa."""
+        if not d_str or str(d_str).strip() in ('', 'N/D'):
+            return None
+        s = str(d_str).strip()[:10]
+        for fmt in ("%Y-%m-%d", "%d-%m-%Y", "%d/%m/%Y", "%Y/%m/%d"):
+            try:
+                dt = datetime.strptime(s, fmt)
+                return dt.strftime("%Y%m%d")
+            except ValueError:
+                pass
+        return None
+
+    def search_contracts_by_entity(
+        self,
+        nif: Optional[str] = None,
+        entity_name: Optional[str] = None,
+        country: str = "PRT",
+        limit: int = 50,
+        date_start: Optional[str] = None,
+        date_end: Optional[str] = None
+    ) -> List[Dict[str, Any]]:
         """
         Pesquisa contratos e adjudicações no TED Europa para uma entidade pública por NIF ou Nome.
+        Suporta filtro de intervalo de datas (publication-date).
         """
         filter_parts = []
 
@@ -222,6 +244,14 @@ class TedScraper:
         main_query = entity_query
         if country and country.upper() != "ALL":
             main_query = f"buyer-country = {country.upper()} AND {main_query}"
+
+        # Adicionar filtros de data no TED
+        ted_start = self._format_date_for_ted(date_start)
+        ted_end = self._format_date_for_ted(date_end)
+        if ted_start:
+            main_query = f"{main_query} AND publication-date >= {ted_start}"
+        if ted_end:
+            main_query = f"{main_query} AND publication-date <= {ted_end}"
 
         full_query = f"{main_query} SORT BY publication-date DESC"
 
