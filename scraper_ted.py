@@ -196,6 +196,137 @@ class TedScraper:
             'matched_terms': [f"CPV {CPV_PREFIX}xxxx / Palavras-chave"]
         }
 
+    def search_contracts_by_entity(self, nif: Optional[str] = None, entity_name: Optional[str] = None, country: str = "PRT", limit: int = 50) -> List[Dict[str, Any]]:
+        """
+        Pesquisa contratos e adjudicações no TED Europa para uma entidade pública por NIF ou Nome.
+        """
+        filter_parts = []
+
+        if entity_name:
+            clean_name = str(entity_name).strip()
+            if clean_name:
+                filter_parts.append(f'buyer-name ~ ("{clean_name}")')
+
+        if nif:
+            clean_nif = str(nif).strip().replace(" ", "")
+            if clean_nif:
+                filter_parts.append(f'(FT ~ ("{clean_nif}") OR buyer-name ~ ("{clean_nif}"))')
+
+        if not filter_parts:
+            return []
+
+        entity_query = " OR ".join(filter_parts)
+        if len(filter_parts) > 1:
+            entity_query = f"({entity_query})"
+
+        main_query = entity_query
+        if country and country.upper() != "ALL":
+            main_query = f"buyer-country = {country.upper()} AND {main_query}"
+
+        full_query = f"{main_query} SORT BY publication-date DESC"
+
+        payload = {
+            'query': full_query,
+            'fields': [
+                'publication-number',
+                'notice-title',
+                'buyer-name',
+                'estimated-value-proc',
+                'estimated-value-lot',
+                'publication-date',
+                'notice-type'
+            ],
+            'page': 1,
+            'limit': limit
+        }
+
+        try:
+            resp = self.session.post(TED_API_URL, json=payload, timeout=self.timeout)
+            if resp.status_code == 200:
+                data = resp.json()
+                raw_notices = data.get('notices', []) or []
+                return [self._normalize_entity_notice(n, searched_nif=nif) for n in raw_notices]
+            else:
+                logger.error(f"Erro na API do TED por entidade (Status {resp.status_code}): {resp.text[:300]}")
+        except Exception as e:
+            logger.error(f"Exceção ao comunicar com a API do TED: {e}")
+
+        return []
+
+    def _normalize_entity_notice(self, item: Dict[str, Any], searched_nif: Optional[str] = None) -> Dict[str, Any]:
+        pub_number = item.get('publication-number', '')
+        title_dict = item.get('notice-title') or {}
+        title = ""
+        if isinstance(title_dict, dict):
+            title = title_dict.get('por') or title_dict.get('eng') or (list(title_dict.values())[0] if title_dict else '')
+        elif isinstance(title_dict, str):
+            title = title_dict
+
+        buyer_dict = item.get('buyer-name') or {}
+        buyer = ""
+        if isinstance(buyer_dict, dict):
+            buyer_list = buyer_dict.get('por') or buyer_dict.get('eng') or (list(buyer_dict.values())[0] if buyer_dict else '')
+            if isinstance(buyer_list, list) and len(buyer_list) > 0:
+                buyer = buyer_list[0]
+            elif isinstance(buyer_list, str):
+                buyer = buyer_list
+        elif isinstance(buyer_dict, list) and len(buyer_dict) > 0:
+            buyer = buyer_dict[0]
+        elif isinstance(buyer_dict, str):
+            buyer = buyer_dict
+
+        val_proc = item.get('estimated-value-proc')
+        val_lot = item.get('estimated-value-lot')
+        formatted_value = self._format_price(val_proc, val_lot)
+
+        pub_date_raw = item.get('publication-date')
+        if isinstance(pub_date_raw, str) and len(pub_date_raw) >= 10:
+            p_parts = pub_date_raw[:10].split('-')
+            if len(p_parts) == 3:
+                pub_date = f"{p_parts[2]}-{p_parts[1]}-{p_parts[0]}"
+            else:
+                pub_date = pub_date_raw[:10]
+        else:
+            pub_date = "N/D"
+
+        notice_type = item.get('notice-type') or 'can-standard'
+        proc_type_desc = "Adjudicação de Contrato (TED)"
+        if "modif" in str(notice_type):
+            proc_type_desc = "Modificação de Contrato (TED)"
+        elif "cn" in str(notice_type):
+            proc_type_desc = "Concurso Internacional"
+
+        direct_url = f"{TED_BASE_WEB}/pt/notice/-/detail/{pub_number}"
+
+        sections = {
+            'Objeto do Contrato': title.strip(),
+            'Entidade Adjudicante': buyer.strip() if buyer else "Entidade Pública",
+            'Tipo de Anúncio': proc_type_desc,
+            'Número de Publicação': str(pub_number)
+        }
+
+        return {
+            'id': f"ted_{pub_number}",
+            'raw_id': str(pub_number),
+            'source': "TED Europa",
+            'procedure_type': proc_type_desc,
+            'title': title.strip(),
+            'description': title.strip(),
+            'fundamentation': "Diretivas Europeias de Contratação Pública",
+            'entity': buyer.strip() if buyer else "Entidade Pública (Consulte o anúncio)",
+            'entity_nif': str(searched_nif or '').strip(),
+            'contracted': "Consulte a ficha oficial do TED",
+            'contracted_nif': "",
+            'value': formatted_value,
+            'signing_date': pub_date,
+            'publication_date': pub_date,
+            'execution_place': "União Europeia / Portugal",
+            'execution_deadline': "Consulte o anúncio",
+            'cpvs_designation': "",
+            'direct_url': direct_url,
+            'sections': {k: v for k, v in sections.items() if v}
+        }
+
 
 if __name__ == "__main__":
     ted = TedScraper()
