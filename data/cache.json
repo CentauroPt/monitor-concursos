@@ -1,6 +1,6 @@
 {
-  "timestamp": "14-10-2026 12:18:50",
-  "total_raw_count": 391,
+  "timestamp": "14-10-2026 15:08:17",
+  "total_raw_count": 395,
   "ted_country": "PRT",
   "items": [
     {
@@ -88,6 +88,78 @@
         "Unidade Móvel"
       ],
       "summary": "• Objeto do Concurso: Ajuste direto para a contratação da aquisição de viatura Toyota Corolla Cross Hev Exclusive - CONNECT AQ-115/2025 - Veículos e Unidade Móvel de Saúde - Lote 14\n• Prazo de Entrega da Proposta: 120 dias (Prazo de Execução)\n• Valor a Concurso: 29.364,86 €\n• Entidade Adjudicante: Município de Loulé"
+    },
+    {
+      "id": "base_contrato_15771828",
+      "source": "Portal BASE",
+      "category": "Contrato / Ajuste Direto",
+      "procedure_type": "Consulta Prévia",
+      "title": "Aquisição de duas viaturas ligeiras elétricas ligeiras",
+      "entity": "Município de Tabuaço",
+      "contracted": "Chamauto - Soc. Transmontana Aut. Lda",
+      "value": "27.178,86 €",
+      "deadline": "30 dias (Prazo de Execução)",
+      "publication_date": "14-10-2026",
+      "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=15771828",
+      "pieces_url": null,
+      "matched_terms": [
+        "CPV 3414xxxx"
+      ],
+      "summary": "• Objeto do Concurso: Aquisição de duas viaturas ligeiras elétricas ligeiras\n• Prazo de Entrega da Proposta: 30 dias (Prazo de Execução)\n• Valor a Concurso: 27.178,86 €\n• Entidade Adjudicante: Município de Tabuaço"
+    },
+    {
+      "id": "base_contrato_15771723",
+      "source": "Portal BASE",
+      "category": "Contrato / Ajuste Direto",
+      "procedure_type": "Concurso público",
+      "title": "Aquisição, através de concurso público, de 1 equipamento combinado 100% elétrico para recolha de biorresíduos, dotado de sistema de elevação por carga traseira, incluindo o respetivo fornecimento e cu...",
+      "entity": "Serviços Municipalizados de Viana do Castelo",
+      "contracted": "Nors Vt Trucks and Buses Portugal S.A",
+      "value": "463.630,00 €",
+      "deadline": "27 dias.",
+      "publication_date": "14-10-2026",
+      "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=15771723",
+      "pieces_url": null,
+      "matched_terms": [
+        "CPV 3414xxxx"
+      ],
+      "summary": "• Objeto do Concurso: Aquisição, através de concurso público, de 1 equipamento combinado 100% elétrico para recolha de biorresíduos, dotado de sistema de elevação por carga traseira, incluindo o respetivo fornecimento e cu...\n• Prazo de Entrega da Proposta: 27 dias.\n• Valor a Concurso: 463.630,00 €\n• Entidade Adjudicante: Serviços Municipalizados de Viana do Castelo"
+    },
+    {
+      "id": "base_contrato_15769954",
+      "source": "Portal BASE",
+      "category": "Contrato / Ajuste Direto",
+      "procedure_type": "Ajuste Direto Regime Geral",
+      "title": "Aquisição de Serviços de Gestão de Campanhas Digitais nas Redes Sociais (Facebook, Instagram e/ou LinkedIn) para Comunicação dos Resultados do Projeto Circulartech  REGI (Resíduos com Gestão Intelige...",
+      "entity": "Associação de Municípios para a Gestão Sustentável de Resíduos do Grande Porto - LIPOR",
+      "contracted": "Link&Grow;, Lda",
+      "value": "19.900,00 €",
+      "deadline": "92 dias (Prazo de Execução)",
+      "publication_date": "14-10-2026",
+      "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=15769954",
+      "pieces_url": null,
+      "matched_terms": [
+        "CPV 3414xxxx"
+      ],
+      "summary": "• Objeto do Concurso: Aquisição de Serviços de Gestão de Campanhas Digitais nas Redes Sociais (Facebook, Instagram e/ou LinkedIn) para Comunicação dos Resultados do Projeto Circulartech  REGI (Resíduos com Gestão Intelige...\n• Prazo de Entrega da Proposta: 92 dias (Prazo de Execução)\n• Valor a Concurso: 19.900,00 €\n• Entidade Adjudicante: Associação de Municípios para a Gestão Sustentável de Resíduos do Grande Porto - LIPOR"
+    },
+    {
+      "id": "base_contrato_15769835",
+      "source": "Portal BASE",
+      "category": "Contrato / Ajuste Direto",
+      "procedure_type": "Ajuste Direto Regime Geral",
+      "title": "Aquisição de serviços de aluguer operacional com manutenção preventiva e seguro incluídos de uma viatura compactadora de recolha de RSU's de 5 m3",
+      "entity": "Freguesia de Estrela",
+      "contracted": "Vecorent Aluguer de Veículos sem condutor e Comercialização de Equipamento Ecológico Lda",
+      "value": "30.696,00 €",
+      "deadline": "364 dias (Prazo de Execução)",
+      "publication_date": "14-10-2026",
+      "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=15769835",
+      "pieces_url": null,
+      "matched_terms": [
+        "CPV 3414xxxx"
+      ],
+      "summary": "• Objeto do Concurso: Aquisição de serviços de aluguer operacional com manutenção preventiva e seguro incluídos de uma viatura compactadora de recolha de RSU's de 5 m3\n• Prazo de Entrega da Proposta: 364 dias (Prazo de Execução)\n• Valor a Concurso: 30.696,00 €\n• Entidade Adjudicante: Freguesia de Estrela"
     },
     {
       "id": "base_contrato_15760770",
@@ -1367,14 +1439,14 @@
       "entity": "Freguesia de Santa Maria, São Pedro e Sobral da Lagoa",
       "contracted": "Lizdrive, SA",
       "value": "35.723,74 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "60 dias (Prazo de Execução)",
       "publication_date": "25-09-2026",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=15670960",
       "pieces_url": null,
       "matched_terms": [
         "Carrinha"
       ],
-      "summary": "• Objeto do Concurso: AQUISIÇÃO DE VEÍCULO AUTOMOVEL DE MERCADORIAS (CARRINHA DE CAIXA ABERTA COM BÁSCULA) PARA OS SERVIÇOS DA JUNTA DE FREGUESIA\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 35.723,74 €\n• Entidade Adjudicante: Freguesia de Santa Maria, São Pedro e Sobral da Lagoa"
+      "summary": "• Objeto do Concurso: AQUISIÇÃO DE VEÍCULO AUTOMOVEL DE MERCADORIAS (CARRINHA DE CAIXA ABERTA COM BÁSCULA) PARA OS SERVIÇOS DA JUNTA DE FREGUESIA\n• Prazo de Entrega da Proposta: 60 dias (Prazo de Execução)\n• Valor a Concurso: 35.723,74 €\n• Entidade Adjudicante: Freguesia de Santa Maria, São Pedro e Sobral da Lagoa"
     },
     {
       "id": "ted_657437-2026",
@@ -1505,14 +1577,14 @@
       "entity": "Município da Covilhã",
       "contracted": "OPSolutions Vehicle Innovation Lda.",
       "value": "74.300,00 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "60 dias (Prazo de Execução)",
       "publication_date": "21-09-2026",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=15637753",
       "pieces_url": null,
       "matched_terms": [
         "Unidade Móvel"
       ],
-      "summary": "• Objeto do Concurso: AQUISIÇÃO DE SERVIÇOS DE TRANSFORMAÇÃO E ADAPTAÇÃO TÉCNICA DE VIATURA DE MERCADORIAS 100% ELETRICA PARA UNIDADE MÓVEL DE ATENDIMENTO\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 74.300,00 €\n• Entidade Adjudicante: Município da Covilhã"
+      "summary": "• Objeto do Concurso: AQUISIÇÃO DE SERVIÇOS DE TRANSFORMAÇÃO E ADAPTAÇÃO TÉCNICA DE VIATURA DE MERCADORIAS 100% ELETRICA PARA UNIDADE MÓVEL DE ATENDIMENTO\n• Prazo de Entrega da Proposta: 60 dias (Prazo de Execução)\n• Valor a Concurso: 74.300,00 €\n• Entidade Adjudicante: Município da Covilhã"
     },
     {
       "id": "ted_646290-2026",
@@ -1665,14 +1737,14 @@
       "entity": "Município da Moita",
       "contracted": "CELIA MARIA FERREIRA MONTEIRO",
       "value": "9.225,00 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "365 dias (Prazo de Execução)",
       "publication_date": "09-09-2026",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=15594970",
       "pieces_url": null,
       "matched_terms": [
         "Unidade Móvel"
       ],
-      "summary": "• Objeto do Concurso: Prestação de serviços, em regime de avença, para apoio à unidade móvel de saúde, pelo período de 12 meses\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 9.225,00 €\n• Entidade Adjudicante: Município da Moita",
+      "summary": "• Objeto do Concurso: Prestação de serviços, em regime de avença, para apoio à unidade móvel de saúde, pelo período de 12 meses\n• Prazo de Entrega da Proposta: 365 dias (Prazo de Execução)\n• Valor a Concurso: 9.225,00 €\n• Entidade Adjudicante: Município da Moita",
       "is_dismissed": false
     },
     {
@@ -1720,14 +1792,14 @@
       "entity": "Centro Municipal de Cultura e Desenvolvimento de Idanha-a-Nova",
       "contracted": "José Fernandes Pereira Alves",
       "value": "22.000,00 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "20 dias (Prazo de Execução)",
       "publication_date": "07-09-2026",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=15589204",
       "pieces_url": null,
       "matched_terms": [
         "Carrinha"
       ],
-      "summary": "• Objeto do Concurso: Aquisição carrinha 9 lugares\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 22.000,00 €\n• Entidade Adjudicante: Centro Municipal de Cultura e Desenvolvimento de Idanha-a-Nova",
+      "summary": "• Objeto do Concurso: Aquisição carrinha 9 lugares\n• Prazo de Entrega da Proposta: 20 dias (Prazo de Execução)\n• Valor a Concurso: 22.000,00 €\n• Entidade Adjudicante: Centro Municipal de Cultura e Desenvolvimento de Idanha-a-Nova",
       "is_dismissed": false
     },
     {
@@ -1739,14 +1811,14 @@
       "entity": "Freguesia de Rio de Moinhos",
       "contracted": "VESAUTO - AUTOMÓVEIS E REPARAÇÕES, SA",
       "value": "21.341,46 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "15 dias (Prazo de Execução)",
       "publication_date": "04-09-2026",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=15585827",
       "pieces_url": null,
       "matched_terms": [
         "Carrinha"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de uma carrinha para os serviços gerais, transporte de bens, maquinaria, ferramentas.\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 21.341,46 €\n• Entidade Adjudicante: Freguesia de Rio de Moinhos",
+      "summary": "• Objeto do Concurso: Aquisição de uma carrinha para os serviços gerais, transporte de bens, maquinaria, ferramentas.\n• Prazo de Entrega da Proposta: 15 dias (Prazo de Execução)\n• Valor a Concurso: 21.341,46 €\n• Entidade Adjudicante: Freguesia de Rio de Moinhos",
       "is_dismissed": false
     },
     {
@@ -1776,14 +1848,14 @@
       "entity": "Município de Alijó",
       "contracted": "Toyota Caetano Portugal, S.A.",
       "value": "45.000,00 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "120 dias (Prazo de Execução)",
       "publication_date": "02-09-2026",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=15571321",
       "pieces_url": null,
       "matched_terms": [
         "Unidade Móvel"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de 2 viaturas Toyota Yaris Cross HEC Confort Plus -LOTE 8, ao abrigo do acordo quadro (CNCM/115//2025) para aquisição de veículos ligeiros de passageiros, Veículos Tipo 4x4 e Unidade Móvel d...\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 45.000,00 €\n• Entidade Adjudicante: Município de Alijó",
+      "summary": "• Objeto do Concurso: Aquisição de 2 viaturas Toyota Yaris Cross HEC Confort Plus -LOTE 8, ao abrigo do acordo quadro (CNCM/115//2025) para aquisição de veículos ligeiros de passageiros, Veículos Tipo 4x4 e Unidade Móvel d...\n• Prazo de Entrega da Proposta: 120 dias (Prazo de Execução)\n• Valor a Concurso: 45.000,00 €\n• Entidade Adjudicante: Município de Alijó",
       "is_dismissed": false
     },
     {
@@ -1870,14 +1942,14 @@
       "entity": "Unidade Local de Saúde de Castelo Branco, E. P. E.",
       "contracted": "Roche Sistemas de Diagnósticos, Lda",
       "value": "737,26 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "9 dias.",
       "publication_date": "31-08-2026",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=15565194",
       "pieces_url": null,
       "matched_terms": [
         "Unidades Móveis"
       ],
-      "summary": "• Objeto do Concurso: CCS-UCBST-763/2023-Aquisição de Equipamento Médico para as Unidades Móveis a adquirir no âmbito do Plano de Recuperação e Resiliência (PRR)\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 737,26 €\n• Entidade Adjudicante: Unidade Local de Saúde de Castelo Branco, E. P. E.",
+      "summary": "• Objeto do Concurso: CCS-UCBST-763/2023-Aquisição de Equipamento Médico para as Unidades Móveis a adquirir no âmbito do Plano de Recuperação e Resiliência (PRR)\n• Prazo de Entrega da Proposta: 9 dias.\n• Valor a Concurso: 737,26 €\n• Entidade Adjudicante: Unidade Local de Saúde de Castelo Branco, E. P. E.",
       "is_dismissed": false
     },
     {
@@ -1908,14 +1980,14 @@
       "entity": "Unidade Local de Saúde de Castelo Branco, E. P. E.",
       "contracted": "PARAMEDICA - Equipamentos Médicos, Lda.",
       "value": "50,00 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "9 dias.",
       "publication_date": "28-08-2026",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=15550285",
       "pieces_url": null,
       "matched_terms": [
         "Unidades Móveis"
       ],
-      "summary": "• Objeto do Concurso: CCS-UCBST-763/2023-Aquisição de Equipamento Médico para as Unidades Móveis a adquirir no âmbito do Plano de Recuperação e Resiliência (PRR)\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 50,00 €\n• Entidade Adjudicante: Unidade Local de Saúde de Castelo Branco, E. P. E.",
+      "summary": "• Objeto do Concurso: CCS-UCBST-763/2023-Aquisição de Equipamento Médico para as Unidades Móveis a adquirir no âmbito do Plano de Recuperação e Resiliência (PRR)\n• Prazo de Entrega da Proposta: 9 dias.\n• Valor a Concurso: 50,00 €\n• Entidade Adjudicante: Unidade Local de Saúde de Castelo Branco, E. P. E.",
       "is_dismissed": false
     },
     {
@@ -1927,14 +1999,14 @@
       "entity": "Unidade Local de Saúde de Castelo Branco, E. P. E.",
       "contracted": "PARAMEDICA - Equipamentos Médicos, Lda.",
       "value": "70,00 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "9 dias.",
       "publication_date": "28-08-2026",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=15550258",
       "pieces_url": null,
       "matched_terms": [
         "Unidades Móveis"
       ],
-      "summary": "• Objeto do Concurso: CCS-UCBST-763/2023-Aquisição de Equipamento Médico para as Unidades Móveis a adquirir no âmbito do Plano de Recuperação e Resiliência (PRR)\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 70,00 €\n• Entidade Adjudicante: Unidade Local de Saúde de Castelo Branco, E. P. E.",
+      "summary": "• Objeto do Concurso: CCS-UCBST-763/2023-Aquisição de Equipamento Médico para as Unidades Móveis a adquirir no âmbito do Plano de Recuperação e Resiliência (PRR)\n• Prazo de Entrega da Proposta: 9 dias.\n• Valor a Concurso: 70,00 €\n• Entidade Adjudicante: Unidade Local de Saúde de Castelo Branco, E. P. E.",
       "is_dismissed": false
     },
     {
@@ -2022,14 +2094,14 @@
       "entity": "ACAPO - Associação dos Cegos e Amblíopes de Portugal",
       "contracted": "Confiauto- Indústria e Comércio de Automóveis S.A.",
       "value": "18.509,75 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "30 dias (Prazo de Execução)",
       "publication_date": "26-08-2026",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=15536566",
       "pieces_url": null,
       "matched_terms": [
         "Carrinha"
       ],
-      "summary": "• Objeto do Concurso: O presente procedimento de ajuste direto tem por objeto a aquisição de uma \nviatura bi-fuel, de tipo carrinha, com lotação para sete pessoas, a afetar ao \nfuncionamento e transporte de pessoas com def...\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 18.509,75 €\n• Entidade Adjudicante: ACAPO - Associação dos Cegos e Amblíopes de Portugal",
+      "summary": "• Objeto do Concurso: O presente procedimento de ajuste direto tem por objeto a aquisição de uma \nviatura bi-fuel, de tipo carrinha, com lotação para sete pessoas, a afetar ao \nfuncionamento e transporte de pessoas com def...\n• Prazo de Entrega da Proposta: 30 dias (Prazo de Execução)\n• Valor a Concurso: 18.509,75 €\n• Entidade Adjudicante: ACAPO - Associação dos Cegos e Amblíopes de Portugal",
       "is_dismissed": false
     },
     {
@@ -2131,14 +2203,14 @@
       "entity": "Freguesia de Santa Maria, São Pedro e Matacães",
       "contracted": "Caixa Geral de Depósitos",
       "value": "51.110,31 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "8 dias.",
       "publication_date": "14-08-2026",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=15496490",
       "pieces_url": null,
       "matched_terms": [
         "Carrinha"
       ],
-      "summary": "• Objeto do Concurso: Locação Financeira (Leasing) destinado à Aquisição de uma Carrinha de 9 lugares\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 51.110,31 €\n• Entidade Adjudicante: Freguesia de Santa Maria, São Pedro e Matacães",
+      "summary": "• Objeto do Concurso: Locação Financeira (Leasing) destinado à Aquisição de uma Carrinha de 9 lugares\n• Prazo de Entrega da Proposta: 8 dias.\n• Valor a Concurso: 51.110,31 €\n• Entidade Adjudicante: Freguesia de Santa Maria, São Pedro e Matacães",
       "is_dismissed": false
     },
     {
@@ -2205,14 +2277,14 @@
       "entity": "Freguesia da Moita",
       "contracted": "Caetano Formula S.A.",
       "value": "36.354,29 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "240 dias (Prazo de Execução)",
       "publication_date": "13-08-2026",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=15495896",
       "pieces_url": null,
       "matched_terms": [
         "Carrinha"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de carrinha de 3500Kg, de 3 lugares com báscula bilateral\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 36.354,29 €\n• Entidade Adjudicante: Freguesia da Moita",
+      "summary": "• Objeto do Concurso: Aquisição de carrinha de 3500Kg, de 3 lugares com báscula bilateral\n• Prazo de Entrega da Proposta: 240 dias (Prazo de Execução)\n• Valor a Concurso: 36.354,29 €\n• Entidade Adjudicante: Freguesia da Moita",
       "is_dismissed": false
     },
     {
@@ -2296,14 +2368,14 @@
       "entity": "Universidade de Lisboa",
       "contracted": "Horizontevertical Unipessoal Lda",
       "value": "0,00 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "14 dias.",
       "publication_date": "12-08-2026",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=15482569",
       "pieces_url": null,
       "matched_terms": [
         "Carrinha"
       ],
-      "summary": "• Objeto do Concurso: Cessão de exploração de espaço para colocação de Carrinha ou Roulotte de venda de produtos alimentares na entrada do Jardim Botânico de Lisboa.\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 0,00 €\n• Entidade Adjudicante: Universidade de Lisboa",
+      "summary": "• Objeto do Concurso: Cessão de exploração de espaço para colocação de Carrinha ou Roulotte de venda de produtos alimentares na entrada do Jardim Botânico de Lisboa.\n• Prazo de Entrega da Proposta: 14 dias.\n• Valor a Concurso: 0,00 €\n• Entidade Adjudicante: Universidade de Lisboa",
       "is_dismissed": false
     },
     {
@@ -2498,14 +2570,14 @@
       "entity": "União das Freguesias de Monte Real e Carvide",
       "contracted": "J. Carnide Lda",
       "value": "29.715,45 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "14 dias (Prazo de Execução)",
       "publication_date": "04-08-2026",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=15443164",
       "pieces_url": null,
       "matched_terms": [
         "Carrinha"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de carrinha\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 29.715,45 €\n• Entidade Adjudicante: União das Freguesias de Monte Real e Carvide",
+      "summary": "• Objeto do Concurso: Aquisição de carrinha\n• Prazo de Entrega da Proposta: 14 dias (Prazo de Execução)\n• Valor a Concurso: 29.715,45 €\n• Entidade Adjudicante: União das Freguesias de Monte Real e Carvide",
       "is_dismissed": false
     },
     {
@@ -2571,14 +2643,14 @@
       "entity": "Município da Madalena",
       "contracted": "TERAUTO - SOCIEDADE TERCEIRENSE DE AUTOMÓVEIS, LDA.",
       "value": "38.793,25 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "30 dias (Prazo de Execução)",
       "publication_date": "03-08-2026",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=15428455",
       "pieces_url": null,
       "matched_terms": [
         "Carrinha"
       ],
-      "summary": "• Objeto do Concurso: AQUISIÇÃO DE CARRINHA ELÉTRICA DE 8 LUGARES\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 38.793,25 €\n• Entidade Adjudicante: Município da Madalena",
+      "summary": "• Objeto do Concurso: AQUISIÇÃO DE CARRINHA ELÉTRICA DE 8 LUGARES\n• Prazo de Entrega da Proposta: 30 dias (Prazo de Execução)\n• Valor a Concurso: 38.793,25 €\n• Entidade Adjudicante: Município da Madalena",
       "is_dismissed": true
     },
     {
@@ -2663,14 +2735,14 @@
       "entity": "Município de Lousada",
       "contracted": "Polieme 2 - Assistência Rodoviária, Unipessoal Lda",
       "value": "15.500,00 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "30 dias (Prazo de Execução)",
       "publication_date": "29-07-2026",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=15405801",
       "pieces_url": null,
       "matched_terms": [
         "Carrinha"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de carrinha ligeira em estado de uso para apoio aos serviços de águas\nAprovação de abertura de procedimento de ajuste direto\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 15.500,00 €\n• Entidade Adjudicante: Município de Lousada",
+      "summary": "• Objeto do Concurso: Aquisição de carrinha ligeira em estado de uso para apoio aos serviços de águas\nAprovação de abertura de procedimento de ajuste direto\n• Prazo de Entrega da Proposta: 30 dias (Prazo de Execução)\n• Valor a Concurso: 15.500,00 €\n• Entidade Adjudicante: Município de Lousada",
       "is_dismissed": true
     },
     {
@@ -2755,14 +2827,14 @@
       "entity": "União de Freguesias de Carvalhal Redondo e Aguieira",
       "contracted": "J. & COIMBRA LDA",
       "value": "11.500,00 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "5 dias (Prazo de Execução)",
       "publication_date": "22-07-2026",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=15338203",
       "pieces_url": null,
       "matched_terms": [
         "Carrinha"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de carrinha ......\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 11.500,00 €\n• Entidade Adjudicante: União de Freguesias de Carvalhal Redondo e Aguieira",
+      "summary": "• Objeto do Concurso: Aquisição de carrinha ......\n• Prazo de Entrega da Proposta: 5 dias (Prazo de Execução)\n• Valor a Concurso: 11.500,00 €\n• Entidade Adjudicante: União de Freguesias de Carvalhal Redondo e Aguieira",
       "is_dismissed": true
     },
     {
@@ -2774,14 +2846,14 @@
       "entity": "Município de Sesimbra",
       "contracted": "Fluitel, Unipessoal, Lda",
       "value": "18.425,00 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "92 dias (Prazo de Execução)",
       "publication_date": "22-07-2026",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=15337669",
       "pieces_url": null,
       "matched_terms": [
         "Carrinha"
       ],
-      "summary": "• Objeto do Concurso: Serviço de recolha de envolventes dos Contentores de resíduos urbanos (monos e verdes) com carrinha\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 18.425,00 €\n• Entidade Adjudicante: Município de Sesimbra",
+      "summary": "• Objeto do Concurso: Serviço de recolha de envolventes dos Contentores de resíduos urbanos (monos e verdes) com carrinha\n• Prazo de Entrega da Proposta: 92 dias (Prazo de Execução)\n• Valor a Concurso: 18.425,00 €\n• Entidade Adjudicante: Município de Sesimbra",
       "is_dismissed": true
     },
     {
@@ -2793,14 +2865,14 @@
       "entity": "União das Freguesias de Alto do Seixalinho, Santo André e Verderena",
       "contracted": "AMBROCAR - Reparação e Comércio de Automóveis, Lda",
       "value": "2.957,40 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "168 dias (Prazo de Execução)",
       "publication_date": "21-07-2026",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=15321012",
       "pieces_url": null,
       "matched_terms": [
         "Carrinha"
       ],
-      "summary": "• Objeto do Concurso: AQUISIÇÃO DE BENS E SERVIÇOS PARA PINTURA DE CARRINHA\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 2.957,40 €\n• Entidade Adjudicante: União das Freguesias de Alto do Seixalinho, Santo André e Verderena",
+      "summary": "• Objeto do Concurso: AQUISIÇÃO DE BENS E SERVIÇOS PARA PINTURA DE CARRINHA\n• Prazo de Entrega da Proposta: 168 dias (Prazo de Execução)\n• Valor a Concurso: 2.957,40 €\n• Entidade Adjudicante: União das Freguesias de Alto do Seixalinho, Santo André e Verderena",
       "is_dismissed": true
     },
     {
@@ -3197,14 +3269,14 @@
       "entity": "Unidade Local de Saúde de Castelo Branco, E. P. E.",
       "contracted": "Bacelar e Irmão, S.A.",
       "value": "42,44 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "30 dias (Prazo de Execução)",
       "publication_date": "30-06-2026",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=15224652",
       "pieces_url": null,
       "matched_terms": [
         "Unidades Móveis"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de Equipamento Médico para as Unidades Móveis a adquirir no âmbito do PRR para as Unidades de Cuidados de Saúde Primários ao abrigo dos lotes 18, 25, 27, 30, 31 e 32 do Acordo-Quadro para “F\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 42,44 €\n• Entidade Adjudicante: Unidade Local de Saúde de Castelo Branco, E. P. E.",
+      "summary": "• Objeto do Concurso: Aquisição de Equipamento Médico para as Unidades Móveis a adquirir no âmbito do PRR para as Unidades de Cuidados de Saúde Primários ao abrigo dos lotes 18, 25, 27, 30, 31 e 32 do Acordo-Quadro para “F\n• Prazo de Entrega da Proposta: 30 dias (Prazo de Execução)\n• Valor a Concurso: 42,44 €\n• Entidade Adjudicante: Unidade Local de Saúde de Castelo Branco, E. P. E.",
       "is_dismissed": true
     },
     {
@@ -3216,14 +3288,14 @@
       "entity": "Centro de Convívio e Apoio à Terceira Idade",
       "contracted": "Caetano City S.A.",
       "value": "55.284,55 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "545 dias (Prazo de Execução)",
       "publication_date": "23-06-2026",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=15188416",
       "pieces_url": null,
       "matched_terms": [
         "Carrinha"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de viatura adaptada para ERPI, carrinha de 9 lugares com adaptação para 1 cadeira de rodas com rampa\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 55.284,55 €\n• Entidade Adjudicante: Centro de Convívio e Apoio à Terceira Idade",
+      "summary": "• Objeto do Concurso: Aquisição de viatura adaptada para ERPI, carrinha de 9 lugares com adaptação para 1 cadeira de rodas com rampa\n• Prazo de Entrega da Proposta: 545 dias (Prazo de Execução)\n• Valor a Concurso: 55.284,55 €\n• Entidade Adjudicante: Centro de Convívio e Apoio à Terceira Idade",
       "is_dismissed": true
     },
     {
@@ -3235,14 +3307,14 @@
       "entity": "Freguesia de A dos Francos",
       "contracted": "AUTO JÚLIO S.A",
       "value": "45.423,75 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "120 dias (Prazo de Execução)",
       "publication_date": "19-06-2026",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=15176688",
       "pieces_url": null,
       "matched_terms": [
         "Carrinha"
       ],
-      "summary": "• Objeto do Concurso: Carrinha de Transporte de Mercadorias\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 45.423,75 €\n• Entidade Adjudicante: Freguesia de A dos Francos",
+      "summary": "• Objeto do Concurso: Carrinha de Transporte de Mercadorias\n• Prazo de Entrega da Proposta: 120 dias (Prazo de Execução)\n• Valor a Concurso: 45.423,75 €\n• Entidade Adjudicante: Freguesia de A dos Francos",
       "is_dismissed": true
     },
     {
@@ -3254,14 +3326,14 @@
       "entity": "União das Freguesias de Azoia de Cima e Tremês",
       "contracted": "ROQUES VALE DO TEJO Comércio de Automóveis SA",
       "value": "32.273,16 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "180 dias (Prazo de Execução)",
       "publication_date": "19-06-2026",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=15175113",
       "pieces_url": null,
       "matched_terms": [
         "Carrinha"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de Uma Carrinha de 9 Lugares para Transporte Coletivo de Crianças\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 32.273,16 €\n• Entidade Adjudicante: União das Freguesias de Azoia de Cima e Tremês",
+      "summary": "• Objeto do Concurso: Aquisição de Uma Carrinha de 9 Lugares para Transporte Coletivo de Crianças\n• Prazo de Entrega da Proposta: 180 dias (Prazo de Execução)\n• Valor a Concurso: 32.273,16 €\n• Entidade Adjudicante: União das Freguesias de Azoia de Cima e Tremês",
       "is_dismissed": true
     },
     {
@@ -3310,14 +3382,14 @@
       "entity": "Freguesia de Pontével",
       "contracted": "Carlos Manuel Pinheiro Mata Valente Rebelo",
       "value": "8.500,00 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "198 dias (Prazo de Execução)",
       "publication_date": "15-06-2026",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=15134708",
       "pieces_url": null,
       "matched_terms": [
         "Carrinha"
       ],
-      "summary": "• Objeto do Concurso: Fornecimento contínuo de combustíveis para carrinhas e máquinas da Freguesia\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 8.500,00 €\n• Entidade Adjudicante: Freguesia de Pontével",
+      "summary": "• Objeto do Concurso: Fornecimento contínuo de combustíveis para carrinhas e máquinas da Freguesia\n• Prazo de Entrega da Proposta: 198 dias (Prazo de Execução)\n• Valor a Concurso: 8.500,00 €\n• Entidade Adjudicante: Freguesia de Pontével",
       "is_dismissed": true
     },
     {
@@ -3345,7 +3417,7 @@
       "category": "Anúncio de Concurso",
       "procedure_type": "Concurso público",
       "title": "Aquisição de uma unidade móvel de radiorrastreio para a ULS de Coimbra, EPE",
-      "entity": "Unidade Local de Saúde de Coimbra, E. P. E.",
+      "entity": "Unidade Local de Saúde de Coimbra, EPE",
       "value": "255.000,00 €",
       "deadline": "29-06-2026",
       "publication_date": "01-06-2026",
@@ -3354,7 +3426,7 @@
       "matched_terms": [
         "Unidade Móvel"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de uma unidade móvel de radiorrastreio para a ULS de Coimbra, EPE\n• Prazo de Entrega da Proposta: 29-06-2026\n• Valor a Concurso: 255.000,00 €\n• Entidade Adjudicante: Unidade Local de Saúde de Coimbra, E. P. E.",
+      "summary": "• Objeto do Concurso: Aquisição de uma unidade móvel de radiorrastreio para a ULS de Coimbra, EPE\n• Prazo de Entrega da Proposta: 29-06-2026\n• Valor a Concurso: 255.000,00 €\n• Entidade Adjudicante: Unidade Local de Saúde de Coimbra, EPE",
       "is_dismissed": true
     },
     {
@@ -3366,14 +3438,14 @@
       "entity": "Município de Elvas",
       "contracted": "Toyota Caetano Portugal",
       "value": "43.902,43 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "60 dias (Prazo de Execução)",
       "publication_date": "29-05-2026",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=15034855",
       "pieces_url": null,
       "matched_terms": [
         "Unidade Móvel"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de viatura ligeira ao abrigo do “Acordo Quadro CNCM – AQ/115/2025 para Aquisição de Veículos Ligeiros de Passageiros, Veículos Comerciais, Veículos Tipo 4x4 e Unidade Móvel de Saúde Elétrica...\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 43.902,43 €\n• Entidade Adjudicante: Município de Elvas",
+      "summary": "• Objeto do Concurso: Aquisição de viatura ligeira ao abrigo do “Acordo Quadro CNCM – AQ/115/2025 para Aquisição de Veículos Ligeiros de Passageiros, Veículos Comerciais, Veículos Tipo 4x4 e Unidade Móvel de Saúde Elétrica...\n• Prazo de Entrega da Proposta: 60 dias (Prazo de Execução)\n• Valor a Concurso: 43.902,43 €\n• Entidade Adjudicante: Município de Elvas",
       "is_dismissed": true
     },
     {
@@ -3385,14 +3457,14 @@
       "entity": "Município de Mira",
       "contracted": "Pedro Tortas Cordeiro, Unipessoal Lda",
       "value": "9.000,00 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "30 dias (Prazo de Execução)",
       "publication_date": "28-05-2026",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=15022337",
       "pieces_url": null,
       "matched_terms": [
         "Carrinha"
       ],
-      "summary": "• Objeto do Concurso: Aluguer de Carrinha com Plataforma Elevatória e Aluguer de Camião para apoio à Retirada de Areias\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 9.000,00 €\n• Entidade Adjudicante: Município de Mira",
+      "summary": "• Objeto do Concurso: Aluguer de Carrinha com Plataforma Elevatória e Aluguer de Camião para apoio à Retirada de Areias\n• Prazo de Entrega da Proposta: 30 dias (Prazo de Execução)\n• Valor a Concurso: 9.000,00 €\n• Entidade Adjudicante: Município de Mira",
       "is_dismissed": true
     },
     {
@@ -3404,14 +3476,14 @@
       "entity": "Freguesia de Salir",
       "contracted": "FIAAL - Fomento Industrial e Agrícola do Algarve, Lda.",
       "value": "36.870,07 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "30 dias (Prazo de Execução)",
       "publication_date": "26-05-2026",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=14991184",
       "pieces_url": null,
       "matched_terms": [
         "Carrinha"
       ],
-      "summary": "• Objeto do Concurso: Fornecimento de Carrinha ligeira de Cabine Dupla e caixa metálica\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 36.870,07 €\n• Entidade Adjudicante: Freguesia de Salir",
+      "summary": "• Objeto do Concurso: Fornecimento de Carrinha ligeira de Cabine Dupla e caixa metálica\n• Prazo de Entrega da Proposta: 30 dias (Prazo de Execução)\n• Valor a Concurso: 36.870,07 €\n• Entidade Adjudicante: Freguesia de Salir",
       "is_dismissed": true
     },
     {
@@ -3457,7 +3529,7 @@
       "category": "Anúncio de Concurso",
       "procedure_type": "Concurso público",
       "title": "Aquisição de uma unidade móvel de rastreio para a ULS de Coimbra, E.P.E.",
-      "entity": "Unidade Local de Saúde de Coimbra, E. P. E.",
+      "entity": "Unidade Local de Saúde de Coimbra, EPE",
       "value": "70.000,00 €",
       "deadline": "29-05-2026",
       "publication_date": "21-05-2026",
@@ -3466,7 +3538,7 @@
       "matched_terms": [
         "Unidade Móvel"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de uma unidade móvel de rastreio para a ULS de Coimbra, E.P.E.\n• Prazo de Entrega da Proposta: 29-05-2026\n• Valor a Concurso: 70.000,00 €\n• Entidade Adjudicante: Unidade Local de Saúde de Coimbra, E. P. E.",
+      "summary": "• Objeto do Concurso: Aquisição de uma unidade móvel de rastreio para a ULS de Coimbra, E.P.E.\n• Prazo de Entrega da Proposta: 29-05-2026\n• Valor a Concurso: 70.000,00 €\n• Entidade Adjudicante: Unidade Local de Saúde de Coimbra, EPE",
       "is_dismissed": true
     },
     {
@@ -3478,14 +3550,14 @@
       "entity": "Centro Social Paroquial da Vera Cruz",
       "contracted": "Rodda C, SA",
       "value": "37.247,07 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "120 dias (Prazo de Execução)",
       "publication_date": "21-05-2026",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=14945242",
       "pieces_url": null,
       "matched_terms": [
         "Carrinha"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de carrinha elétrica nova adaptada ao transporte coletivo de crianças\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 37.247,07 €\n• Entidade Adjudicante: Centro Social Paroquial da Vera Cruz",
+      "summary": "• Objeto do Concurso: Aquisição de carrinha elétrica nova adaptada ao transporte coletivo de crianças\n• Prazo de Entrega da Proposta: 120 dias (Prazo de Execução)\n• Valor a Concurso: 37.247,07 €\n• Entidade Adjudicante: Centro Social Paroquial da Vera Cruz",
       "is_dismissed": true
     },
     {
@@ -3497,14 +3569,14 @@
       "entity": "Município de Oleiros",
       "contracted": "Litocar - Distribuição Automóvel, S.A.",
       "value": "17.442,86 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "60 dias (Prazo de Execução)",
       "publication_date": "20-05-2026",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=14935034",
       "pieces_url": null,
       "matched_terms": [
         "Carrinha"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de veículos - Carrinha de 3 lugares\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 17.442,86 €\n• Entidade Adjudicante: Município de Oleiros",
+      "summary": "• Objeto do Concurso: Aquisição de veículos - Carrinha de 3 lugares\n• Prazo de Entrega da Proposta: 60 dias (Prazo de Execução)\n• Valor a Concurso: 17.442,86 €\n• Entidade Adjudicante: Município de Oleiros",
       "is_dismissed": true
     },
     {
@@ -3516,14 +3588,14 @@
       "entity": "União das Freguesias de Proença-a-Nova e Peral",
       "contracted": "António M. Antunes - Automóveis Unipessoal, Lda",
       "value": "19.990,00 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "30 dias (Prazo de Execução)",
       "publication_date": "20-05-2026",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=14933199",
       "pieces_url": null,
       "matched_terms": [
         "Carrinha"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de carrinha para transporte de mercadorias\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 19.990,00 €\n• Entidade Adjudicante: União das Freguesias de Proença-a-Nova e Peral",
+      "summary": "• Objeto do Concurso: Aquisição de carrinha para transporte de mercadorias\n• Prazo de Entrega da Proposta: 30 dias (Prazo de Execução)\n• Valor a Concurso: 19.990,00 €\n• Entidade Adjudicante: União das Freguesias de Proença-a-Nova e Peral",
       "is_dismissed": true
     },
     {
@@ -3535,14 +3607,14 @@
       "entity": "Centro de Oncologia dos Açores Professor Doutor José Conde",
       "contracted": "Siemens Healthcare, Unipessoal, Lda",
       "value": "651.000,00 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "28 dias.",
       "publication_date": "19-05-2026",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=14932470",
       "pieces_url": null,
       "matched_terms": [
         "Unidades Móveis"
       ],
-      "summary": "• Objeto do Concurso: AQUISIÇÃO E INSTALAÇÃO DE DUAS UNIDADES MÓVEIS DE RASTREIO DE CANCRO DA MAMA\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 651.000,00 €\n• Entidade Adjudicante: Centro de Oncologia dos Açores Professor Doutor José Conde",
+      "summary": "• Objeto do Concurso: AQUISIÇÃO E INSTALAÇÃO DE DUAS UNIDADES MÓVEIS DE RASTREIO DE CANCRO DA MAMA\n• Prazo de Entrega da Proposta: 28 dias.\n• Valor a Concurso: 651.000,00 €\n• Entidade Adjudicante: Centro de Oncologia dos Açores Professor Doutor José Conde",
       "is_dismissed": true
     },
     {
@@ -3554,14 +3626,14 @@
       "entity": "Município de Alijó",
       "contracted": "Transvetra, Transformação de veículos Lda",
       "value": "40.222,00 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "120 dias (Prazo de Execução)",
       "publication_date": "14-05-2026",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=14851857",
       "pieces_url": null,
       "matched_terms": [
         "Unidades Móveis"
       ],
-      "summary": "• Objeto do Concurso: Acordo Quadro para Aquisição de 1 Peugeot Riftler L2, ao abrigo do Acordo Quadro para Aquisição de Unidades Móveis e Equipamentos Associados (CNCM- AQ/81/2023)  Lote 53, promovido pela Central Naci...\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 40.222,00 €\n• Entidade Adjudicante: Município de Alijó",
+      "summary": "• Objeto do Concurso: Acordo Quadro para Aquisição de 1 Peugeot Riftler L2, ao abrigo do Acordo Quadro para Aquisição de Unidades Móveis e Equipamentos Associados (CNCM- AQ/81/2023)  Lote 53, promovido pela Central Naci...\n• Prazo de Entrega da Proposta: 120 dias (Prazo de Execução)\n• Valor a Concurso: 40.222,00 €\n• Entidade Adjudicante: Município de Alijó",
       "is_dismissed": true
     },
     {
@@ -3573,14 +3645,14 @@
       "entity": "Município de Alandroal",
       "contracted": "MOTORPOR - COMÉRCIO DE AUTOMÓVEIS, S.A.",
       "value": "22.117,78 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "30 dias (Prazo de Execução)",
       "publication_date": "07-05-2026",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=14771985",
       "pieces_url": null,
       "matched_terms": [
         "Carrinha"
       ],
-      "summary": "• Objeto do Concurso: PROCEDIMENTO POR CONSULTA PRÉVIA – AQUISIÇÃO DE CARRINHA PARA SERVIÇOS DE VETERINÁRIA\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 22.117,78 €\n• Entidade Adjudicante: Município de Alandroal",
+      "summary": "• Objeto do Concurso: PROCEDIMENTO POR CONSULTA PRÉVIA – AQUISIÇÃO DE CARRINHA PARA SERVIÇOS DE VETERINÁRIA\n• Prazo de Entrega da Proposta: 30 dias (Prazo de Execução)\n• Valor a Concurso: 22.117,78 €\n• Entidade Adjudicante: Município de Alandroal",
       "is_dismissed": true
     },
     {
@@ -3592,14 +3664,14 @@
       "entity": "Freguesia de Santa Maria, São Pedro e Matacães",
       "contracted": "MAN Truck &amp; Bus Portugal, Soc. Unip., Lda",
       "value": "48.900,00 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "184 dias (Prazo de Execução)",
       "publication_date": "05-05-2026",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=14726100",
       "pieces_url": null,
       "matched_terms": [
         "Carrinha"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de uma carrinha de 9 lugares para transporte escolar\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 48.900,00 €\n• Entidade Adjudicante: Freguesia de Santa Maria, São Pedro e Matacães",
+      "summary": "• Objeto do Concurso: Aquisição de uma carrinha de 9 lugares para transporte escolar\n• Prazo de Entrega da Proposta: 184 dias (Prazo de Execução)\n• Valor a Concurso: 48.900,00 €\n• Entidade Adjudicante: Freguesia de Santa Maria, São Pedro e Matacães",
       "is_dismissed": true
     },
     {
@@ -3648,14 +3720,14 @@
       "entity": "Município de Alijó",
       "contracted": "Transvetra, Transformação de veículos Lda",
       "value": "40.974,00 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "150 dias (Prazo de Execução)",
       "publication_date": "30-04-2026",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=14704445",
       "pieces_url": null,
       "matched_terms": [
         "Unidades Móveis"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de 1 Peugeot Partner L1, ao abrigo do Acordo Quadro para Aquisição de Unidades Móveis e Equipamentos Associados (CNCM- AQ/81/2023)  Lote 54, promovido pela Central Nacional de Compras Mun...\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 40.974,00 €\n• Entidade Adjudicante: Município de Alijó",
+      "summary": "• Objeto do Concurso: Aquisição de 1 Peugeot Partner L1, ao abrigo do Acordo Quadro para Aquisição de Unidades Móveis e Equipamentos Associados (CNCM- AQ/81/2023)  Lote 54, promovido pela Central Nacional de Compras Mun...\n• Prazo de Entrega da Proposta: 150 dias (Prazo de Execução)\n• Valor a Concurso: 40.974,00 €\n• Entidade Adjudicante: Município de Alijó",
       "is_dismissed": true
     },
     {
@@ -3686,14 +3758,14 @@
       "entity": "Município de Mondim de Basto",
       "contracted": "Transvetra-Transformação de Veículos Lda",
       "value": "59.295,00 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "195 dias (Prazo de Execução)",
       "publication_date": "29-04-2026",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=14692597",
       "pieces_url": null,
       "matched_terms": [
         "Unidades Móveis"
       ],
-      "summary": "• Objeto do Concurso: Aquisição Unidades Móveis e Equipamentos ao abrigo do Acordo Quadro (CNCM- AQ/81/2023)\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 59.295,00 €\n• Entidade Adjudicante: Município de Mondim de Basto",
+      "summary": "• Objeto do Concurso: Aquisição Unidades Móveis e Equipamentos ao abrigo do Acordo Quadro (CNCM- AQ/81/2023)\n• Prazo de Entrega da Proposta: 195 dias (Prazo de Execução)\n• Valor a Concurso: 59.295,00 €\n• Entidade Adjudicante: Município de Mondim de Basto",
       "is_dismissed": true
     },
     {
@@ -3761,14 +3833,14 @@
       "entity": "Freguesia de Adães",
       "contracted": "Serralharia Soramos, Lda.",
       "value": "11.250,00 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "60 dias (Prazo de Execução)",
       "publication_date": "24-04-2026",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=14633196",
       "pieces_url": null,
       "matched_terms": [
         "Carrinha"
       ],
-      "summary": "• Objeto do Concurso: Construção de garagem para as carrinhas da Junta de Freguesia de Adães\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 11.250,00 €\n• Entidade Adjudicante: Freguesia de Adães",
+      "summary": "• Objeto do Concurso: Construção de garagem para as carrinhas da Junta de Freguesia de Adães\n• Prazo de Entrega da Proposta: 60 dias (Prazo de Execução)\n• Valor a Concurso: 11.250,00 €\n• Entidade Adjudicante: Freguesia de Adães",
       "is_dismissed": true
     },
     {
@@ -3818,14 +3890,14 @@
       "entity": "Município da Chamusca",
       "contracted": "Ana Isabel Narciso Caranguejeiro",
       "value": "17.400,00 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "365 dias (Prazo de Execução)",
       "publication_date": "23-04-2026",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=14618376",
       "pieces_url": null,
       "matched_terms": [
         "Biblioteca itinerante"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de Serviços – Biblioteca Itinerante do Ruy\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 17.400,00 €\n• Entidade Adjudicante: Município da Chamusca"
+      "summary": "• Objeto do Concurso: Aquisição de Serviços – Biblioteca Itinerante do Ruy\n• Prazo de Entrega da Proposta: 365 dias (Prazo de Execução)\n• Valor a Concurso: 17.400,00 €\n• Entidade Adjudicante: Município da Chamusca"
     },
     {
       "id": "base_contrato_14596737",
@@ -3911,14 +3983,14 @@
       "entity": "Unidade Local de Saúde da Lezíria, EPE",
       "contracted": "Workx4Pros - Soluções Especiais Lda",
       "value": "63.990,00 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "90 dias (Prazo de Execução)",
       "publication_date": "14-04-2026",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=14512241",
       "pieces_url": null,
       "matched_terms": [
         "Unidades Móveis"
       ],
-      "summary": "• Objeto do Concurso: AQUISIÇÃO DE UNIDADES MÓVEIS AO ABRIGO DO PRR PARA AS UNIDADES DE CUIDADOS DE SAÚDE PRIMÁRIOS - Concurso SPMS (Ref.ª 726/2023) Contrato n.º 35/2024\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 63.990,00 €\n• Entidade Adjudicante: Unidade Local de Saúde da Lezíria, EPE",
+      "summary": "• Objeto do Concurso: AQUISIÇÃO DE UNIDADES MÓVEIS AO ABRIGO DO PRR PARA AS UNIDADES DE CUIDADOS DE SAÚDE PRIMÁRIOS - Concurso SPMS (Ref.ª 726/2023) Contrato n.º 35/2024\n• Prazo de Entrega da Proposta: 90 dias (Prazo de Execução)\n• Valor a Concurso: 63.990,00 €\n• Entidade Adjudicante: Unidade Local de Saúde da Lezíria, EPE",
       "is_dismissed": true
     },
     {
@@ -4004,14 +4076,14 @@
       "entity": "Unidade Local de Saúde do Médio Tejo, EPE",
       "contracted": "Workx4Pros - Soluções Especiais, Lda",
       "value": "127.980,00 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "90 dias (Prazo de Execução)",
       "publication_date": "07-04-2026",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=14467917",
       "pieces_url": null,
       "matched_terms": [
         "Unidades Móveis"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de Duas Unidades Móveis, ao abrigo do PRR, para as Unidades de Cuidados de Saúde Primários\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 127.980,00 €\n• Entidade Adjudicante: Unidade Local de Saúde do Médio Tejo, EPE",
+      "summary": "• Objeto do Concurso: Aquisição de Duas Unidades Móveis, ao abrigo do PRR, para as Unidades de Cuidados de Saúde Primários\n• Prazo de Entrega da Proposta: 90 dias (Prazo de Execução)\n• Valor a Concurso: 127.980,00 €\n• Entidade Adjudicante: Unidade Local de Saúde do Médio Tejo, EPE",
       "is_dismissed": true
     },
     {
@@ -4042,14 +4114,14 @@
       "entity": "Município de Aljezur",
       "contracted": "Onda Predileta Lda.",
       "value": "87.350,00 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "10 dias.",
       "publication_date": "19-03-2026",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=14185781",
       "pieces_url": null,
       "matched_terms": [
         "Biblioteca itinerante"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de veículo para Biblioteca Itinerante online\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 87.350,00 €\n• Entidade Adjudicante: Município de Aljezur"
+      "summary": "• Objeto do Concurso: Aquisição de veículo para Biblioteca Itinerante online\n• Prazo de Entrega da Proposta: 10 dias.\n• Valor a Concurso: 87.350,00 €\n• Entidade Adjudicante: Município de Aljezur"
     },
     {
       "id": "base_contrato_14117558",
@@ -4060,14 +4132,14 @@
       "entity": "Comunidade Intermunicipal do Alto Alentejo",
       "contracted": "Xercode Media Software, SL",
       "value": "94.900,00 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "15 dias.",
       "publication_date": "16-03-2026",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=14117558",
       "pieces_url": null,
       "matched_terms": [
         "Biblioteca itinerante"
       ],
-      "summary": "• Objeto do Concurso: Modernização da infraestrutura tecnológica da rede de equipamentos culturais e submedida aquisição de equipamentos informáticos, bibliotecas itinerantes online e sistemas de informação e catálogos int...\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 94.900,00 €\n• Entidade Adjudicante: Comunidade Intermunicipal do Alto Alentejo"
+      "summary": "• Objeto do Concurso: Modernização da infraestrutura tecnológica da rede de equipamentos culturais e submedida aquisição de equipamentos informáticos, bibliotecas itinerantes online e sistemas de informação e catálogos int...\n• Prazo de Entrega da Proposta: 15 dias.\n• Valor a Concurso: 94.900,00 €\n• Entidade Adjudicante: Comunidade Intermunicipal do Alto Alentejo"
     },
     {
       "id": "base_contrato_13919357",
@@ -4096,14 +4168,14 @@
       "entity": "EMAC - Empresa Municipal de Ambiente de Cascais, EM, SA",
       "contracted": "MAN TRUCK &amp; BUS PORTUGAL, SOCIEDADE UNIPESSOAL LDA",
       "value": "163.500,00 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "27 dias.",
       "publication_date": "27-02-2026",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=13715456",
       "pieces_url": null,
       "matched_terms": [
         "Viaturas Especiais"
       ],
-      "summary": "• Objeto do Concurso: CPUB013DTEDGA2025 - Aquisição de 2 Viaturas Especiais Limpeza Urbana\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 163.500,00 €\n• Entidade Adjudicante: EMAC - Empresa Municipal de Ambiente de Cascais, EM, SA"
+      "summary": "• Objeto do Concurso: CPUB013DTEDGA2025 - Aquisição de 2 Viaturas Especiais Limpeza Urbana\n• Prazo de Entrega da Proposta: 27 dias.\n• Valor a Concurso: 163.500,00 €\n• Entidade Adjudicante: EMAC - Empresa Municipal de Ambiente de Cascais, EM, SA"
     },
     {
       "id": "base_contrato_13715004",
@@ -4114,14 +4186,14 @@
       "entity": "EMAC - Empresa Municipal de Ambiente de Cascais, EM, SA",
       "contracted": "MAN TRUCK &amp; BUS PORTUGAL, SOCIEDADE UNIPESSOAL LDA",
       "value": "101.450,00 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "27 dias.",
       "publication_date": "27-02-2026",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=13715004",
       "pieces_url": null,
       "matched_terms": [
         "Viaturas Especiais"
       ],
-      "summary": "• Objeto do Concurso: CPUB013DTEDGA2025 - Aquisição de 2 Viaturas Especiais Limpeza Urbana\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 101.450,00 €\n• Entidade Adjudicante: EMAC - Empresa Municipal de Ambiente de Cascais, EM, SA"
+      "summary": "• Objeto do Concurso: CPUB013DTEDGA2025 - Aquisição de 2 Viaturas Especiais Limpeza Urbana\n• Prazo de Entrega da Proposta: 27 dias.\n• Valor a Concurso: 101.450,00 €\n• Entidade Adjudicante: EMAC - Empresa Municipal de Ambiente de Cascais, EM, SA"
     },
     {
       "id": "base_anuncio_436379",
@@ -4222,14 +4294,14 @@
       "entity": "Município de Sernancelhe",
       "contracted": "Ana Margarida Leitão Gouveia",
       "value": "37.281,00 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "516 dias (Prazo de Execução)",
       "publication_date": "08-01-2026",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=12458849",
       "pieces_url": null,
       "matched_terms": [
         "Unidades Móveis"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de serviços de educação/serviço social no âmbito da operação NORTE2030-FSE+-02939400 - Balcão INCLUI (Ser + Próximo) | Aviso NORTE2030-2024-7 - Balcão da Inclusão — Unidades móveis em territ...\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 37.281,00 €\n• Entidade Adjudicante: Município de Sernancelhe",
+      "summary": "• Objeto do Concurso: Aquisição de serviços de educação/serviço social no âmbito da operação NORTE2030-FSE+-02939400 - Balcão INCLUI (Ser + Próximo) | Aviso NORTE2030-2024-7 - Balcão da Inclusão — Unidades móveis em territ...\n• Prazo de Entrega da Proposta: 516 dias (Prazo de Execução)\n• Valor a Concurso: 37.281,00 €\n• Entidade Adjudicante: Município de Sernancelhe",
       "is_dismissed": true
     },
     {
@@ -4241,14 +4313,14 @@
       "entity": "Município de Vila Viçosa",
       "contracted": "MIND - Software Multimédia e Industrial, S.A.",
       "value": "17.655,15 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "37 dias (Prazo de Execução)",
       "publication_date": "17-12-2025",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=12125362",
       "pieces_url": null,
       "matched_terms": [
         "Biblioteca itinerante"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de Software para Biblioteca Itinerante\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 17.655,15 €\n• Entidade Adjudicante: Município de Vila Viçosa"
+      "summary": "• Objeto do Concurso: Aquisição de Software para Biblioteca Itinerante\n• Prazo de Entrega da Proposta: 37 dias (Prazo de Execução)\n• Valor a Concurso: 17.655,15 €\n• Entidade Adjudicante: Município de Vila Viçosa"
     },
     {
       "id": "base_contrato_12049855",
@@ -4259,14 +4331,14 @@
       "entity": "Município de Lamego",
       "contracted": "KINTO PORTUGAL, S.A.",
       "value": "36.237,60 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "1096 dias (Prazo de Execução)",
       "publication_date": "11-12-2025",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=12049855",
       "pieces_url": null,
       "matched_terms": [
         "Unidades Móveis"
       ],
-      "summary": "• Objeto do Concurso: ALUGUER OPERACIONAL DE VEÍCULO PARA BALCÃO DA INCLUSÃO - UNIDADES MÓVEIS EM TERRITÓRIOS DE BAIXA DENSIDADE (ITI), NO ÂMBITO DA\nCANDIDATURA NORTE2030-2024-7\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 36.237,60 €\n• Entidade Adjudicante: Município de Lamego",
+      "summary": "• Objeto do Concurso: ALUGUER OPERACIONAL DE VEÍCULO PARA BALCÃO DA INCLUSÃO - UNIDADES MÓVEIS EM TERRITÓRIOS DE BAIXA DENSIDADE (ITI), NO ÂMBITO DA\nCANDIDATURA NORTE2030-2024-7\n• Prazo de Entrega da Proposta: 1096 dias (Prazo de Execução)\n• Valor a Concurso: 36.237,60 €\n• Entidade Adjudicante: Município de Lamego",
       "is_dismissed": true
     },
     {
@@ -4368,14 +4440,14 @@
       "entity": "Município de Lamego",
       "contracted": "Afonso Loureiro Xavier",
       "value": "14.054,56 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "485 dias (Prazo de Execução)",
       "publication_date": "17-11-2025",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=11950669",
       "pieces_url": null,
       "matched_terms": [
         "Unidades Móveis"
       ],
-      "summary": "• Objeto do Concurso: AQUISIÇÃO DE SERVIÇOS DE 1 TÉCNICO PARA O BALCÃO DA INCLUSÃO  UNIDADES MÓVEIS EM TERRITÓRIOS DE BAIXA DENSIDADE (ITI)\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 14.054,56 €\n• Entidade Adjudicante: Município de Lamego",
+      "summary": "• Objeto do Concurso: AQUISIÇÃO DE SERVIÇOS DE 1 TÉCNICO PARA O BALCÃO DA INCLUSÃO  UNIDADES MÓVEIS EM TERRITÓRIOS DE BAIXA DENSIDADE (ITI)\n• Prazo de Entrega da Proposta: 485 dias (Prazo de Execução)\n• Valor a Concurso: 14.054,56 €\n• Entidade Adjudicante: Município de Lamego",
       "is_dismissed": true
     },
     {
@@ -4423,14 +4495,14 @@
       "entity": "Área Metropolitana de Lisboa",
       "contracted": "CPCECHO, Lda",
       "value": "15.277,90 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "32 dias.",
       "publication_date": "01-11-2025",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=11875452",
       "pieces_url": null,
       "matched_terms": [
         "Biblioteca itinerante"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de Equipamentos informáticos (hardware e software), para a Rede de Bibliotecas Públicas, a distribuir pelos municípios da Área Metropolitana de Lisboa, no âmbito da candidatura à Componente ...\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 15.277,90 €\n• Entidade Adjudicante: Área Metropolitana de Lisboa"
+      "summary": "• Objeto do Concurso: Aquisição de Equipamentos informáticos (hardware e software), para a Rede de Bibliotecas Públicas, a distribuir pelos municípios da Área Metropolitana de Lisboa, no âmbito da candidatura à Componente ...\n• Prazo de Entrega da Proposta: 32 dias.\n• Valor a Concurso: 15.277,90 €\n• Entidade Adjudicante: Área Metropolitana de Lisboa"
     },
     {
       "id": "base_contrato_11875450",
@@ -4441,14 +4513,14 @@
       "entity": "Área Metropolitana de Lisboa",
       "contracted": "CPCECHO, Lda",
       "value": "38.889,20 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "32 dias.",
       "publication_date": "01-11-2025",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=11875450",
       "pieces_url": null,
       "matched_terms": [
         "Biblioteca itinerante"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de Equipamentos informáticos (hardware e software), para a Rede de Bibliotecas Públicas, a distribuir pelos municípios da Área Metropolitana de Lisboa, no âmbito da candidatura à Componente ...\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 38.889,20 €\n• Entidade Adjudicante: Área Metropolitana de Lisboa"
+      "summary": "• Objeto do Concurso: Aquisição de Equipamentos informáticos (hardware e software), para a Rede de Bibliotecas Públicas, a distribuir pelos municípios da Área Metropolitana de Lisboa, no âmbito da candidatura à Componente ...\n• Prazo de Entrega da Proposta: 32 dias.\n• Valor a Concurso: 38.889,20 €\n• Entidade Adjudicante: Área Metropolitana de Lisboa"
     },
     {
       "id": "base_contrato_11875449",
@@ -4459,14 +4531,14 @@
       "entity": "Área Metropolitana de Lisboa",
       "contracted": "CPCECHO, Lda",
       "value": "17.361,25 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "32 dias.",
       "publication_date": "01-11-2025",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=11875449",
       "pieces_url": null,
       "matched_terms": [
         "Biblioteca itinerante"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de Equipamentos informáticos (hardware e software), para a Rede de Bibliotecas Públicas, a distribuir pelos municípios da Área Metropolitana de Lisboa, no âmbito da candidatura à Componente ...\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 17.361,25 €\n• Entidade Adjudicante: Área Metropolitana de Lisboa"
+      "summary": "• Objeto do Concurso: Aquisição de Equipamentos informáticos (hardware e software), para a Rede de Bibliotecas Públicas, a distribuir pelos municípios da Área Metropolitana de Lisboa, no âmbito da candidatura à Componente ...\n• Prazo de Entrega da Proposta: 32 dias.\n• Valor a Concurso: 17.361,25 €\n• Entidade Adjudicante: Área Metropolitana de Lisboa"
     },
     {
       "id": "base_contrato_11875448",
@@ -4477,14 +4549,14 @@
       "entity": "Área Metropolitana de Lisboa",
       "contracted": "CPCECHO, Lda",
       "value": "22.222,40 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "32 dias.",
       "publication_date": "01-11-2025",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=11875448",
       "pieces_url": null,
       "matched_terms": [
         "Biblioteca itinerante"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de Equipamentos informáticos (hardware e software), para a Rede de Bibliotecas Públicas, a distribuir pelos municípios da Área Metropolitana de Lisboa, no âmbito da candidatura à Componente ...\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 22.222,40 €\n• Entidade Adjudicante: Área Metropolitana de Lisboa"
+      "summary": "• Objeto do Concurso: Aquisição de Equipamentos informáticos (hardware e software), para a Rede de Bibliotecas Públicas, a distribuir pelos municípios da Área Metropolitana de Lisboa, no âmbito da candidatura à Componente ...\n• Prazo de Entrega da Proposta: 32 dias.\n• Valor a Concurso: 22.222,40 €\n• Entidade Adjudicante: Área Metropolitana de Lisboa"
     },
     {
       "id": "base_contrato_11875447",
@@ -4495,14 +4567,14 @@
       "entity": "Área Metropolitana de Lisboa",
       "contracted": "CPCECHO, Lda",
       "value": "24.305,75 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "32 dias.",
       "publication_date": "01-11-2025",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=11875447",
       "pieces_url": null,
       "matched_terms": [
         "Biblioteca itinerante"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de Equipamentos informáticos (hardware e software), para a Rede de Bibliotecas Públicas, a distribuir pelos municípios da Área Metropolitana de Lisboa, no âmbito da candidatura à Componente ...\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 24.305,75 €\n• Entidade Adjudicante: Área Metropolitana de Lisboa"
+      "summary": "• Objeto do Concurso: Aquisição de Equipamentos informáticos (hardware e software), para a Rede de Bibliotecas Públicas, a distribuir pelos municípios da Área Metropolitana de Lisboa, no âmbito da candidatura à Componente ...\n• Prazo de Entrega da Proposta: 32 dias.\n• Valor a Concurso: 24.305,75 €\n• Entidade Adjudicante: Área Metropolitana de Lisboa"
     },
     {
       "id": "base_contrato_11875446",
@@ -4513,14 +4585,14 @@
       "entity": "Área Metropolitana de Lisboa",
       "contracted": "CPCECHO, Lda",
       "value": "21.527,95 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "32 dias.",
       "publication_date": "01-11-2025",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=11875446",
       "pieces_url": null,
       "matched_terms": [
         "Biblioteca itinerante"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de Equipamentos informáticos (hardware e software), para a Rede de Bibliotecas Públicas, a distribuir pelos municípios da Área Metropolitana de Lisboa, no âmbito da candidatura à Componente ...\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 21.527,95 €\n• Entidade Adjudicante: Área Metropolitana de Lisboa"
+      "summary": "• Objeto do Concurso: Aquisição de Equipamentos informáticos (hardware e software), para a Rede de Bibliotecas Públicas, a distribuir pelos municípios da Área Metropolitana de Lisboa, no âmbito da candidatura à Componente ...\n• Prazo de Entrega da Proposta: 32 dias.\n• Valor a Concurso: 21.527,95 €\n• Entidade Adjudicante: Área Metropolitana de Lisboa"
     },
     {
       "id": "base_contrato_11875445",
@@ -4531,14 +4603,14 @@
       "entity": "Área Metropolitana de Lisboa",
       "contracted": "CPCECHO, Lda",
       "value": "21.527,95 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "32 dias.",
       "publication_date": "01-11-2025",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=11875445",
       "pieces_url": null,
       "matched_terms": [
         "Biblioteca itinerante"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de Equipamentos informáticos (hardware e software), para a Rede de Bibliotecas Públicas, a distribuir pelos municípios da Área Metropolitana de Lisboa, no âmbito da candidatura à Componente ...\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 21.527,95 €\n• Entidade Adjudicante: Área Metropolitana de Lisboa"
+      "summary": "• Objeto do Concurso: Aquisição de Equipamentos informáticos (hardware e software), para a Rede de Bibliotecas Públicas, a distribuir pelos municípios da Área Metropolitana de Lisboa, no âmbito da candidatura à Componente ...\n• Prazo de Entrega da Proposta: 32 dias.\n• Valor a Concurso: 21.527,95 €\n• Entidade Adjudicante: Área Metropolitana de Lisboa"
     },
     {
       "id": "base_contrato_11875444",
@@ -4549,14 +4621,14 @@
       "entity": "Área Metropolitana de Lisboa",
       "contracted": "CPCECHO, Lda",
       "value": "13.194,55 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "32 dias.",
       "publication_date": "01-11-2025",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=11875444",
       "pieces_url": null,
       "matched_terms": [
         "Biblioteca itinerante"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de Equipamentos informáticos (hardware e software), para a Rede de Bibliotecas Públicas, a distribuir pelos municípios da Área Metropolitana de Lisboa, no âmbito da candidatura à Componente ...\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 13.194,55 €\n• Entidade Adjudicante: Área Metropolitana de Lisboa"
+      "summary": "• Objeto do Concurso: Aquisição de Equipamentos informáticos (hardware e software), para a Rede de Bibliotecas Públicas, a distribuir pelos municípios da Área Metropolitana de Lisboa, no âmbito da candidatura à Componente ...\n• Prazo de Entrega da Proposta: 32 dias.\n• Valor a Concurso: 13.194,55 €\n• Entidade Adjudicante: Área Metropolitana de Lisboa"
     },
     {
       "id": "base_contrato_11875443",
@@ -4567,14 +4639,14 @@
       "entity": "Área Metropolitana de Lisboa",
       "contracted": "CPCECHO, Lda",
       "value": "9.027,85 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "32 dias.",
       "publication_date": "01-11-2025",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=11875443",
       "pieces_url": null,
       "matched_terms": [
         "Biblioteca itinerante"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de Equipamentos informáticos (hardware e software), para a Rede de Bibliotecas Públicas, a distribuir pelos municípios da Área Metropolitana de Lisboa, no âmbito da candidatura à Componente ...\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 9.027,85 €\n• Entidade Adjudicante: Área Metropolitana de Lisboa"
+      "summary": "• Objeto do Concurso: Aquisição de Equipamentos informáticos (hardware e software), para a Rede de Bibliotecas Públicas, a distribuir pelos municípios da Área Metropolitana de Lisboa, no âmbito da candidatura à Componente ...\n• Prazo de Entrega da Proposta: 32 dias.\n• Valor a Concurso: 9.027,85 €\n• Entidade Adjudicante: Área Metropolitana de Lisboa"
     },
     {
       "id": "base_contrato_11875441",
@@ -4585,14 +4657,14 @@
       "entity": "Área Metropolitana de Lisboa",
       "contracted": "CPCECHO, Lda",
       "value": "24.305,75 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "32 dias.",
       "publication_date": "01-11-2025",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=11875441",
       "pieces_url": null,
       "matched_terms": [
         "Biblioteca itinerante"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de Equipamentos informáticos (hardware e software), para a Rede de Bibliotecas Públicas, a distribuir pelos municípios da Área Metropolitana de Lisboa, no âmbito da candidatura à Componente ...\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 24.305,75 €\n• Entidade Adjudicante: Área Metropolitana de Lisboa"
+      "summary": "• Objeto do Concurso: Aquisição de Equipamentos informáticos (hardware e software), para a Rede de Bibliotecas Públicas, a distribuir pelos municípios da Área Metropolitana de Lisboa, no âmbito da candidatura à Componente ...\n• Prazo de Entrega da Proposta: 32 dias.\n• Valor a Concurso: 24.305,75 €\n• Entidade Adjudicante: Área Metropolitana de Lisboa"
     },
     {
       "id": "base_contrato_11875439",
@@ -4603,14 +4675,14 @@
       "entity": "Área Metropolitana de Lisboa",
       "contracted": "CPCECHO, Lda",
       "value": "29.861,35 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "32 dias.",
       "publication_date": "01-11-2025",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=11875439",
       "pieces_url": null,
       "matched_terms": [
         "Biblioteca itinerante"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de Equipamentos informáticos (hardware e software), para a Rede de Bibliotecas Públicas, a distribuir pelos municípios da Área Metropolitana de Lisboa, no âmbito da candidatura à Componente ...\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 29.861,35 €\n• Entidade Adjudicante: Área Metropolitana de Lisboa"
+      "summary": "• Objeto do Concurso: Aquisição de Equipamentos informáticos (hardware e software), para a Rede de Bibliotecas Públicas, a distribuir pelos municípios da Área Metropolitana de Lisboa, no âmbito da candidatura à Componente ...\n• Prazo de Entrega da Proposta: 32 dias.\n• Valor a Concurso: 29.861,35 €\n• Entidade Adjudicante: Área Metropolitana de Lisboa"
     },
     {
       "id": "base_contrato_11875437",
@@ -4621,14 +4693,14 @@
       "entity": "Área Metropolitana de Lisboa",
       "contracted": "CPCECHO, Lda",
       "value": "45.139,25 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "32 dias.",
       "publication_date": "01-11-2025",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=11875437",
       "pieces_url": null,
       "matched_terms": [
         "Biblioteca itinerante"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de Equipamentos informáticos (hardware e software), para a Rede de Bibliotecas Públicas, a distribuir pelos municípios da Área Metropolitana de Lisboa, no âmbito da candidatura à Componente ...\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 45.139,25 €\n• Entidade Adjudicante: Área Metropolitana de Lisboa"
+      "summary": "• Objeto do Concurso: Aquisição de Equipamentos informáticos (hardware e software), para a Rede de Bibliotecas Públicas, a distribuir pelos municípios da Área Metropolitana de Lisboa, no âmbito da candidatura à Componente ...\n• Prazo de Entrega da Proposta: 32 dias.\n• Valor a Concurso: 45.139,25 €\n• Entidade Adjudicante: Área Metropolitana de Lisboa"
     },
     {
       "id": "base_contrato_11875434",
@@ -4639,14 +4711,14 @@
       "entity": "Área Metropolitana de Lisboa",
       "contracted": "CPCECHO, Lda",
       "value": "10.416,75 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "32 dias.",
       "publication_date": "01-11-2025",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=11875434",
       "pieces_url": null,
       "matched_terms": [
         "Biblioteca itinerante"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de Equipamentos informáticos (hardware e software), para a Rede de Bibliotecas Públicas, a distribuir pelos municípios da Área Metropolitana de Lisboa, no âmbito da candidatura à Componente ...\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 10.416,75 €\n• Entidade Adjudicante: Área Metropolitana de Lisboa"
+      "summary": "• Objeto do Concurso: Aquisição de Equipamentos informáticos (hardware e software), para a Rede de Bibliotecas Públicas, a distribuir pelos municípios da Área Metropolitana de Lisboa, no âmbito da candidatura à Componente ...\n• Prazo de Entrega da Proposta: 32 dias.\n• Valor a Concurso: 10.416,75 €\n• Entidade Adjudicante: Área Metropolitana de Lisboa"
     },
     {
       "id": "base_contrato_11875433",
@@ -4657,14 +4729,14 @@
       "entity": "Área Metropolitana de Lisboa",
       "contracted": "CPCECHO, Lda",
       "value": "20.833,50 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "32 dias.",
       "publication_date": "01-11-2025",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=11875433",
       "pieces_url": null,
       "matched_terms": [
         "Biblioteca itinerante"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de Equipamentos informáticos (hardware e software), para a Rede de Bibliotecas Públicas, a distribuir pelos municípios da Área Metropolitana de Lisboa, no âmbito da candidatura à Componente ...\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 20.833,50 €\n• Entidade Adjudicante: Área Metropolitana de Lisboa"
+      "summary": "• Objeto do Concurso: Aquisição de Equipamentos informáticos (hardware e software), para a Rede de Bibliotecas Públicas, a distribuir pelos municípios da Área Metropolitana de Lisboa, no âmbito da candidatura à Componente ...\n• Prazo de Entrega da Proposta: 32 dias.\n• Valor a Concurso: 20.833,50 €\n• Entidade Adjudicante: Área Metropolitana de Lisboa"
     },
     {
       "id": "base_contrato_11875431",
@@ -4675,14 +4747,14 @@
       "entity": "Área Metropolitana de Lisboa",
       "contracted": "CPCECHO, Lda",
       "value": "27.083,55 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "32 dias.",
       "publication_date": "01-11-2025",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=11875431",
       "pieces_url": null,
       "matched_terms": [
         "Biblioteca itinerante"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de Equipamentos informáticos (hardware e software), para a Rede de Bibliotecas Públicas, a distribuir pelos municípios da Área Metropolitana de Lisboa, no âmbito da candidatura à Componente ...\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 27.083,55 €\n• Entidade Adjudicante: Área Metropolitana de Lisboa"
+      "summary": "• Objeto do Concurso: Aquisição de Equipamentos informáticos (hardware e software), para a Rede de Bibliotecas Públicas, a distribuir pelos municípios da Área Metropolitana de Lisboa, no âmbito da candidatura à Componente ...\n• Prazo de Entrega da Proposta: 32 dias.\n• Valor a Concurso: 27.083,55 €\n• Entidade Adjudicante: Área Metropolitana de Lisboa"
     },
     {
       "id": "base_contrato_11875429",
@@ -4693,14 +4765,14 @@
       "entity": "Área Metropolitana de Lisboa",
       "contracted": "CPCECHO, Lda",
       "value": "14.583,45 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "32 dias.",
       "publication_date": "01-11-2025",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=11875429",
       "pieces_url": null,
       "matched_terms": [
         "Biblioteca itinerante"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de Equipamentos informáticos (hardware e software), para a Rede de Bibliotecas Públicas, a distribuir pelos municípios da Área Metropolitana de Lisboa, no âmbito da candidatura à Componente ...\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 14.583,45 €\n• Entidade Adjudicante: Área Metropolitana de Lisboa"
+      "summary": "• Objeto do Concurso: Aquisição de Equipamentos informáticos (hardware e software), para a Rede de Bibliotecas Públicas, a distribuir pelos municípios da Área Metropolitana de Lisboa, no âmbito da candidatura à Componente ...\n• Prazo de Entrega da Proposta: 32 dias.\n• Valor a Concurso: 14.583,45 €\n• Entidade Adjudicante: Área Metropolitana de Lisboa"
     },
     {
       "id": "base_anuncio_426607",
@@ -4801,14 +4873,14 @@
       "entity": "Município de Vila Viçosa",
       "contracted": "TRANSVETRA - TRANSFORMAÇÃO DE VEÍCULOS, LDA.",
       "value": "84.466,00 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "9 dias.",
       "publication_date": "02-07-2025",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=11550347",
       "pieces_url": null,
       "matched_terms": [
         "Biblioteca itinerante"
       ],
-      "summary": "• Objeto do Concurso: AQUISIÇÃO DE VIATURA – BIBLIOTECA ITINERANTE\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 84.466,00 €\n• Entidade Adjudicante: Município de Vila Viçosa"
+      "summary": "• Objeto do Concurso: AQUISIÇÃO DE VIATURA – BIBLIOTECA ITINERANTE\n• Prazo de Entrega da Proposta: 9 dias.\n• Valor a Concurso: 84.466,00 €\n• Entidade Adjudicante: Município de Vila Viçosa"
     },
     {
       "id": "base_anuncio_416891",
@@ -4873,14 +4945,14 @@
       "entity": "Município de Terras de Bouro",
       "contracted": "Livraria Minho – Ferreira, Unipessoal, Lda.",
       "value": "8.447,15 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "30 dias (Prazo de Execução)",
       "publication_date": "26-05-2025",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=11462225",
       "pieces_url": null,
       "matched_terms": [
         "Biblioteca itinerante"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de fundo documental - Biblioteca Itinerante\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 8.447,15 €\n• Entidade Adjudicante: Município de Terras de Bouro"
+      "summary": "• Objeto do Concurso: Aquisição de fundo documental - Biblioteca Itinerante\n• Prazo de Entrega da Proposta: 30 dias (Prazo de Execução)\n• Valor a Concurso: 8.447,15 €\n• Entidade Adjudicante: Município de Terras de Bouro"
     },
     {
       "id": "base_anuncio_412724",
@@ -4963,14 +5035,14 @@
       "entity": "Comunidade Intermunicipal do Alto Alentejo",
       "contracted": "Inforabreu, Lda.",
       "value": "80.298,00 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "9 dias.",
       "publication_date": "14-04-2025",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=11346270",
       "pieces_url": null,
       "matched_terms": [
         "Biblioteca itinerante"
       ],
-      "summary": "• Objeto do Concurso: O presente procedimento insere-se no âmbito da componente de Investimento RE-C04-i01 – Redes Culturais e Transição Digital, cuja concretização se pretende implementada através da Medida de Investiment...\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 80.298,00 €\n• Entidade Adjudicante: Comunidade Intermunicipal do Alto Alentejo"
+      "summary": "• Objeto do Concurso: O presente procedimento insere-se no âmbito da componente de Investimento RE-C04-i01 – Redes Culturais e Transição Digital, cuja concretização se pretende implementada através da Medida de Investiment...\n• Prazo de Entrega da Proposta: 9 dias.\n• Valor a Concurso: 80.298,00 €\n• Entidade Adjudicante: Comunidade Intermunicipal do Alto Alentejo"
     },
     {
       "id": "base_anuncio_408579",
@@ -5053,14 +5125,14 @@
       "entity": "Município de Terras de Bouro",
       "contracted": "KEEP SOLUTIONS, LDA",
       "value": "15.687,00 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "90 dias (Prazo de Execução)",
       "publication_date": "07-02-2025",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=11213574",
       "pieces_url": null,
       "matched_terms": [
         "Biblioteca itinerante"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de sistema de informação/software integrado de gestão de bibliotecas – Biblioteca Itinerante do Município de Terras de Bouro\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 15.687,00 €\n• Entidade Adjudicante: Município de Terras de Bouro"
+      "summary": "• Objeto do Concurso: Aquisição de sistema de informação/software integrado de gestão de bibliotecas – Biblioteca Itinerante do Município de Terras de Bouro\n• Prazo de Entrega da Proposta: 90 dias (Prazo de Execução)\n• Valor a Concurso: 15.687,00 €\n• Entidade Adjudicante: Município de Terras de Bouro"
     },
     {
       "id": "base_anuncio_398466",
@@ -5143,14 +5215,14 @@
       "entity": "Serviços Intermunicipalizados de Águas e Resíduos dos Municípios de Loures e Odivelas",
       "contracted": "D2B, Lda",
       "value": "150.000,00 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "9 dias.",
       "publication_date": "31-10-2024",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=11002923",
       "pieces_url": null,
       "matched_terms": [
         "Viaturas Especiais"
       ],
-      "summary": "• Objeto do Concurso: Prestação de Serviços de Manutenção Preventiva e Corretiva de Superestruturas de Viaturas Especiais de Recolha Lateral de Resíduos Urbanos\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 150.000,00 €\n• Entidade Adjudicante: Serviços Intermunicipalizados de Águas e Resíduos dos Municípios de Loures e Odivelas"
+      "summary": "• Objeto do Concurso: Prestação de Serviços de Manutenção Preventiva e Corretiva de Superestruturas de Viaturas Especiais de Recolha Lateral de Resíduos Urbanos\n• Prazo de Entrega da Proposta: 9 dias.\n• Valor a Concurso: 150.000,00 €\n• Entidade Adjudicante: Serviços Intermunicipalizados de Águas e Resíduos dos Municípios de Loures e Odivelas"
     },
     {
       "id": "base_anuncio_390174",
@@ -5215,14 +5287,14 @@
       "entity": "Município de Alfândega da Fé",
       "contracted": "Luís Augusto Rego Afonso",
       "value": "16.900,00 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "365 dias (Prazo de Execução)",
       "publication_date": "13-09-2024",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=10918327",
       "pieces_url": null,
       "matched_terms": [
         "Viaturas Especiais"
       ],
-      "summary": "• Objeto do Concurso: “Aquisição de serviços de um condutor de máquinas pesadas e viaturas especiais”\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 16.900,00 €\n• Entidade Adjudicante: Município de Alfândega da Fé"
+      "summary": "• Objeto do Concurso: “Aquisição de serviços de um condutor de máquinas pesadas e viaturas especiais”\n• Prazo de Entrega da Proposta: 365 dias (Prazo de Execução)\n• Valor a Concurso: 16.900,00 €\n• Entidade Adjudicante: Município de Alfândega da Fé"
     },
     {
       "id": "base_anuncio_394643",
@@ -5323,14 +5395,14 @@
       "entity": "Município de Barcelos",
       "contracted": "MARTA PEREIRA EVANGELISTA",
       "value": "13.861,72 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "40 dias (Prazo de Execução)",
       "publication_date": "24-06-2024",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=10785830",
       "pieces_url": null,
       "matched_terms": [
         "Biblioteca itinerante"
       ],
-      "summary": "• Objeto do Concurso: Livros para Bibliotecas Itinerantes\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 13.861,72 €\n• Entidade Adjudicante: Município de Barcelos"
+      "summary": "• Objeto do Concurso: Livros para Bibliotecas Itinerantes\n• Prazo de Entrega da Proposta: 40 dias (Prazo de Execução)\n• Valor a Concurso: 13.861,72 €\n• Entidade Adjudicante: Município de Barcelos"
     },
     {
       "id": "base_anuncio_381025",
@@ -5521,14 +5593,14 @@
       "entity": "Serviços Intermunicipalizados de Águas e Resíduos dos Municípios de Loures e Odivelas",
       "contracted": "Simopeças, Lda",
       "value": "150.000,00 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "9 dias.",
       "publication_date": "03-11-2023",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=10325909",
       "pieces_url": null,
       "matched_terms": [
         "Viaturas Especiais"
       ],
-      "summary": "• Objeto do Concurso: CP 44/2023-Prestação Serviços Manutenção/Reparação Superestruturas de Viaturas Especiais RSU-Caixas Recolha Resíduos Multimarcas 7m3 /20m3\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 150.000,00 €\n• Entidade Adjudicante: Serviços Intermunicipalizados de Águas e Resíduos dos Municípios de Loures e Odivelas"
+      "summary": "• Objeto do Concurso: CP 44/2023-Prestação Serviços Manutenção/Reparação Superestruturas de Viaturas Especiais RSU-Caixas Recolha Resíduos Multimarcas 7m3 /20m3\n• Prazo de Entrega da Proposta: 9 dias.\n• Valor a Concurso: 150.000,00 €\n• Entidade Adjudicante: Serviços Intermunicipalizados de Águas e Resíduos dos Municípios de Loures e Odivelas"
     },
     {
       "id": "base_anuncio_360030",
@@ -5665,14 +5737,14 @@
       "entity": "Município de Alfândega da Fé",
       "contracted": "Luís Augusto Rego Afonso",
       "value": "13.500,00 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "366 dias (Prazo de Execução)",
       "publication_date": "08-08-2023",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=10180148",
       "pieces_url": null,
       "matched_terms": [
         "Viaturas Especiais"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de serviços de um condutor de máquinas pesadas e viaturas especiais, a prestar no Município de Alfândega da Fé\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 13.500,00 €\n• Entidade Adjudicante: Município de Alfândega da Fé"
+      "summary": "• Objeto do Concurso: Aquisição de serviços de um condutor de máquinas pesadas e viaturas especiais, a prestar no Município de Alfândega da Fé\n• Prazo de Entrega da Proposta: 366 dias (Prazo de Execução)\n• Valor a Concurso: 13.500,00 €\n• Entidade Adjudicante: Município de Alfândega da Fé"
     },
     {
       "id": "base_anuncio_353642",
@@ -5737,14 +5809,14 @@
       "entity": "Serviços Municipalizados de Saneamento Básico de Viana do Castelo",
       "contracted": "IRMÃOS JÁCOME, LDA",
       "value": "39.800,00 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "30 dias.",
       "publication_date": "26-04-2023",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=9947597",
       "pieces_url": null,
       "matched_terms": [
         "Viaturas Especiais"
       ],
-      "summary": "• Objeto do Concurso: Prestação de Serviço de Manutenção Preventiva e Corretiva de Superestruturas de Viaturas Especiais de Recolha Lateral\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 39.800,00 €\n• Entidade Adjudicante: Serviços Municipalizados de Saneamento Básico de Viana do Castelo"
+      "summary": "• Objeto do Concurso: Prestação de Serviço de Manutenção Preventiva e Corretiva de Superestruturas de Viaturas Especiais de Recolha Lateral\n• Prazo de Entrega da Proposta: 30 dias.\n• Valor a Concurso: 39.800,00 €\n• Entidade Adjudicante: Serviços Municipalizados de Saneamento Básico de Viana do Castelo"
     },
     {
       "id": "base_anuncio_345481",
@@ -5953,14 +6025,14 @@
       "entity": "Serviços Intermunicipalizados de Águas e Resíduos dos Municípios de Loures e Odivelas",
       "contracted": "Go Partnrers",
       "value": "150.000,00 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "9 dias.",
       "publication_date": "21-06-2021",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=7725952",
       "pieces_url": null,
       "matched_terms": [
         "Viaturas Especiais"
       ],
-      "summary": "• Objeto do Concurso: CP 41/2020-Prestação Serviços Lavagem,Lubrificação Viaturas Especiais de Resíduos Urbanos\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 150.000,00 €\n• Entidade Adjudicante: Serviços Intermunicipalizados de Águas e Resíduos dos Municípios de Loures e Odivelas"
+      "summary": "• Objeto do Concurso: CP 41/2020-Prestação Serviços Lavagem,Lubrificação Viaturas Especiais de Resíduos Urbanos\n• Prazo de Entrega da Proposta: 9 dias.\n• Valor a Concurso: 150.000,00 €\n• Entidade Adjudicante: Serviços Intermunicipalizados de Águas e Resíduos dos Municípios de Loures e Odivelas"
     },
     {
       "id": "base_contrato_7593002",
@@ -5971,14 +6043,14 @@
       "entity": "Serviços Intermunicipalizados de Águas e Resíduos dos Municípios de Loures e Odivelas",
       "contracted": "BLUEOTTER CIRCULAR, SA",
       "value": "19.950,00 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "105 dias (Prazo de Execução)",
       "publication_date": "30-03-2021",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=7593002",
       "pieces_url": null,
       "matched_terms": [
         "Viaturas Especiais"
       ],
-      "summary": "• Objeto do Concurso: Prestação de Serviços de Lubrificação de Viaturas Especiais e Resíduos Urbanos\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 19.950,00 €\n• Entidade Adjudicante: Serviços Intermunicipalizados de Águas e Resíduos dos Municípios de Loures e Odivelas"
+      "summary": "• Objeto do Concurso: Prestação de Serviços de Lubrificação de Viaturas Especiais e Resíduos Urbanos\n• Prazo de Entrega da Proposta: 105 dias (Prazo de Execução)\n• Valor a Concurso: 19.950,00 €\n• Entidade Adjudicante: Serviços Intermunicipalizados de Águas e Resíduos dos Municípios de Loures e Odivelas"
     },
     {
       "id": "base_contrato_7534125",
@@ -6043,14 +6115,14 @@
       "entity": "Serviços Intermunicipalizados de Águas e Resíduos dos Municípios de Loures e Odivelas",
       "contracted": "D2B, LDA.",
       "value": "100.000,00 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "9 dias.",
       "publication_date": "07-01-2021",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=7375093",
       "pieces_url": null,
       "matched_terms": [
         "Viaturas Especiais"
       ],
-      "summary": "• Objeto do Concurso: CP 36/2020 - Prestação Serviço Continuado Manutenção Preventiva e Corretiva de Superestruturas  de Viaturas Especiais de Recolha Lateral  Resíduos Urbanos.\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 100.000,00 €\n• Entidade Adjudicante: Serviços Intermunicipalizados de Águas e Resíduos dos Municípios de Loures e Odivelas"
+      "summary": "• Objeto do Concurso: CP 36/2020 - Prestação Serviço Continuado Manutenção Preventiva e Corretiva de Superestruturas  de Viaturas Especiais de Recolha Lateral  Resíduos Urbanos.\n• Prazo de Entrega da Proposta: 9 dias.\n• Valor a Concurso: 100.000,00 €\n• Entidade Adjudicante: Serviços Intermunicipalizados de Águas e Resíduos dos Municípios de Loures e Odivelas"
     },
     {
       "id": "base_anuncio_254327",
@@ -6097,14 +6169,14 @@
       "entity": "Ambiolhão - Empresa Municipal de Ambiente de Olhão, E. M.",
       "contracted": "Hidralsul, Unipessoal, Lda.",
       "value": "70.000,00 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "1095 dias (Prazo de Execução)",
       "publication_date": "22-09-2020",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=6981710",
       "pieces_url": null,
       "matched_terms": [
         "Viaturas Especiais"
       ],
-      "summary": "• Objeto do Concurso: 25/20 - Manutenção e reparação de viaturas especiais, aquisição e reaparação de sistemas hidraulicos\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 70.000,00 €\n• Entidade Adjudicante: Ambiolhão - Empresa Municipal de Ambiente de Olhão, E. M."
+      "summary": "• Objeto do Concurso: 25/20 - Manutenção e reparação de viaturas especiais, aquisição e reaparação de sistemas hidraulicos\n• Prazo de Entrega da Proposta: 1095 dias (Prazo de Execução)\n• Valor a Concurso: 70.000,00 €\n• Entidade Adjudicante: Ambiolhão - Empresa Municipal de Ambiente de Olhão, E. M."
     },
     {
       "id": "base_contrato_6811605",
@@ -6115,14 +6187,14 @@
       "entity": "Serviços Intermunicipalizados de Águas e Resíduos dos Municípios de Loures e Odivelas",
       "contracted": "Ergsilva - Construção e Restauro de Edifícios, S.A.",
       "value": "398.940,00 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "40 dias.",
       "publication_date": "30-07-2020",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=6811605",
       "pieces_url": null,
       "matched_terms": [
         "Viaturas Especiais"
       ],
-      "summary": "• Objeto do Concurso: Empreitada de Construção do Posto de Lavagem de Viaturas Especiais no Juncal\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 398.940,00 €\n• Entidade Adjudicante: Serviços Intermunicipalizados de Águas e Resíduos dos Municípios de Loures e Odivelas"
+      "summary": "• Objeto do Concurso: Empreitada de Construção do Posto de Lavagem de Viaturas Especiais no Juncal\n• Prazo de Entrega da Proposta: 40 dias.\n• Valor a Concurso: 398.940,00 €\n• Entidade Adjudicante: Serviços Intermunicipalizados de Águas e Resíduos dos Municípios de Loures e Odivelas"
     },
     {
       "id": "base_anuncio_212222",
@@ -6205,14 +6277,14 @@
       "entity": "Serviços Intermunicipalizados de Águas e Resíduos dos Municípios de Loures e Odivelas",
       "contracted": "BLUEOTTER - Circular, S.A.",
       "value": "74.900,00 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "365 dias (Prazo de Execução)",
       "publication_date": "23-12-2019",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=6135631",
       "pieces_url": null,
       "matched_terms": [
         "Viaturas Especiais"
       ],
-      "summary": "• Objeto do Concurso: Prestação de Serviços de Lavagem e Lubrificação de Viaturas Especiais de Resíduos Urbanos\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 74.900,00 €\n• Entidade Adjudicante: Serviços Intermunicipalizados de Águas e Resíduos dos Municípios de Loures e Odivelas"
+      "summary": "• Objeto do Concurso: Prestação de Serviços de Lavagem e Lubrificação de Viaturas Especiais de Resíduos Urbanos\n• Prazo de Entrega da Proposta: 365 dias (Prazo de Execução)\n• Valor a Concurso: 74.900,00 €\n• Entidade Adjudicante: Serviços Intermunicipalizados de Águas e Resíduos dos Municípios de Loures e Odivelas"
     },
     {
       "id": "base_contrato_6044256",
@@ -6277,14 +6349,14 @@
       "entity": "Município de Barcelos",
       "contracted": "Elementar Amper Manutenção e Reparação Unipessoal, Lda",
       "value": "1.506,95 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "15 dias (Prazo de Execução)",
       "publication_date": "13-02-2019",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=5244582",
       "pieces_url": null,
       "matched_terms": [
         "Viaturas Especiais"
       ],
-      "summary": "• Objeto do Concurso: Cpv58/2018 Reparações diversas em viaturas especiais de recolha\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 1.506,95 €\n• Entidade Adjudicante: Município de Barcelos"
+      "summary": "• Objeto do Concurso: Cpv58/2018 Reparações diversas em viaturas especiais de recolha\n• Prazo de Entrega da Proposta: 15 dias (Prazo de Execução)\n• Valor a Concurso: 1.506,95 €\n• Entidade Adjudicante: Município de Barcelos"
     },
     {
       "id": "base_contrato_5244555",
@@ -6295,14 +6367,14 @@
       "entity": "Município de Barcelos",
       "contracted": "OLIMEC-UNIPESSOAL, LDA",
       "value": "5.040,91 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "15 dias (Prazo de Execução)",
       "publication_date": "13-02-2019",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=5244555",
       "pieces_url": null,
       "matched_terms": [
         "Viaturas Especiais"
       ],
-      "summary": "• Objeto do Concurso: Cpv58/2018 Reparações diversas em viaturas especiais de recolha\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 5.040,91 €\n• Entidade Adjudicante: Município de Barcelos"
+      "summary": "• Objeto do Concurso: Cpv58/2018 Reparações diversas em viaturas especiais de recolha\n• Prazo de Entrega da Proposta: 15 dias (Prazo de Execução)\n• Valor a Concurso: 5.040,91 €\n• Entidade Adjudicante: Município de Barcelos"
     },
     {
       "id": "base_contrato_5244537",
@@ -6313,14 +6385,14 @@
       "entity": "Município de Barcelos",
       "contracted": "AUTO-SUECO PORTUGAL - VEÍCULOS PESADOS, S.A.",
       "value": "12.695,65 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "15 dias (Prazo de Execução)",
       "publication_date": "13-02-2019",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=5244537",
       "pieces_url": null,
       "matched_terms": [
         "Viaturas Especiais"
       ],
-      "summary": "• Objeto do Concurso: Cpv58/2018 Reparações diversas em viaturas especiais de recolha\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 12.695,65 €\n• Entidade Adjudicante: Município de Barcelos"
+      "summary": "• Objeto do Concurso: Cpv58/2018 Reparações diversas em viaturas especiais de recolha\n• Prazo de Entrega da Proposta: 15 dias (Prazo de Execução)\n• Valor a Concurso: 12.695,65 €\n• Entidade Adjudicante: Município de Barcelos"
     },
     {
       "id": "base_anuncio_158328",
@@ -6367,14 +6439,14 @@
       "entity": "Serviços Intermunicipalizados de Águas e Resíduos dos Municípios de Loures e Odivelas",
       "contracted": "EGEO - Tecnologia e Ambiente, S.A.",
       "value": "74.900,00 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "365 dias (Prazo de Execução)",
       "publication_date": "13-08-2018",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=4759983",
       "pieces_url": null,
       "matched_terms": [
         "Viaturas Especiais"
       ],
-      "summary": "• Objeto do Concurso: CPU 8/2018 - Prestação de Serviço de Lavagem e Lubrificação de Viaturas Especiais de Resíduos Urbanos\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 74.900,00 €\n• Entidade Adjudicante: Serviços Intermunicipalizados de Águas e Resíduos dos Municípios de Loures e Odivelas"
+      "summary": "• Objeto do Concurso: CPU 8/2018 - Prestação de Serviço de Lavagem e Lubrificação de Viaturas Especiais de Resíduos Urbanos\n• Prazo de Entrega da Proposta: 365 dias (Prazo de Execução)\n• Valor a Concurso: 74.900,00 €\n• Entidade Adjudicante: Serviços Intermunicipalizados de Águas e Resíduos dos Municípios de Loures e Odivelas"
     },
     {
       "id": "base_contrato_4695387",
@@ -6439,14 +6511,14 @@
       "entity": "ASSOL - Associação de Solidariedade Social de Lafões",
       "contracted": "Emertech Project - Transformação de Viaturas, Sociedade Unipessoal, Lda.",
       "value": "65.950,18 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "6 dias.",
       "publication_date": "24-04-2018",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=4430961",
       "pieces_url": null,
       "matched_terms": [
         "Viaturas Especiais"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de duas viaturas especiais para transporte de pessoas com mobilidade reduzida\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 65.950,18 €\n• Entidade Adjudicante: ASSOL - Associação de Solidariedade Social de Lafões"
+      "summary": "• Objeto do Concurso: Aquisição de duas viaturas especiais para transporte de pessoas com mobilidade reduzida\n• Prazo de Entrega da Proposta: 6 dias.\n• Valor a Concurso: 65.950,18 €\n• Entidade Adjudicante: ASSOL - Associação de Solidariedade Social de Lafões"
     },
     {
       "id": "base_contrato_4373241",
@@ -6547,14 +6619,14 @@
       "entity": "Serviços Intermunicipalizados de Águas e Resíduos dos Municípios de Loures e Odivelas",
       "contracted": "Egeo Tecnologia e Ambiente, S.A.",
       "value": "74.900,00 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "3 dias.",
       "publication_date": "20-06-2017",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=3443823",
       "pieces_url": null,
       "matched_terms": [
         "Viaturas Especiais"
       ],
-      "summary": "• Objeto do Concurso: CPU 6/2017 - Prestação de Serviço de Lavagem e Lubrificação de Viaturas Especiais\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 74.900,00 €\n• Entidade Adjudicante: Serviços Intermunicipalizados de Águas e Resíduos dos Municípios de Loures e Odivelas"
+      "summary": "• Objeto do Concurso: CPU 6/2017 - Prestação de Serviço de Lavagem e Lubrificação de Viaturas Especiais\n• Prazo de Entrega da Proposta: 3 dias.\n• Valor a Concurso: 74.900,00 €\n• Entidade Adjudicante: Serviços Intermunicipalizados de Águas e Resíduos dos Municípios de Loures e Odivelas"
     },
     {
       "id": "base_anuncio_91462",
@@ -6583,14 +6655,14 @@
       "entity": "Serviços Intermunicipalizados de Águas e Resíduos dos Municípios de Loures e Odivelas",
       "contracted": "Grade Ribeiro - Estudos, Projectos e Consultadoria, Lda.",
       "value": "6.500,00 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "30 dias (Prazo de Execução)",
       "publication_date": "31-05-2017",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=3388069",
       "pieces_url": null,
       "matched_terms": [
         "Viaturas Especiais"
       ],
-      "summary": "• Objeto do Concurso: Projecto Lavagem de Viaturas Especiais\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 6.500,00 €\n• Entidade Adjudicante: Serviços Intermunicipalizados de Águas e Resíduos dos Municípios de Loures e Odivelas"
+      "summary": "• Objeto do Concurso: Projecto Lavagem de Viaturas Especiais\n• Prazo de Entrega da Proposta: 30 dias (Prazo de Execução)\n• Valor a Concurso: 6.500,00 €\n• Entidade Adjudicante: Serviços Intermunicipalizados de Águas e Resíduos dos Municípios de Loures e Odivelas"
     },
     {
       "id": "base_contrato_3131032",
@@ -6601,14 +6673,14 @@
       "entity": "Estado-Maior do Exército",
       "contracted": "HABITÂMEGA, CONSTRUÇÕES, S.A.",
       "value": "1.650.000,01 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "30 dias.",
       "publication_date": "16-03-2017",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=3131032",
       "pieces_url": null,
       "matched_terms": [
         "Viaturas Especiais"
       ],
-      "summary": "• Objeto do Concurso: PM 004/BENAVENTE – “TERRENO COM 55HA A NORTE DO CAMPO DE TIRO DE ALCOCHETE” (UAGME) – “OFICINA DE VIATURAS ESPECIAIS\".\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 1.650.000,01 €\n• Entidade Adjudicante: Estado-Maior do Exército"
+      "summary": "• Objeto do Concurso: PM 004/BENAVENTE – “TERRENO COM 55HA A NORTE DO CAMPO DE TIRO DE ALCOCHETE” (UAGME) – “OFICINA DE VIATURAS ESPECIAIS\".\n• Prazo de Entrega da Proposta: 30 dias.\n• Valor a Concurso: 1.650.000,01 €\n• Entidade Adjudicante: Estado-Maior do Exército"
     },
     {
       "id": "base_anuncio_85408",
@@ -6709,14 +6781,14 @@
       "entity": "SIMAR – Serviços Intermunicipalizados de Loures e Odivelas",
       "contracted": "EGEO Tecnologia e Ambiente, S.A.",
       "value": "74.900,00 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "365 dias (Prazo de Execução)",
       "publication_date": "10-05-2016",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=2176858",
       "pieces_url": null,
       "matched_terms": [
         "Viaturas Especiais"
       ],
-      "summary": "• Objeto do Concurso: ADRG 15/C/00615 -Serviço continuado de lavagem, limpeza, desinfeção e lubrificação de viaturas especiais de Residuos Urbanos\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 74.900,00 €\n• Entidade Adjudicante: SIMAR – Serviços Intermunicipalizados de Loures e Odivelas"
+      "summary": "• Objeto do Concurso: ADRG 15/C/00615 -Serviço continuado de lavagem, limpeza, desinfeção e lubrificação de viaturas especiais de Residuos Urbanos\n• Prazo de Entrega da Proposta: 365 dias (Prazo de Execução)\n• Valor a Concurso: 74.900,00 €\n• Entidade Adjudicante: SIMAR – Serviços Intermunicipalizados de Loures e Odivelas"
     },
     {
       "id": "base_anuncio_76330",
@@ -6763,14 +6835,14 @@
       "entity": "Serviços Intermunicipalizados de Águas e Resíduos dos Municípios de Loures e Odivelas",
       "contracted": "EGEO Tecnologia e Ambiente, SA",
       "value": "8.152,20 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "90 dias (Prazo de Execução)",
       "publication_date": "15-10-2015",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=1668018",
       "pieces_url": null,
       "matched_terms": [
         "Viaturas Especiais"
       ],
-      "summary": "• Objeto do Concurso: Lavagem e lubrificação de viaturas especiais RSU\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 8.152,20 €\n• Entidade Adjudicante: Serviços Intermunicipalizados de Águas e Resíduos dos Municípios de Loures e Odivelas"
+      "summary": "• Objeto do Concurso: Lavagem e lubrificação de viaturas especiais RSU\n• Prazo de Entrega da Proposta: 90 dias (Prazo de Execução)\n• Valor a Concurso: 8.152,20 €\n• Entidade Adjudicante: Serviços Intermunicipalizados de Águas e Resíduos dos Municípios de Loures e Odivelas"
     },
     {
       "id": "base_contrato_1627508",
@@ -6781,14 +6853,14 @@
       "entity": "Serviços Intermunicipalizados de Águas e Resíduos dos Municípios de Loures e Odivelas",
       "contracted": "CML - Câmara Municipal de Loures",
       "value": "8.130,08 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "365 dias (Prazo de Execução)",
       "publication_date": "01-10-2015",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=1627508",
       "pieces_url": null,
       "matched_terms": [
         "Viaturas Especiais"
       ],
-      "summary": "• Objeto do Concurso: Serviço de lavagem de viaturas especiais DRU\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 8.130,08 €\n• Entidade Adjudicante: Serviços Intermunicipalizados de Águas e Resíduos dos Municípios de Loures e Odivelas"
+      "summary": "• Objeto do Concurso: Serviço de lavagem de viaturas especiais DRU\n• Prazo de Entrega da Proposta: 365 dias (Prazo de Execução)\n• Valor a Concurso: 8.130,08 €\n• Entidade Adjudicante: Serviços Intermunicipalizados de Águas e Resíduos dos Municípios de Loures e Odivelas"
     },
     {
       "id": "base_contrato_1431614",
@@ -6799,14 +6871,14 @@
       "entity": "Serviços Intermunicipalizados de Águas e Resíduos dos Municípios de Loures e Odivelas",
       "contracted": "Vecofabril - Acessórios e Transformação de Veículos, Lda",
       "value": "25.600,00 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "3 dias.",
       "publication_date": "15-04-2015",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=1431614",
       "pieces_url": null,
       "matched_terms": [
         "Viaturas Especiais"
       ],
-      "summary": "• Objeto do Concurso: Assistência a viaturas especiais em 9 lotes\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 25.600,00 €\n• Entidade Adjudicante: Serviços Intermunicipalizados de Águas e Resíduos dos Municípios de Loures e Odivelas"
+      "summary": "• Objeto do Concurso: Assistência a viaturas especiais em 9 lotes\n• Prazo de Entrega da Proposta: 3 dias.\n• Valor a Concurso: 25.600,00 €\n• Entidade Adjudicante: Serviços Intermunicipalizados de Águas e Resíduos dos Municípios de Loures e Odivelas"
     },
     {
       "id": "base_contrato_1424445",
@@ -7061,5 +7133,5 @@
       "is_dismissed": true
     }
   ],
-  "duration_seconds": 63.13
+  "duration_seconds": 103.37
 }
