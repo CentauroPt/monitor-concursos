@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pesquisa de Contratos Públicos - Portal BASE & TED Europa</title>
+  <link rel="stylesheet" href="/styles.css?v=3.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header Principal -->
+    <header class="header">
+      <div class="header-inner">
+        <div class="header-branding">
+          <div class="logo-circle">📑</div>
+          <div class="header-title-group">
+            <h1>Pesquisa de Contratos Públicos Assinados</h1>
+            <p class="subtitle">Consulta exaustiva por entidade pública no <strong>Portal BASE</strong> e <strong>TED Europa</strong></p>
+          </div>
+        </div>
+        <div class="header-status">
+          <span class="status-indicator live"></span>
+          <span id="last-update-text">Pronto para pesquisar contratos</span>
+        </div>
+      </div>
+
+      <!-- Barra de Navegação entre Páginas -->
+      <nav class="main-nav-bar">
+        <a href="/index.html" class="nav-tab">
+          <span class="nav-icon">📢</span>
+          <div class="nav-text">
+            <span class="nav-title">Monitor de Oportunidades</span>
+            <span class="nav-desc">Alertas de Viaturas & Unidades Móveis</span>
+          </div>
+        </a>
+        <a href="/contratos.html" class="nav-tab active">
+          <span class="nav-icon">📑</span>
+          <div class="nav-text">
+            <span class="nav-title">Pesquisa de Contratos Públicos</span>
+            <span class="nav-desc">Por NIF / Nome de Entidade Adjudicante</span>
+          </div>
+        </a>
+      </nav>
+    </header>
+
+    <!-- Painel de Pesquisa por Entidade Adjudicante -->
+    <section class="contracts-search-card">
+      <div class="search-card-header">
+        <div class="search-card-title">
+          <h2>🔍 Pesquisar Contratos por Entidade Adjudicante</h2>
+          <p>Indique o <strong>NIF</strong> (Número de Contribuinte) ou o <strong>Nome da Entidade Pública</strong> para recolher todos os contratos assinados e publicados.</p>
+        </div>
+      </div>
+
+      <form id="contracts-search-form" class="contracts-form" onsubmit="event.preventDefault(); handleContractSearch();">
+        <div class="form-grid">
+          <div class="form-field">
+            <label for="input-nif">NIF da Entidade Adjudicante:</label>
+            <div class="input-with-icon">
+              <span class="field-icon">🔢</span>
+              <input type="text" id="input-nif" class="form-input" placeholder="Ex: 500051070" maxlength="9" />
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label for="input-entity-name">Nome da Entidade Adjudicante:</label>
+            <div class="input-with-icon">
+              <span class="field-icon">🏛️</span>
+              <input type="text" id="input-entity-name" class="form-input" placeholder="Ex: Município de Lisboa, Turismo do Alentejo..." />
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label for="select-source">Fonte de Dados:</label>
+            <select id="select-source" class="form-select">
+              <option value="all" selected>🇵🇹 Portal BASE + 🇪🇺 TED Europa</option>
+              <option value="base">🇵🇹 Apenas Portal BASE</option>
+              <option value="ted">🇪🇺 Apenas TED Europa</option>
+            </select>
+          </div>
+
+          <div class="form-field form-field-small">
+            <label for="select-limit">Máx. Contratos:</label>
+            <select id="select-limit" class="form-select">
+              <option value="25">25</option>
+              <option value="50" selected>50</option>
+              <option value="100">100</option>
+            </select>
+          </div>
+
+          <div class="form-field form-field-action">
+            <button type="submit" id="btn-submit-search" class="btn btn-primary btn-search-wide">
+              <span class="btn-icon">🔍</span>
+              <span class="btn-text">Pesquisar Contratos</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Atalhos Rápidos para Teste Imediato -->
+        <div class="quick-entities-row">
+          <span class="quick-label">⚡ Exemplos rápidos:</span>
+          <button type="button" class="quick-entity-btn" data-nif="500051070" data-name="Município de Lisboa">🏛️ Município de Lisboa (500051070)</button>
+          <button type="button" class="quick-entity-btn" data-nif="501306099" data-name="Município do Porto">🏛️ Município do Porto (501306099)</button>
+          <button type="button" class="quick-entity-btn" data-nif="508817897" data-name="Turismo do Alentejo">🌾 Turismo do Alentejo (508817897)</button>
+          <button type="button" class="quick-entity-btn" data-nif="500345058" data-name="Metropolitano de Lisboa">🚇 Metropolitano de Lisboa (500345058)</button>
+          <button type="button" class="quick-entity-btn" data-nif="503933813" data-name="Infraestruturas de Portugal">🛤️ Infraestruturas de Portugal (503933813)</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Barra de Filtros dos Resultados Apresentados -->
+    <section id="contracts-filter-section" class="contracts-filter-section hidden">
+      <div class="filter-controls-container">
+        <div class="filter-inputs-row">
+          <!-- Filtro 1: Objeto do Contrato -->
+          <div class="filter-group">
+            <label for="filter-contract-object">📋 Objeto do Contrato:</label>
+            <input type="text" id="filter-contract-object" class="filter-input-field" placeholder="Filtrar por objeto ou título..." />
+          </div>
+
+          <!-- Filtro 2: Data do Contrato (Celebração) -->
+          <div class="filter-group">
+            <label for="filter-contract-signing">📅 Data do Contrato:</label>
+            <input type="text" id="filter-contract-signing" class="filter-input-field" placeholder="Ex: 2026, 10-2026..." />
+          </div>
+
+          <!-- Filtro 3: Data de Publicação -->
+          <div class="filter-group">
+            <label for="filter-contract-publication">📢 Data de Publicação:</label>
+            <input type="text" id="filter-contract-publication" class="filter-input-field" placeholder="Ex: 2026, 14-10-2026..." />
+          </div>
+
+          <!-- Filtro 4: PROCURAR PALAVRAS ESCRITAS DENTRO DO CONTRATO -->
+          <div class="filter-group filter-group-words">
+            <label for="filter-inside-words">
+              <span>🔎 Procurar palavras (no texto do contrato):</span>
+              <span class="badge-hint">Abre painel lateral</span>
+            </label>
+            <div class="input-with-clear">
+              <input type="text" id="filter-inside-words" class="filter-input-field highlight-field" placeholder="Escreva um termo para ver as frases e locais exatos..." />
+              <button type="button" id="btn-clear-words" class="btn-clear-input hidden" title="Limpar pesquisa de palavras">✕</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="filter-actions-row">
+          <div class="filter-stats-badge">
+            A apresentar <strong id="visible-count">0</strong> de <strong id="total-contracts-count">0</strong> contratos encontrados
+          </div>
+          <div class="filter-btn-group">
+            <button type="button" id="btn-toggle-sidebar" class="btn btn-secondary btn-sm" title="Alternar visibilidade do painel lateral direito">
+              <span>📑</span> <span id="toggle-sidebar-text">Painel Lateral de Ocorrências</span>
+            </button>
+            <button type="button" id="btn-clear-all-filters" class="btn btn-secondary btn-sm" title="Limpar todos os filtros">
+              <span>🔄</span> <span>Limpar Filtros</span>
+            </button>
+            <button type="button" id="btn-export-excel" class="btn btn-secondary btn-sm" title="Exportar contratos para folha de cálculo Excel">
+              <span>📥</span> <span>Exportar Excel</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Layout Central: Lista de Contratos + Janela Vertical Lateral Direita -->
+    <main class="contracts-main-layout">
+      <!-- Coluna da Lista de Contratos -->
+      <div id="contracts-content-column" class="contracts-content-column">
+        <!-- Estado Inicial Vazio -->
+        <div id="empty-state" class="state-card">
+          <div class="state-icon">🏛️</div>
+          <h3>Nenhuma pesquisa efetuada</h3>
+          <p>Preencha o <strong>NIF</strong> ou o <strong>Nome da Entidade Adjudicante</strong> acima (ou clique num dos exemplos rápidos) para consultar os contratos celebrados nos portais oficiais.</p>
+        </div>
+
+        <!-- Estado de Carregamento -->
+        <div id="loading-state" class="state-card hidden">
+          <div class="spinner"></div>
+          <h3>A consultar Portal BASE e TED Europa...</h3>
+          <p>A recolher contratos publicados e respetivas fichas detalhadas.</p>
+        </div>
+
+        <!-- Lista de Cartões de Contrato -->
+        <div id="contracts-list" class="contracts-list"></div>
+      </div>
+
+      <!-- JANELA VERTICAL LATERAL DIREITA: Ocorrências no Texto do Contrato -->
+      <aside id="words-sidebar-panel" class="right-sidebar-panel hidden">
+        <div class="sidebar-header">
+          <div class="sidebar-title-group">
+            <div class="sidebar-badge">🔎 Ocorrências no Texto</div>
+            <h3 id="sidebar-query-title">Resultados da Pesquisa</h3>
+            <p id="sidebar-subtitle" class="sidebar-subtitle">A aguardar termo...</p>
+          </div>
+          <button type="button" id="btn-close-sidebar" class="sidebar-close-btn" title="Fechar painel lateral">✕</button>
+        </div>
+
+        <div class="sidebar-scrollable-body">
+          <div id="sidebar-empty-state" class="sidebar-empty">
+            <span class="sidebar-empty-icon">📝</span>
+            <p>Escreva qualquer palavra no campo <strong>"Procurar palavras (no texto do contrato)"</strong> para ver aqui a indicação de cada contrato e o local exato com o texto destacado.</p>
+          </div>
+
+          <div id="sidebar-matches-list" class="sidebar-matches-list"></div>
+        </div>
+      </aside>
+    </main>
+
+    <!-- Modal de Ficha Técnica Completa do Contrato -->
+    <div id="contract-detail-modal" class="modal hidden">
+      <div class="modal-dialog modal-dialog-large">
+        <div class="modal-header">
+          <div class="modal-header-title">
+            <span class="source-badge" id="modal-source-badge">Portal BASE</span>
+            <h3 id="modal-contract-title">Ficha Completa do Contrato</h3>
+          </div>
+          <button id="modal-close-btn" class="modal-close" title="Fechar">&times;</button>
+        </div>
+        <div class="modal-body" id="modal-contract-body">
+          <!-- Popula-se dinamicamente via JS -->
+        </div>
+        <div class="modal-footer">
+          <a id="modal-external-link" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+            Abrir Ficha no Portal Oficial ↗
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rodapé -->
+    <footer class="footer">
+      <p>Monitor de Contratos Públicos &bull; Pesquisa de contratos celebrados por entidades públicas no Portal BASE (base.gov.pt) e TED Europa (ted.europa.eu).</p>
+    </footer>
+  </div>
+
+  <script src="/contratos.js?v=3.0"></script>
+</body>
+</html>
