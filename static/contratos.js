@@ -39,6 +39,14 @@ const lastUpdateText = document.getElementById('last-update-text');
 // Janela Vertical Lateral Direita
 const wordsSidebarPanel = document.getElementById('words-sidebar-panel');
 const btnCloseSidebar = document.getElementById('btn-close-sidebar');
+const tabSidebarFicha = document.getElementById('tab-sidebar-ficha');
+const tabSidebarWords = document.getElementById('tab-sidebar-words');
+const sidebarTabFichaTitle = document.getElementById('sidebar-tab-ficha-title');
+const sidebarWordsCountBadge = document.getElementById('sidebar-words-count-badge');
+const sidebarViewFicha = document.getElementById('sidebar-view-ficha');
+const sidebarViewWords = document.getElementById('sidebar-view-words');
+const sidebarFichaEmpty = document.getElementById('sidebar-ficha-empty');
+const sidebarFichaContent = document.getElementById('sidebar-ficha-content');
 const sidebarQueryTitle = document.getElementById('sidebar-query-title');
 const sidebarSubtitle = document.getElementById('sidebar-subtitle');
 const sidebarEmptyState = document.getElementById('sidebar-empty-state');
@@ -150,6 +158,25 @@ function setupEventListeners() {
 
   if (btnCloseSidebar) {
     btnCloseSidebar.addEventListener('click', closeSidebar);
+  }
+
+  // Alternar abas no painel lateral (Ficha vs Palavras)
+  if (tabSidebarFicha) {
+    tabSidebarFicha.addEventListener('click', () => {
+      tabSidebarFicha.classList.add('active');
+      if (tabSidebarWords) tabSidebarWords.classList.remove('active');
+      if (sidebarViewFicha) sidebarViewFicha.classList.remove('hidden');
+      if (sidebarViewWords) sidebarViewWords.classList.add('hidden');
+    });
+  }
+
+  if (tabSidebarWords) {
+    tabSidebarWords.addEventListener('click', () => {
+      tabSidebarWords.classList.add('active');
+      if (tabSidebarFicha) tabSidebarFicha.classList.remove('active');
+      if (sidebarViewWords) sidebarViewWords.classList.remove('hidden');
+      if (sidebarViewFicha) sidebarViewFicha.classList.add('hidden');
+    });
   }
 
   // Modal
@@ -459,12 +486,187 @@ function createContractCardHtml(c) {
 
 function attachCardEvents() {
   document.querySelectorAll('.btn-detail').forEach(btn => {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
       const cid = btn.dataset.id;
       const found = allContracts.find(it => it.id === cid);
-      if (found) openDetailModal(found);
+      if (found) showContractFichaInSidebar(found, true);
     });
   });
+
+  document.querySelectorAll('.contract-card').forEach(card => {
+    card.addEventListener('click', (e) => {
+      if (e.target.closest('a') || e.target.closest('.btn-detail')) return;
+      const cid = card.dataset.id;
+      const found = allContracts.find(it => it.id === cid);
+      if (found) showContractFichaInSidebar(found, true);
+    });
+  });
+}
+
+// JANELA VERTICAL LATERAL DIREITA: Ficha Detalhada do Contrato em Verificação
+function showContractFichaInSidebar(c, switchToTab = true) {
+  if (!wordsSidebarPanel) return;
+
+  // 1. Destaque no cartão do contrato na lista ao lado
+  document.querySelectorAll('.contract-card').forEach(card => {
+    card.classList.remove('active-contract-card');
+    const badge = card.querySelector('.active-verifying-badge');
+    if (badge) badge.remove();
+  });
+
+  const cardElement = document.getElementById(`card-${c.id}`);
+  if (cardElement) {
+    cardElement.classList.add('active-contract-card');
+    const badgeContainer = cardElement.querySelector('.card-badges-left');
+    if (badgeContainer && !cardElement.querySelector('.active-verifying-badge')) {
+      const badge = document.createElement('span');
+      badge.className = 'active-verifying-badge';
+      badge.innerHTML = '👁️ Em verificação';
+      badgeContainer.appendChild(badge);
+    }
+  }
+
+  // 2. Atualizar título da aba
+  if (sidebarTabFichaTitle) {
+    sidebarTabFichaTitle.textContent = `Ficha #${c.raw_id || c.id}`;
+  }
+
+  // 3. Alternar para a aba da Ficha
+  if (switchToTab) {
+    if (tabSidebarFicha) tabSidebarFicha.classList.add('active');
+    if (tabSidebarWords) tabSidebarWords.classList.remove('active');
+    if (sidebarViewFicha) sidebarViewFicha.classList.remove('hidden');
+    if (sidebarViewWords) sidebarViewWords.classList.add('hidden');
+  }
+
+  // 4. Montar o conteúdo completo da Ficha Técnica na lateral
+  const isBase = c.source === 'Portal BASE';
+  const badgeClass = isBase ? 'badge-base' : 'badge-ted';
+  const sourceIcon = isBase ? '🇵🇹' : '🇪🇺';
+
+  const safeTitle = escapeHtml(c.title || 'Sem título');
+  const safeEntity = escapeHtml(c.entity || 'Entidade Adjudicante');
+  const safeContracted = escapeHtml(c.contracted || 'Não especificado');
+  const safeDesc = escapeHtml(c.description || c.title || '');
+
+  const sections = c.sections || {};
+  let extraSectionsHtml = '';
+  for (const [secTitle, secContent] of Object.entries(sections)) {
+    if (!secContent || ['Objeto do Contrato', 'Descrição Detalhada', 'Entidade Adjudicante', 'Adjudicatário'].includes(secTitle)) continue;
+    extraSectionsHtml += `
+      <div class="ficha-section">
+        <span class="ficha-section-title">📌 ${escapeHtml(secTitle)}</span>
+        <div class="ficha-section-content">${escapeHtml(secContent)}</div>
+      </div>
+    `;
+  }
+
+  const fichaHtml = `
+    <div class="ficha-header-block">
+      <div class="ficha-badges-row">
+        <span class="source-badge ${badgeClass}">${sourceIcon} ${escapeHtml(c.source)}</span>
+        <span class="procedure-type-badge">${escapeHtml(c.procedure_type || 'Contrato')}</span>
+        <span class="ficha-contract-id">#${escapeHtml(c.raw_id || c.id)}</span>
+      </div>
+      <h3 class="ficha-contract-title">${safeTitle}</h3>
+    </div>
+
+    <!-- 4 Pilares Técnicos -->
+    <div class="ficha-pillars-mini">
+      <div class="ficha-mini-pillar">
+        <span class="mini-p-label">💰 Preço Contratual</span>
+        <span class="mini-p-val highlight-price">${escapeHtml(c.value || 'N/D')}</span>
+      </div>
+      <div class="ficha-mini-pillar">
+        <span class="mini-p-label">📅 Data do Contrato</span>
+        <span class="mini-p-val highlight-date">${escapeHtml(c.signing_date || 'N/D')}</span>
+      </div>
+      <div class="ficha-mini-pillar">
+        <span class="mini-p-label">📢 Publicação</span>
+        <span class="mini-p-val">${escapeHtml(c.publication_date || 'N/D')}</span>
+      </div>
+      <div class="ficha-mini-pillar">
+        <span class="mini-p-label">⏱️ Prazo Execução</span>
+        <span class="mini-p-val">${escapeHtml(c.execution_deadline || 'Consulte caderno')}</span>
+      </div>
+    </div>
+
+    <!-- Partes Envolvidas -->
+    <div class="ficha-section">
+      <span class="ficha-section-title">🏛️ Entidade Adjudicante</span>
+      <div class="ficha-party-box">
+        <span class="ficha-party-name">${safeEntity}</span>
+        ${c.entity_nif ? `<span class="ficha-party-nif">NIF: ${escapeHtml(c.entity_nif)}</span>` : ''}
+      </div>
+    </div>
+
+    <div class="ficha-section">
+      <span class="ficha-section-title">🏢 Adjudicatário (Empresa)</span>
+      <div class="ficha-party-box">
+        <span class="ficha-party-name">${safeContracted}</span>
+        ${c.contracted_nif ? `<span class="ficha-party-nif">NIF: ${escapeHtml(c.contracted_nif)}</span>` : ''}
+      </div>
+    </div>
+
+    ${c.execution_place ? `
+      <div class="ficha-section">
+        <span class="ficha-section-title">📍 Local de Execução</span>
+        <div class="ficha-section-content">${escapeHtml(c.execution_place)}</div>
+      </div>
+    ` : ''}
+
+    ${c.fundamentation ? `
+      <div class="ficha-section">
+        <span class="ficha-section-title">⚖️ Fundamentação Legal</span>
+        <div class="ficha-section-content">${escapeHtml(c.fundamentation)}</div>
+      </div>
+    ` : ''}
+
+    ${c.cpvs_designation ? `
+      <div class="ficha-section">
+        <span class="ficha-section-title">🏷️ Designação CPV</span>
+        <div class="ficha-section-content">${escapeHtml(c.cpvs_designation)}</div>
+      </div>
+    ` : ''}
+
+    ${safeDesc && safeDesc !== safeTitle ? `
+      <div class="ficha-section">
+        <span class="ficha-section-title">📝 Descrição Detalhada</span>
+        <div class="ficha-section-content">${safeDesc}</div>
+      </div>
+    ` : ''}
+
+    ${extraSectionsHtml}
+
+    <div class="ficha-footer-actions">
+      <a href="${escapeHtml(c.direct_url)}" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="flex: 1; text-align: center; justify-content: center;">
+        Abrir no Portal Oficial ↗
+      </a>
+      <button type="button" id="btn-copy-ficha" class="btn btn-secondary" title="Copiar resumo do contrato">
+        📋 Copiar Resumo
+      </button>
+    </div>
+  `;
+
+  if (sidebarFichaEmpty) sidebarFichaEmpty.classList.add('hidden');
+  if (sidebarFichaContent) {
+    sidebarFichaContent.innerHTML = fichaHtml;
+    sidebarFichaContent.classList.remove('hidden');
+
+    const btnCopy = document.getElementById('btn-copy-ficha');
+    if (btnCopy) {
+      btnCopy.addEventListener('click', () => {
+        const textToCopy = `CONTRATO: ${c.title}\nENTIDADE: ${c.entity} (NIF: ${c.entity_nif || 'N/D'})\nADJUDICATÁRIO: ${c.contracted} (NIF: ${c.contracted_nif || 'N/D'})\nVALOR: ${c.value}\nDATA CONTRATO: ${c.signing_date}\nDATA PUBLICAÇÃO: ${c.publication_date}\nLINK: ${c.direct_url}`;
+        navigator.clipboard.writeText(textToCopy).then(() => {
+          btnCopy.textContent = '✓ Copiado!';
+          setTimeout(() => { btnCopy.textContent = '📋 Copiar Resumo'; }, 2000);
+        });
+      });
+    }
+  }
+
+  openSidebar();
 }
 
 // JANELA VERTICAL LATERAL DIREITA: Pesquisa de Palavras dentro dos Contratos
@@ -597,6 +799,10 @@ function updateSidebarMatches(searchWord) {
 }
 
 function scrollToAndHighlightContract(contractId) {
+  const found = allContracts.find(it => it.id === contractId);
+  if (found) {
+    showContractFichaInSidebar(found, false);
+  }
   const cardElement = document.getElementById(`card-${contractId}`);
   if (cardElement) {
     cardElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
