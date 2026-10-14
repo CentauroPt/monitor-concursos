@@ -332,13 +332,22 @@ class TedScraper:
             'Objeto do Contrato': title.strip(),
             'Entidade Adjudicante': buyer.strip() if buyer else "Entidade Pública",
             'Tipo de Anúncio': proc_type_desc,
-            'Número de Publicação': str(pub_number)
+            'Número de Publicação': str(pub_number),
+            'Plataforma Eletrónica': '🇪🇺 TED Europa (ted.europa.eu)'
         }
 
         return {
             'id': f"ted_{pub_number}",
             'raw_id': str(pub_number),
             'source': "TED Europa",
+            'platform_code': 'ted',
+            'platform_name': 'TED Europa',
+            'platform_icon': '🇪🇺',
+            'platform_url': direct_url,
+            'platform_home': 'https://ted.europa.eu',
+            'dre_id': None,
+            'dre_url': None,
+            'dre_label': None,
             'procedure_type': proc_type_desc,
             'title': title.strip(),
             'description': title.strip(),
@@ -354,6 +363,7 @@ class TedScraper:
             'execution_deadline': "Consulte o anúncio",
             'cpvs_designation': "",
             'direct_url': direct_url,
+            'documents': [],
             'sections': {k: v for k, v in sections.items() if v}
         }
 
