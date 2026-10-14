@@ -1,6 +1,6 @@
 {
-  "timestamp": "14-10-2026 10:59:39",
-  "total_raw_count": 390,
+  "timestamp": "14-10-2026 15:08:17",
+  "total_raw_count": 395,
   "ted_country": "PRT",
   "items": [
     {
@@ -70,6 +70,96 @@
         "CPV 3414xxxx"
       ],
       "summary": "• Objeto do Concurso: Aquisição de Veículo Florestal de Combate a Incêndios\n• Prazo de Entrega da Proposta: 29-10-2026\n• Valor a Concurso: 250.000,00 €\n• Entidade Adjudicante: Associação Humanitária dos Bombeiros Voluntários do Soito"
+    },
+    {
+      "id": "base_contrato_15769002",
+      "source": "Portal BASE",
+      "category": "Contrato / Ajuste Direto",
+      "procedure_type": "Ao abrigo de acordo-quadro (art.º 258.º)",
+      "title": "Ajuste direto para a contratação da aquisição de viatura Toyota Corolla Cross Hev Exclusive - CONNECT AQ-115/2025 - Veículos e Unidade Móvel de Saúde - Lote 14",
+      "entity": "Município de Loulé",
+      "contracted": "TOYOTA CAETANO PORTUGAL, SA",
+      "value": "29.364,86 €",
+      "deadline": "120 dias (Prazo de Execução)",
+      "publication_date": "14-10-2026",
+      "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=15769002",
+      "pieces_url": null,
+      "matched_terms": [
+        "Unidade Móvel"
+      ],
+      "summary": "• Objeto do Concurso: Ajuste direto para a contratação da aquisição de viatura Toyota Corolla Cross Hev Exclusive - CONNECT AQ-115/2025 - Veículos e Unidade Móvel de Saúde - Lote 14\n• Prazo de Entrega da Proposta: 120 dias (Prazo de Execução)\n• Valor a Concurso: 29.364,86 €\n• Entidade Adjudicante: Município de Loulé"
+    },
+    {
+      "id": "base_contrato_15771828",
+      "source": "Portal BASE",
+      "category": "Contrato / Ajuste Direto",
+      "procedure_type": "Consulta Prévia",
+      "title": "Aquisição de duas viaturas ligeiras elétricas ligeiras",
+      "entity": "Município de Tabuaço",
+      "contracted": "Chamauto - Soc. Transmontana Aut. Lda",
+      "value": "27.178,86 €",
+      "deadline": "30 dias (Prazo de Execução)",
+      "publication_date": "14-10-2026",
+      "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=15771828",
+      "pieces_url": null,
+      "matched_terms": [
+        "CPV 3414xxxx"
+      ],
+      "summary": "• Objeto do Concurso: Aquisição de duas viaturas ligeiras elétricas ligeiras\n• Prazo de Entrega da Proposta: 30 dias (Prazo de Execução)\n• Valor a Concurso: 27.178,86 €\n• Entidade Adjudicante: Município de Tabuaço"
+    },
+    {
+      "id": "base_contrato_15771723",
+      "source": "Portal BASE",
+      "category": "Contrato / Ajuste Direto",
+      "procedure_type": "Concurso público",
+      "title": "Aquisição, através de concurso público, de 1 equipamento combinado 100% elétrico para recolha de biorresíduos, dotado de sistema de elevação por carga traseira, incluindo o respetivo fornecimento e cu...",
+      "entity": "Serviços Municipalizados de Viana do Castelo",
+      "contracted": "Nors Vt Trucks and Buses Portugal S.A",
+      "value": "463.630,00 €",
+      "deadline": "27 dias.",
+      "publication_date": "14-10-2026",
+      "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=15771723",
+      "pieces_url": null,
+      "matched_terms": [
+        "CPV 3414xxxx"
+      ],
+      "summary": "• Objeto do Concurso: Aquisição, através de concurso público, de 1 equipamento combinado 100% elétrico para recolha de biorresíduos, dotado de sistema de elevação por carga traseira, incluindo o respetivo fornecimento e cu...\n• Prazo de Entrega da Proposta: 27 dias.\n• Valor a Concurso: 463.630,00 €\n• Entidade Adjudicante: Serviços Municipalizados de Viana do Castelo"
+    },
+    {
+      "id": "base_contrato_15769954",
+      "source": "Portal BASE",
+      "category": "Contrato / Ajuste Direto",
+      "procedure_type": "Ajuste Direto Regime Geral",
+      "title": "Aquisição de Serviços de Gestão de Campanhas Digitais nas Redes Sociais (Facebook, Instagram e/ou LinkedIn) para Comunicação dos Resultados do Projeto Circulartech  REGI (Resíduos com Gestão Intelige...",
+      "entity": "Associação de Municípios para a Gestão Sustentável de Resíduos do Grande Porto - LIPOR",
+      "contracted": "Link&Grow;, Lda",
+      "value": "19.900,00 €",
+      "deadline": "92 dias (Prazo de Execução)",
+      "publication_date": "14-10-2026",
+      "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=15769954",
+      "pieces_url": null,
+      "matched_terms": [
+        "CPV 3414xxxx"
+      ],
+      "summary": "• Objeto do Concurso: Aquisição de Serviços de Gestão de Campanhas Digitais nas Redes Sociais (Facebook, Instagram e/ou LinkedIn) para Comunicação dos Resultados do Projeto Circulartech  REGI (Resíduos com Gestão Intelige...\n• Prazo de Entrega da Proposta: 92 dias (Prazo de Execução)\n• Valor a Concurso: 19.900,00 €\n• Entidade Adjudicante: Associação de Municípios para a Gestão Sustentável de Resíduos do Grande Porto - LIPOR"
+    },
+    {
+      "id": "base_contrato_15769835",
+      "source": "Portal BASE",
+      "category": "Contrato / Ajuste Direto",
+      "procedure_type": "Ajuste Direto Regime Geral",
+      "title": "Aquisição de serviços de aluguer operacional com manutenção preventiva e seguro incluídos de uma viatura compactadora de recolha de RSU's de 5 m3",
+      "entity": "Freguesia de Estrela",
+      "contracted": "Vecorent Aluguer de Veículos sem condutor e Comercialização de Equipamento Ecológico Lda",
+      "value": "30.696,00 €",
+      "deadline": "364 dias (Prazo de Execução)",
+      "publication_date": "14-10-2026",
+      "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=15769835",
+      "pieces_url": null,
+      "matched_terms": [
+        "CPV 3414xxxx"
+      ],
+      "summary": "• Objeto do Concurso: Aquisição de serviços de aluguer operacional com manutenção preventiva e seguro incluídos de uma viatura compactadora de recolha de RSU's de 5 m3\n• Prazo de Entrega da Proposta: 364 dias (Prazo de Execução)\n• Valor a Concurso: 30.696,00 €\n• Entidade Adjudicante: Freguesia de Estrela"
     },
     {
       "id": "base_contrato_15760770",
@@ -1125,14 +1215,14 @@
       "entity": "COMPANHIA DE AUTOCARROS DA MADEIRA CAM SA",
       "contracted": "UIC- UNIDADE DE INDUSTRIA AUTO MECÂNICA DO CENTRO, S.A.",
       "value": "4.252.000,00 €",
-      "deadline": "28 dias.",
+      "deadline": "393 dias (Prazo de Execução)",
       "publication_date": "29-09-2026",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=15710377",
       "pieces_url": null,
       "matched_terms": [
         "CPV 3414xxxx"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de autocarros elétricos e respetivas estações de carregamento\n• Prazo de Entrega da Proposta: 28 dias.\n• Valor a Concurso: 4.252.000,00 €\n• Entidade Adjudicante: COMPANHIA DE AUTOCARROS DA MADEIRA CAM SA"
+      "summary": "• Objeto do Concurso: Aquisição de autocarros elétricos e respetivas estações de carregamento\n• Prazo de Entrega da Proposta: 393 dias (Prazo de Execução)\n• Valor a Concurso: 4.252.000,00 €\n• Entidade Adjudicante: COMPANHIA DE AUTOCARROS DA MADEIRA CAM SA"
     },
     {
       "id": "base_contrato_15710182",
@@ -3930,14 +4020,14 @@
       "entity": "Município de Vila Verde",
       "contracted": "SAMBIENTAL - LIMPEZA DE SANEAMENTO, LDA.",
       "value": "49.200,00 €",
-      "deadline": "730 dias (Prazo de Execução)",
+      "deadline": "Consulte o anúncio",
       "publication_date": "13-04-2026",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=14506309",
       "pieces_url": null,
       "matched_terms": [
         "Viatura especial"
       ],
-      "summary": "• Objeto do Concurso: AQUISIÇÃO DE SERVIÇO COM VIATURA ESPECIALIZADA PARA LIMPEZA E DESOBSTRUÇÃO DE REDE DE SANEAMENTO DE ÁGUAS RESIDUAIS E ESTAÇÕES ELEVATÓRIAS\n• Prazo de Entrega da Proposta: 730 dias (Prazo de Execução)\n• Valor a Concurso: 49.200,00 €\n• Entidade Adjudicante: Município de Vila Verde"
+      "summary": "• Objeto do Concurso: AQUISIÇÃO DE SERVIÇO COM VIATURA ESPECIALIZADA PARA LIMPEZA E DESOBSTRUÇÃO DE REDE DE SANEAMENTO DE ÁGUAS RESIDUAIS E ESTAÇÕES ELEVATÓRIAS\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 49.200,00 €\n• Entidade Adjudicante: Município de Vila Verde"
     },
     {
       "id": "base_contrato_14494995",
@@ -4060,14 +4150,14 @@
       "entity": "Santa Casa da Misericórdia de Alvorge",
       "contracted": "M.Coutinho Porto - Comércio de Automóveis, S.A",
       "value": "43.950,00 €",
-      "deadline": "25 dias (Prazo de Execução)",
+      "deadline": "Consulte o anúncio",
       "publication_date": "09-03-2026",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=13919357",
       "pieces_url": null,
       "matched_terms": [
         "Viatura especial"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de Viatura especial para transporte de pessoas com mobilidade reduzida VETD Elétrica 5 lugares com transformação para 1 cadeira de Rodas\n• Prazo de Entrega da Proposta: 25 dias (Prazo de Execução)\n• Valor a Concurso: 43.950,00 €\n• Entidade Adjudicante: Santa Casa da Misericórdia de Alvorge"
+      "summary": "• Objeto do Concurso: Aquisição de Viatura especial para transporte de pessoas com mobilidade reduzida VETD Elétrica 5 lugares com transformação para 1 cadeira de Rodas\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 43.950,00 €\n• Entidade Adjudicante: Santa Casa da Misericórdia de Alvorge"
     },
     {
       "id": "base_contrato_13715456",
@@ -4657,14 +4747,14 @@
       "entity": "Área Metropolitana de Lisboa",
       "contracted": "CPCECHO, Lda",
       "value": "27.083,55 €",
-      "deadline": "30 dias (Prazo de Execução)",
+      "deadline": "32 dias.",
       "publication_date": "01-11-2025",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=11875431",
       "pieces_url": null,
       "matched_terms": [
         "Biblioteca itinerante"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de Equipamentos informáticos (hardware e software), para a Rede de Bibliotecas Públicas, a distribuir pelos municípios da Área Metropolitana de Lisboa, no âmbito da candidatura à Componente ...\n• Prazo de Entrega da Proposta: 30 dias (Prazo de Execução)\n• Valor a Concurso: 27.083,55 €\n• Entidade Adjudicante: Área Metropolitana de Lisboa"
+      "summary": "• Objeto do Concurso: Aquisição de Equipamentos informáticos (hardware e software), para a Rede de Bibliotecas Públicas, a distribuir pelos municípios da Área Metropolitana de Lisboa, no âmbito da candidatura à Componente ...\n• Prazo de Entrega da Proposta: 32 dias.\n• Valor a Concurso: 27.083,55 €\n• Entidade Adjudicante: Área Metropolitana de Lisboa"
     },
     {
       "id": "base_contrato_11875429",
@@ -4675,14 +4765,14 @@
       "entity": "Área Metropolitana de Lisboa",
       "contracted": "CPCECHO, Lda",
       "value": "14.583,45 €",
-      "deadline": "30 dias (Prazo de Execução)",
+      "deadline": "32 dias.",
       "publication_date": "01-11-2025",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=11875429",
       "pieces_url": null,
       "matched_terms": [
         "Biblioteca itinerante"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de Equipamentos informáticos (hardware e software), para a Rede de Bibliotecas Públicas, a distribuir pelos municípios da Área Metropolitana de Lisboa, no âmbito da candidatura à Componente ...\n• Prazo de Entrega da Proposta: 30 dias (Prazo de Execução)\n• Valor a Concurso: 14.583,45 €\n• Entidade Adjudicante: Área Metropolitana de Lisboa"
+      "summary": "• Objeto do Concurso: Aquisição de Equipamentos informáticos (hardware e software), para a Rede de Bibliotecas Públicas, a distribuir pelos municípios da Área Metropolitana de Lisboa, no âmbito da candidatura à Componente ...\n• Prazo de Entrega da Proposta: 32 dias.\n• Valor a Concurso: 14.583,45 €\n• Entidade Adjudicante: Área Metropolitana de Lisboa"
     },
     {
       "id": "base_anuncio_426607",
@@ -4711,14 +4801,14 @@
       "entity": "Serviços Municipalizados de Água e Saneamento de Almada",
       "contracted": "Certoma Comercio Tecnico de Maquinas Lda",
       "value": "7.912,00 €",
-      "deadline": "91 dias (Prazo de Execução)",
+      "deadline": "Consulte o anúncio",
       "publication_date": "26-09-2025",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=11746553",
       "pieces_url": null,
       "matched_terms": [
         "Viatura especial"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de serviços de reparação de bomba de vácuo para viatura especial de desobstrução de coletores\n• Prazo de Entrega da Proposta: 91 dias (Prazo de Execução)\n• Valor a Concurso: 7.912,00 €\n• Entidade Adjudicante: Serviços Municipalizados de Água e Saneamento de Almada"
+      "summary": "• Objeto do Concurso: Aquisição de serviços de reparação de bomba de vácuo para viatura especial de desobstrução de coletores\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 7.912,00 €\n• Entidade Adjudicante: Serviços Municipalizados de Água e Saneamento de Almada"
     },
     {
       "id": "base_anuncio_422581",
@@ -4783,14 +4873,14 @@
       "entity": "Município de Vila Viçosa",
       "contracted": "TRANSVETRA - TRANSFORMAÇÃO DE VEÍCULOS, LDA.",
       "value": "84.466,00 €",
-      "deadline": "180 dias (Prazo de Execução)",
+      "deadline": "9 dias.",
       "publication_date": "02-07-2025",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=11550347",
       "pieces_url": null,
       "matched_terms": [
         "Biblioteca itinerante"
       ],
-      "summary": "• Objeto do Concurso: AQUISIÇÃO DE VIATURA – BIBLIOTECA ITINERANTE\n• Prazo de Entrega da Proposta: 180 dias (Prazo de Execução)\n• Valor a Concurso: 84.466,00 €\n• Entidade Adjudicante: Município de Vila Viçosa"
+      "summary": "• Objeto do Concurso: AQUISIÇÃO DE VIATURA – BIBLIOTECA ITINERANTE\n• Prazo de Entrega da Proposta: 9 dias.\n• Valor a Concurso: 84.466,00 €\n• Entidade Adjudicante: Município de Vila Viçosa"
     },
     {
       "id": "base_anuncio_416891",
@@ -4855,14 +4945,14 @@
       "entity": "Município de Terras de Bouro",
       "contracted": "Livraria Minho – Ferreira, Unipessoal, Lda.",
       "value": "8.447,15 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "30 dias (Prazo de Execução)",
       "publication_date": "26-05-2025",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=11462225",
       "pieces_url": null,
       "matched_terms": [
         "Biblioteca itinerante"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de fundo documental - Biblioteca Itinerante\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 8.447,15 €\n• Entidade Adjudicante: Município de Terras de Bouro"
+      "summary": "• Objeto do Concurso: Aquisição de fundo documental - Biblioteca Itinerante\n• Prazo de Entrega da Proposta: 30 dias (Prazo de Execução)\n• Valor a Concurso: 8.447,15 €\n• Entidade Adjudicante: Município de Terras de Bouro"
     },
     {
       "id": "base_anuncio_412724",
@@ -4945,14 +5035,14 @@
       "entity": "Comunidade Intermunicipal do Alto Alentejo",
       "contracted": "Inforabreu, Lda.",
       "value": "80.298,00 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "9 dias.",
       "publication_date": "14-04-2025",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=11346270",
       "pieces_url": null,
       "matched_terms": [
         "Biblioteca itinerante"
       ],
-      "summary": "• Objeto do Concurso: O presente procedimento insere-se no âmbito da componente de Investimento RE-C04-i01 – Redes Culturais e Transição Digital, cuja concretização se pretende implementada através da Medida de Investiment...\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 80.298,00 €\n• Entidade Adjudicante: Comunidade Intermunicipal do Alto Alentejo"
+      "summary": "• Objeto do Concurso: O presente procedimento insere-se no âmbito da componente de Investimento RE-C04-i01 – Redes Culturais e Transição Digital, cuja concretização se pretende implementada através da Medida de Investiment...\n• Prazo de Entrega da Proposta: 9 dias.\n• Valor a Concurso: 80.298,00 €\n• Entidade Adjudicante: Comunidade Intermunicipal do Alto Alentejo"
     },
     {
       "id": "base_anuncio_408579",
@@ -5035,14 +5125,14 @@
       "entity": "Município de Terras de Bouro",
       "contracted": "KEEP SOLUTIONS, LDA",
       "value": "15.687,00 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "90 dias (Prazo de Execução)",
       "publication_date": "07-02-2025",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=11213574",
       "pieces_url": null,
       "matched_terms": [
         "Biblioteca itinerante"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de sistema de informação/software integrado de gestão de bibliotecas – Biblioteca Itinerante do Município de Terras de Bouro\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 15.687,00 €\n• Entidade Adjudicante: Município de Terras de Bouro"
+      "summary": "• Objeto do Concurso: Aquisição de sistema de informação/software integrado de gestão de bibliotecas – Biblioteca Itinerante do Município de Terras de Bouro\n• Prazo de Entrega da Proposta: 90 dias (Prazo de Execução)\n• Valor a Concurso: 15.687,00 €\n• Entidade Adjudicante: Município de Terras de Bouro"
     },
     {
       "id": "base_anuncio_398466",
@@ -5251,14 +5341,14 @@
       "entity": "Município de Vila Verde",
       "contracted": "SAMBIENTAL - LIMPEZA DE SANEAMENTO, LDA.",
       "value": "38.950,00 €",
-      "deadline": "365 dias (Prazo de Execução)",
+      "deadline": "Consulte o anúncio",
       "publication_date": "30-07-2024",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=10841367",
       "pieces_url": null,
       "matched_terms": [
         "Viatura especial"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de serviço com viatura especializada para limpeza e desobstrução de coletores de saneamento de águas residuais e estações elevatórias\n• Prazo de Entrega da Proposta: 365 dias (Prazo de Execução)\n• Valor a Concurso: 38.950,00 €\n• Entidade Adjudicante: Município de Vila Verde"
+      "summary": "• Objeto do Concurso: Aquisição de serviço com viatura especializada para limpeza e desobstrução de coletores de saneamento de águas residuais e estações elevatórias\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 38.950,00 €\n• Entidade Adjudicante: Município de Vila Verde"
     },
     {
       "id": "base_anuncio_383338",
@@ -5305,14 +5395,14 @@
       "entity": "Município de Barcelos",
       "contracted": "MARTA PEREIRA EVANGELISTA",
       "value": "13.861,72 €",
-      "deadline": "Consulte o anúncio",
+      "deadline": "40 dias (Prazo de Execução)",
       "publication_date": "24-06-2024",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=10785830",
       "pieces_url": null,
       "matched_terms": [
         "Biblioteca itinerante"
       ],
-      "summary": "• Objeto do Concurso: Livros para Bibliotecas Itinerantes\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 13.861,72 €\n• Entidade Adjudicante: Município de Barcelos"
+      "summary": "• Objeto do Concurso: Livros para Bibliotecas Itinerantes\n• Prazo de Entrega da Proposta: 40 dias (Prazo de Execução)\n• Valor a Concurso: 13.861,72 €\n• Entidade Adjudicante: Município de Barcelos"
     },
     {
       "id": "base_anuncio_381025",
@@ -5773,14 +5863,14 @@
       "entity": "Município de Vila Verde",
       "contracted": "Sambiental - Limpeza de Saneamento, Lda.",
       "value": "38.550,00 €",
-      "deadline": "365 dias (Prazo de Execução)",
+      "deadline": "Consulte o anúncio",
       "publication_date": "04-04-2023",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=9911066",
       "pieces_url": null,
       "matched_terms": [
         "Viatura especial"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de serviço com viatura especializada para limpeza e desobstrução de coletores de saneamento de águas residuais e estações elevatórias\n• Prazo de Entrega da Proposta: 365 dias (Prazo de Execução)\n• Valor a Concurso: 38.550,00 €\n• Entidade Adjudicante: Município de Vila Verde"
+      "summary": "• Objeto do Concurso: Aquisição de serviço com viatura especializada para limpeza e desobstrução de coletores de saneamento de águas residuais e estações elevatórias\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 38.550,00 €\n• Entidade Adjudicante: Município de Vila Verde"
     },
     {
       "id": "base_anuncio_341647",
@@ -5827,14 +5917,14 @@
       "entity": "Município de Vila Nova de Gaia",
       "contracted": "SABSEG - CORRETOR DE SEGUROS, S.A.",
       "value": "24.398,74 €",
-      "deadline": "365 dias (Prazo de Execução)",
+      "deadline": "Consulte o anúncio",
       "publication_date": "06-01-2023",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=9684037",
       "pieces_url": null,
       "matched_terms": [
         "Viatura especial"
       ],
-      "summary": "• Objeto do Concurso: Aquisição da prestação de serviços de seguros - Contratação complementar de seguro - Viatura Especial da CBS - AC-69-SC\n• Prazo de Entrega da Proposta: 365 dias (Prazo de Execução)\n• Valor a Concurso: 24.398,74 €\n• Entidade Adjudicante: Município de Vila Nova de Gaia"
+      "summary": "• Objeto do Concurso: Aquisição da prestação de serviços de seguros - Contratação complementar de seguro - Viatura Especial da CBS - AC-69-SC\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 24.398,74 €\n• Entidade Adjudicante: Município de Vila Nova de Gaia"
     },
     {
       "id": "base_anuncio_320143",
@@ -5881,14 +5971,14 @@
       "entity": "Município de Angra do Heroísmo",
       "contracted": "VECOAÇORES - Veículos Comerciais dos Açores, Lda.",
       "value": "74.000,00 €",
-      "deadline": "40 dias (Prazo de Execução)",
+      "deadline": "Consulte o anúncio",
       "publication_date": "17-01-2022",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=8716853",
       "pieces_url": null,
       "matched_terms": [
         "Viatura especial"
       ],
-      "summary": "• Objeto do Concurso: Viatura Especial Equipada com Plataforma Elevatória\n• Prazo de Entrega da Proposta: 40 dias (Prazo de Execução)\n• Valor a Concurso: 74.000,00 €\n• Entidade Adjudicante: Município de Angra do Heroísmo"
+      "summary": "• Objeto do Concurso: Viatura Especial Equipada com Plataforma Elevatória\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 74.000,00 €\n• Entidade Adjudicante: Município de Angra do Heroísmo"
     },
     {
       "id": "base_contrato_8542016",
@@ -5899,14 +5989,14 @@
       "entity": "Guarda Nacional Republicana",
       "contracted": "MJ BUS, Lda.",
       "value": "8.905,00 €",
-      "deadline": "10 dias (Prazo de Execução)",
+      "deadline": "Consulte o anúncio",
       "publication_date": "22-12-2021",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=8542016",
       "pieces_url": null,
       "matched_terms": [
         "Viatura especial"
       ],
-      "summary": "• Objeto do Concurso: AQUISIÇÃO DE SERVIÇOS ATINENTES À PINTURA GERAL E NOVA CARACTERIZAÇÃO DE VIATURA ESPECIAL DE MATRÍCULA GNR E-0207, VIATURA GRUA E REBOQUE DE PESADOS DA CITM DA SGG\n• Prazo de Entrega da Proposta: 10 dias (Prazo de Execução)\n• Valor a Concurso: 8.905,00 €\n• Entidade Adjudicante: Guarda Nacional Republicana"
+      "summary": "• Objeto do Concurso: AQUISIÇÃO DE SERVIÇOS ATINENTES À PINTURA GERAL E NOVA CARACTERIZAÇÃO DE VIATURA ESPECIAL DE MATRÍCULA GNR E-0207, VIATURA GRUA E REBOQUE DE PESADOS DA CITM DA SGG\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 8.905,00 €\n• Entidade Adjudicante: Guarda Nacional Republicana"
     },
     {
       "id": "base_anuncio_277928",
@@ -5971,14 +6061,14 @@
       "entity": "CERCIPENICHE - Cooperativa de Educação e Reabilitação de Cidadãos Inadaptados, C. R. L.",
       "contracted": "EMERTECH PROJECT – TRANSFORMAÇÃO DE VIATURAS, LDA.,",
       "value": "49.850,00 €",
-      "deadline": "90 dias (Prazo de Execução)",
+      "deadline": "Consulte o anúncio",
       "publication_date": "05-03-2021",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=7534125",
       "pieces_url": null,
       "matched_terms": [
         "Viatura especial"
       ],
-      "summary": "• Objeto do Concurso: Procedimento pré-contratual por consulta prévia  e que tem por objeto principal o fornecimento de viatura especial de transporte de pessoas com mobilidade reduzida, no âmbito da prestação tipo CPV 341...\n• Prazo de Entrega da Proposta: 90 dias (Prazo de Execução)\n• Valor a Concurso: 49.850,00 €\n• Entidade Adjudicante: CERCIPENICHE - Cooperativa de Educação e Reabilitação de Cidadãos Inadaptados, C. R. L."
+      "summary": "• Objeto do Concurso: Procedimento pré-contratual por consulta prévia  e que tem por objeto principal o fornecimento de viatura especial de transporte de pessoas com mobilidade reduzida, no âmbito da prestação tipo CPV 341...\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 49.850,00 €\n• Entidade Adjudicante: CERCIPENICHE - Cooperativa de Educação e Reabilitação de Cidadãos Inadaptados, C. R. L."
     },
     {
       "id": "base_anuncio_259223",
@@ -6151,14 +6241,14 @@
       "entity": "Município de Loulé",
       "contracted": "Shinelimit,  Unipessoal, Lda",
       "value": "89.800,00 €",
-      "deadline": "6 dias.",
+      "deadline": "Consulte o anúncio",
       "publication_date": "28-05-2020",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=6635526",
       "pieces_url": null,
       "matched_terms": [
         "Viatura especial"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de uma viatura especializada de comunicações, apoio às operações e sensibilização\n• Prazo de Entrega da Proposta: 6 dias.\n• Valor a Concurso: 89.800,00 €\n• Entidade Adjudicante: Município de Loulé"
+      "summary": "• Objeto do Concurso: Aquisição de uma viatura especializada de comunicações, apoio às operações e sensibilização\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 89.800,00 €\n• Entidade Adjudicante: Município de Loulé"
     },
     {
       "id": "base_anuncio_210765",
@@ -6205,14 +6295,14 @@
       "entity": "Cerci-Lamas - Cooperativa de Educação e Reabilitação para a Comunidade Inclusiva, C. R. L.",
       "contracted": "AUTO RIBEIRO LDA",
       "value": "32.670,00 €",
-      "deadline": "90 dias (Prazo de Execução)",
+      "deadline": "Consulte o anúncio",
       "publication_date": "21-11-2019",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=6044256",
       "pieces_url": null,
       "matched_terms": [
         "Viatura especial"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de uma Viatura Especial de Transportes\n• Prazo de Entrega da Proposta: 90 dias (Prazo de Execução)\n• Valor a Concurso: 32.670,00 €\n• Entidade Adjudicante: Cerci-Lamas - Cooperativa de Educação e Reabilitação para a Comunidade Inclusiva, C. R. L."
+      "summary": "• Objeto do Concurso: Aquisição de uma Viatura Especial de Transportes\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 32.670,00 €\n• Entidade Adjudicante: Cerci-Lamas - Cooperativa de Educação e Reabilitação para a Comunidade Inclusiva, C. R. L."
     },
     {
       "id": "base_anuncio_192439",
@@ -6331,14 +6421,14 @@
       "entity": "CERCIPORTALEGRE - Cooperativa de Educação e Reabilitação de Cidadãos com Incapacidades de Portalegre C. R. L.",
       "contracted": "LUBRIPOR LDA",
       "value": "32.702,84 €",
-      "deadline": "42 dias (Prazo de Execução)",
+      "deadline": "Consulte o anúncio",
       "publication_date": "26-11-2018",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=4973604",
       "pieces_url": null,
       "matched_terms": [
         "Viatura especial"
       ],
-      "summary": "• Objeto do Concurso: AQUISIÇÃO DE VIATURA ESPECIAL DE TRANSPORTE COM KIT VTC\n• Prazo de Entrega da Proposta: 42 dias (Prazo de Execução)\n• Valor a Concurso: 32.702,84 €\n• Entidade Adjudicante: CERCIPORTALEGRE - Cooperativa de Educação e Reabilitação de Cidadãos com Incapacidades de Portalegre C. R. L."
+      "summary": "• Objeto do Concurso: AQUISIÇÃO DE VIATURA ESPECIAL DE TRANSPORTE COM KIT VTC\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 32.702,84 €\n• Entidade Adjudicante: CERCIPORTALEGRE - Cooperativa de Educação e Reabilitação de Cidadãos com Incapacidades de Portalegre C. R. L."
     },
     {
       "id": "base_contrato_4759983",
@@ -6367,14 +6457,14 @@
       "entity": "Casa de Povo de Água de Pau",
       "contracted": "296 Automóveis S.A.",
       "value": "33.209,01 €",
-      "deadline": "45 dias (Prazo de Execução)",
+      "deadline": "Consulte o anúncio",
       "publication_date": "27-07-2018",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=4695387",
       "pieces_url": null,
       "matched_terms": [
         "Viatura especial"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de uma carrinha de 9 lugares transformada em viatura especial com possibilidade de adaptação\n• Prazo de Entrega da Proposta: 45 dias (Prazo de Execução)\n• Valor a Concurso: 33.209,01 €\n• Entidade Adjudicante: Casa de Povo de Água de Pau"
+      "summary": "• Objeto do Concurso: Aquisição de uma carrinha de 9 lugares transformada em viatura especial com possibilidade de adaptação\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 33.209,01 €\n• Entidade Adjudicante: Casa de Povo de Água de Pau"
     },
     {
       "id": "base_anuncio_150393",
@@ -6403,14 +6493,14 @@
       "entity": "Resitejo Associação de Gestão e Tratamento dos Lixos do Médio Tejo",
       "contracted": "CAMIONANTUNES, COMÉRCIO DE DE VIATURAS, LDA.",
       "value": "18.000,00 €",
-      "deadline": "1 dias (Prazo de Execução)",
+      "deadline": "Consulte o anúncio",
       "publication_date": "25-05-2018",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=4508109",
       "pieces_url": null,
       "matched_terms": [
         "Viatura especial"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de Viatura Especial de Combate a Incêndios\n• Prazo de Entrega da Proposta: 1 dias (Prazo de Execução)\n• Valor a Concurso: 18.000,00 €\n• Entidade Adjudicante: Resitejo Associação de Gestão e Tratamento dos Lixos do Médio Tejo"
+      "summary": "• Objeto do Concurso: Aquisição de Viatura Especial de Combate a Incêndios\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 18.000,00 €\n• Entidade Adjudicante: Resitejo Associação de Gestão e Tratamento dos Lixos do Médio Tejo"
     },
     {
       "id": "base_contrato_4430961",
@@ -6439,14 +6529,14 @@
       "entity": "Município de Melgaço",
       "contracted": "Auto-Sueco, Ldª.",
       "value": "7.734,54 €",
-      "deadline": "30 dias (Prazo de Execução)",
+      "deadline": "Consulte o anúncio",
       "publication_date": "23-03-2018",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=4373241",
       "pieces_url": null,
       "matched_terms": [
         "Viatura especial"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de serviços de manutenção e reparação na viatura especial - 42-BO-79\n• Prazo de Entrega da Proposta: 30 dias (Prazo de Execução)\n• Valor a Concurso: 7.734,54 €\n• Entidade Adjudicante: Município de Melgaço"
+      "summary": "• Objeto do Concurso: Aquisição de serviços de manutenção e reparação na viatura especial - 42-BO-79\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 7.734,54 €\n• Entidade Adjudicante: Município de Melgaço"
     },
     {
       "id": "base_anuncio_110540",
@@ -6493,14 +6583,14 @@
       "entity": "Município de Melgaço",
       "contracted": "AUTO SUECO, LDA",
       "value": "8.130,00 €",
-      "deadline": "30 dias (Prazo de Execução)",
+      "deadline": "Consulte o anúncio",
       "publication_date": "29-08-2017",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=3634155",
       "pieces_url": null,
       "matched_terms": [
         "Viatura especial"
       ],
-      "summary": "• Objeto do Concurso: Serviços de manutenção no equipamento da viatura especial 42-BO-79\n• Prazo de Entrega da Proposta: 30 dias (Prazo de Execução)\n• Valor a Concurso: 8.130,00 €\n• Entidade Adjudicante: Município de Melgaço"
+      "summary": "• Objeto do Concurso: Serviços de manutenção no equipamento da viatura especial 42-BO-79\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 8.130,00 €\n• Entidade Adjudicante: Município de Melgaço"
     },
     {
       "id": "base_anuncio_94140",
@@ -6637,14 +6727,14 @@
       "entity": "Município de Setúbal",
       "contracted": "Jacinto Marques Oliveira Sucessores, Lda",
       "value": "36.900,00 €",
-      "deadline": "0 dias (Prazo de Execução)",
+      "deadline": "Consulte o anúncio",
       "publication_date": "04-11-2016",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=2619205",
       "pieces_url": null,
       "matched_terms": [
         "Viatura especial"
       ],
-      "summary": "• Objeto do Concurso: AQUISIÇÃO DE UMA VIATURA ESPECIAL DE APOIO AOS SERVIÇOS DA EQUIPA DE RESGATE\n• Prazo de Entrega da Proposta: 0 dias (Prazo de Execução)\n• Valor a Concurso: 36.900,00 €\n• Entidade Adjudicante: Município de Setúbal"
+      "summary": "• Objeto do Concurso: AQUISIÇÃO DE UMA VIATURA ESPECIAL DE APOIO AOS SERVIÇOS DA EQUIPA DE RESGATE\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 36.900,00 €\n• Entidade Adjudicante: Município de Setúbal"
     },
     {
       "id": "base_anuncio_82479",
@@ -6799,14 +6889,14 @@
       "entity": "Município de Vila do Bispo",
       "contracted": "BASRIO-METALOMECÂNICA E EQUIPAMENTOS RODOVIÁRIOS, S.A.",
       "value": "12.577,60 €",
-      "deadline": "30 dias (Prazo de Execução)",
+      "deadline": "Consulte o anúncio",
       "publication_date": "07-04-2015",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=1424445",
       "pieces_url": null,
       "matched_terms": [
         "Viatura especial"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de serviços de reparação da caixa de RSU da viatura especial de limpeza urbana 06-91-HN\n• Prazo de Entrega da Proposta: 30 dias (Prazo de Execução)\n• Valor a Concurso: 12.577,60 €\n• Entidade Adjudicante: Município de Vila do Bispo"
+      "summary": "• Objeto do Concurso: Aquisição de serviços de reparação da caixa de RSU da viatura especial de limpeza urbana 06-91-HN\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 12.577,60 €\n• Entidade Adjudicante: Município de Vila do Bispo"
     },
     {
       "id": "base_anuncio_67388",
@@ -6835,14 +6925,14 @@
       "entity": "Centro Social e Paroquial de Campos",
       "contracted": "Auto Rabal – Comércio de Automóveis e Acessórios, S.A",
       "value": "52.500,00 €",
-      "deadline": "60 dias (Prazo de Execução)",
+      "deadline": "Consulte o anúncio",
       "publication_date": "14-01-2015",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=1351184",
       "pieces_url": null,
       "matched_terms": [
         "Viatura especial"
       ],
-      "summary": "• Objeto do Concurso: Aquisição e transformação de viatura especial para o transporte de pessoas com mobilidade reduzida e aquisição e transformação de viatura para o serviço de apoio domiciliário.\n• Prazo de Entrega da Proposta: 60 dias (Prazo de Execução)\n• Valor a Concurso: 52.500,00 €\n• Entidade Adjudicante: Centro Social e Paroquial de Campos"
+      "summary": "• Objeto do Concurso: Aquisição e transformação de viatura especial para o transporte de pessoas com mobilidade reduzida e aquisição e transformação de viatura para o serviço de apoio domiciliário.\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 52.500,00 €\n• Entidade Adjudicante: Centro Social e Paroquial de Campos"
     },
     {
       "id": "base_contrato_1284299",
@@ -6853,14 +6943,14 @@
       "entity": "Município de Vila do Bispo",
       "contracted": "Vecofabril - Acessórios e Transformação de Veículos, S.A.",
       "value": "14.958,91 €",
-      "deadline": "30 dias (Prazo de Execução)",
+      "deadline": "Consulte o anúncio",
       "publication_date": "29-10-2014",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=1284299",
       "pieces_url": null,
       "matched_terms": [
         "Viatura especial"
       ],
-      "summary": "• Objeto do Concurso: Aquisição de serviço de reparação da caixa de RSU da viatura especial de limpeza urbana 04-IF-80\n• Prazo de Entrega da Proposta: 30 dias (Prazo de Execução)\n• Valor a Concurso: 14.958,91 €\n• Entidade Adjudicante: Município de Vila do Bispo"
+      "summary": "• Objeto do Concurso: Aquisição de serviço de reparação da caixa de RSU da viatura especial de limpeza urbana 04-IF-80\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 14.958,91 €\n• Entidade Adjudicante: Município de Vila do Bispo"
     },
     {
       "id": "base_anuncio_60452",
@@ -6889,14 +6979,14 @@
       "entity": "Centro Paroquial da Mexilhoeira Grande",
       "contracted": "Futurvida - fabricação de veículos especiais, lda.",
       "value": "39.530,86 €",
-      "deadline": "90 dias (Prazo de Execução)",
+      "deadline": "Consulte o anúncio",
       "publication_date": "09-05-2014",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=1057329",
       "pieces_url": null,
       "matched_terms": [
         "Viatura especial"
       ],
-      "summary": "• Objeto do Concurso: aquisição e transformação de viatura especial para transporte de pessoas com mobilidade reduzida\n• Prazo de Entrega da Proposta: 90 dias (Prazo de Execução)\n• Valor a Concurso: 39.530,86 €\n• Entidade Adjudicante: Centro Paroquial da Mexilhoeira Grande"
+      "summary": "• Objeto do Concurso: aquisição e transformação de viatura especial para transporte de pessoas com mobilidade reduzida\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 39.530,86 €\n• Entidade Adjudicante: Centro Paroquial da Mexilhoeira Grande"
     },
     {
       "id": "base_anuncio_59458",
@@ -6925,14 +7015,14 @@
       "entity": "Municipio de Vila do Bispo",
       "contracted": "Basrio - Metalomecânica e equipamento rodoviários, SA",
       "value": "16.480,00 €",
-      "deadline": "30 dias (Prazo de Execução)",
+      "deadline": "Consulte o anúncio",
       "publication_date": "15-05-2013",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=759020",
       "pieces_url": null,
       "matched_terms": [
         "Viatura especial"
       ],
-      "summary": "• Objeto do Concurso: Reparação da caixa de RSU da viatura especial de limpeza urbana 87-75-OC\n• Prazo de Entrega da Proposta: 30 dias (Prazo de Execução)\n• Valor a Concurso: 16.480,00 €\n• Entidade Adjudicante: Municipio de Vila do Bispo"
+      "summary": "• Objeto do Concurso: Reparação da caixa de RSU da viatura especial de limpeza urbana 87-75-OC\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 16.480,00 €\n• Entidade Adjudicante: Municipio de Vila do Bispo"
     },
     {
       "id": "base_contrato_529639",
@@ -6943,14 +7033,14 @@
       "entity": "A.R.M. - Águas e Resíduos da Madeira, S.A.",
       "contracted": "EMANUEL GOUVEIA RODRIGUES – Comércio e Reparação de Automóveis Unipessoal, Lda.",
       "value": "7.580,00 €",
-      "deadline": "45 dias (Prazo de Execução)",
+      "deadline": "Consulte o anúncio",
       "publication_date": "21-06-2012",
       "direct_url": "https://www.base.gov.pt/Base4/pt/detalhe/?type=contratos&id=529639",
       "pieces_url": null,
       "matched_terms": [
         "Viatura especial"
       ],
-      "summary": "• Objeto do Concurso: Fornecimento e montagem de um motor reconstruído para a reparação da viatura especial de recolha de resíduos MERCEDES BENZ 2024, CHASSIS n.º WDB656109-1K-126779, com a matrícula 37-18-FN e com caixa d...\n• Prazo de Entrega da Proposta: 45 dias (Prazo de Execução)\n• Valor a Concurso: 7.580,00 €\n• Entidade Adjudicante: A.R.M. - Águas e Resíduos da Madeira, S.A."
+      "summary": "• Objeto do Concurso: Fornecimento e montagem de um motor reconstruído para a reparação da viatura especial de recolha de resíduos MERCEDES BENZ 2024, CHASSIS n.º WDB656109-1K-126779, com a matrícula 37-18-FN e com caixa d...\n• Prazo de Entrega da Proposta: Consulte o anúncio\n• Valor a Concurso: 7.580,00 €\n• Entidade Adjudicante: A.R.M. - Águas e Resíduos da Madeira, S.A."
     },
     {
       "id": "base_anuncio_10079",
@@ -7043,5 +7133,5 @@
       "is_dismissed": true
     }
   ],
-  "duration_seconds": 57.11
+  "duration_seconds": 103.37
 }
