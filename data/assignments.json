@@ -1,5 +1,5 @@
 {
-  "last_search": "14-10-2026 12:18:50",
+  "last_search": "14-10-2026 15:08:17",
   "assignments": {
     "base_anuncio_10079": {
       "folder": "dismissed",
@@ -1571,6 +1571,22 @@
     },
     "base_contrato_15769002": {
       "folder": "evaluation",
+      "is_favorite": false
+    },
+    "base_contrato_15771828": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_contrato_15771723": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_contrato_15769954": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_contrato_15769835": {
+      "folder": "inbox",
       "is_favorite": false
     }
   }
