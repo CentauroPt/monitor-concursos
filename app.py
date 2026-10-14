@@ -256,15 +256,21 @@ class MonitorHandler(SimpleHTTPRequestHandler):
             source = params.get('source', 'all')
             ted_country = params.get('ted_country', 'PRT')
             limit = int(params.get('limit', 50))
+            date_start = params.get('date_start')
+            date_end = params.get('date_end')
+            date_mode = params.get('date_mode', 'any')
 
-            logger.info(f"Pesquisa de contratos por entidade (NIF={nif}, Nome={entity_name}, Fonte={source}, Limite={limit})...")
+            logger.info(f"Pesquisa de contratos por entidade (NIF={nif}, Nome={entity_name}, Fonte={source}, Datas={date_start} a {date_end}, Modo={date_mode}, Limite={limit})...")
             try:
                 results = analyzer.search_entity_contracts(
                     nif=nif,
                     entity_name=entity_name,
                     source=source,
                     ted_country=ted_country,
-                    limit=limit
+                    limit=limit,
+                    date_start=date_start,
+                    date_end=date_end,
+                    date_mode=date_mode
                 )
                 return self._send_json(results)
             except Exception as e:
