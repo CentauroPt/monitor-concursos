@@ -540,13 +540,13 @@ class ProcurementAnalyzer:
         base_contracts = []
         ted_contracts = []
 
-        # 1. Pesquisa no Portal BASE
-        if source in ("all", "base", "Portal BASE"):
+        # 1. Pesquisa no Portal BASE (agregador nacional de Acingov, Vortal, AnoGov, ComprasPT e DRE)
+        if source in ("all", "base", "Portal BASE", "acingov", "vortal", "anogov", "compraspt", "dre"):
             try:
                 base_contracts = self.base_scraper.search_contracts_by_entity(
                     nif=nif,
                     entity_name=entity_name,
-                    max_items=limit,
+                    max_items=limit if source in ("all", "base") else max(limit, 50),
                     date_start=date_start,
                     date_end=date_end,
                     date_mode=date_mode
@@ -570,7 +570,23 @@ class ProcurementAnalyzer:
 
         all_contracts = base_contracts + ted_contracts
 
-        # 3. Validação estrita de intervalo de datas (assinados e/ou publicados)
+        # 3. Filtragem específica por Plataforma / Entidade oficial se selecionada
+        if source == "acingov":
+            all_contracts = [c for c in all_contracts if c.get('platform_code') == 'acingov']
+        elif source == "vortal":
+            all_contracts = [c for c in all_contracts if c.get('platform_code') == 'vortal']
+        elif source == "anogov":
+            all_contracts = [c for c in all_contracts if c.get('platform_code') == 'anogov']
+        elif source == "compraspt":
+            all_contracts = [c for c in all_contracts if c.get('platform_code') == 'compraspt']
+        elif source == "dre":
+            all_contracts = [c for c in all_contracts if c.get('dre_id') or c.get('dre_url')]
+        elif source in ("base", "Portal BASE"):
+            all_contracts = [c for c in all_contracts if c.get('source') == 'Portal BASE']
+        elif source in ("ted", "TED Europa"):
+            all_contracts = [c for c in all_contracts if c.get('source') == 'TED Europa']
+
+        # 4. Validação estrita de intervalo de datas (assinados e/ou publicados)
         dt_start = self._parse_comparable_date(date_start)
         dt_end = self._parse_comparable_date(date_end)
 
@@ -614,11 +630,17 @@ class ProcurementAnalyzer:
             'total_count': len(all_contracts),
             'base_count': len([c for c in all_contracts if c.get('source') == 'Portal BASE']),
             'ted_count': len([c for c in all_contracts if c.get('source') == 'TED Europa']),
+            'acingov_count': len([c for c in all_contracts if c.get('platform_code') == 'acingov']),
+            'vortal_count': len([c for c in all_contracts if c.get('platform_code') == 'vortal']),
+            'anogov_count': len([c for c in all_contracts if c.get('platform_code') == 'anogov']),
+            'compraspt_count': len([c for c in all_contracts if c.get('platform_code') == 'compraspt']),
+            'dre_count': len([c for c in all_contracts if c.get('dre_id') or c.get('dre_url')]),
             'searched_nif': nif,
             'searched_entity': entity_name,
             'searched_date_start': date_start or '',
             'searched_date_end': date_end or '',
             'searched_date_mode': date_mode,
+            'searched_source': source,
             'duration_seconds': elapsed
         }
 
@@ -628,16 +650,21 @@ class ProcurementAnalyzer:
             return ""
 
         headers = [
-            "Fonte", "Tipo de Procedimento", "Objeto do Contrato",
+            "Fonte", "Plataforma Eletrónica", "Link Procedimento Plataforma",
+            "Diário da República (DRE)", "Link DRE", "Tipo de Procedimento", "Objeto do Contrato",
             "Entidade Adjudicante", "NIF Adjudicante", "Adjudicatário", "NIF Adjudicatário",
             "Preço Contratual", "Data do Contrato", "Data de Publicação",
-            "Local de Execução", "Fundamentação Legal", "Link Direto"
+            "Local de Execução", "Fundamentação Legal", "Link Portal BASE / Oficial"
         ]
 
         lines = [";".join([f'"{h}"' for h in headers])]
         for c in contracts:
             row = [
                 c.get('source', ''),
+                c.get('platform_name', ''),
+                c.get('platform_url', ''),
+                c.get('dre_label', ''),
+                c.get('dre_url', ''),
                 c.get('procedure_type', ''),
                 (c.get('title') or '').replace('"', '""'),
                 (c.get('entity') or '').replace('"', '""'),
