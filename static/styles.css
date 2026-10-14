@@ -1104,9 +1104,57 @@ body {
 
 .contracts-form .form-grid {
   display: grid;
-  grid-template-columns: 1.2fr 1.8fr 1.2fr 0.8fr auto;
+  grid-template-columns: 1.2fr 1.8fr 1.2fr 0.8fr;
   gap: 16px;
   align-items: flex-end;
+}
+
+.contracts-form .form-grid-dates {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.4fr auto;
+  gap: 16px;
+  align-items: flex-end;
+  margin-top: 14px;
+}
+
+.quick-dates-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--border-color);
+}
+
+.quick-date-btn {
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.quick-date-btn:hover {
+  background: var(--primary-light);
+  color: var(--primary);
+  border-color: #93c5fd;
+  transform: translateY(-1px);
+}
+
+.quick-date-clear {
+  color: #dc2626;
+  border-color: #fca5a5;
+  background: #fef2f2;
+}
+
+.quick-date-clear:hover {
+  background: #fee2e2;
+  color: #b91c1c;
 }
 
 .form-field {
