@@ -7,6 +7,7 @@ por palavras-chave e códigos CPV (34140000 - 34149999).
 import json
 import logging
 import re
+from datetime import datetime
 import requests
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -255,27 +256,84 @@ class BaseScraper:
             'matched_terms': {matched_by}
         }
 
-    def search_contracts_by_entity(self, nif: Optional[str] = None, entity_name: Optional[str] = None, max_items: int = 50) -> List[Dict[str, Any]]:
+    def _format_date_for_base(self, d_str: Optional[str]) -> Optional[str]:
+        """Converte qualquer formato de data para YYYY-MM-DD exigido pela API do Portal BASE."""
+        if not d_str or str(d_str).strip() in ('', 'N/D'):
+            return None
+        s = str(d_str).strip()[:10]
+        for fmt in ("%Y-%m-%d", "%d-%m-%Y", "%d/%m/%Y", "%Y/%m/%d"):
+            try:
+                dt = datetime.strptime(s, fmt)
+                return dt.strftime("%Y-%m-%d")
+            except ValueError:
+                pass
+        return None
+
+    def search_contracts_by_entity(
+        self,
+        nif: Optional[str] = None,
+        entity_name: Optional[str] = None,
+        max_items: int = 50,
+        date_start: Optional[str] = None,
+        date_end: Optional[str] = None,
+        date_mode: str = "any"
+    ) -> List[Dict[str, Any]]:
         """
         Pesquisa contratos publicados no Portal BASE para uma entidade pública específica por NIF ou Nome.
+        Suporta pesquisa entre datas (contratos assinados e/ou publicados).
         Obtém os detalhes completos de cada contrato para permitir pesquisa por palavras escritas no contrato.
         """
         results_map = {}
-        queries = []
+        base_start = self._format_date_for_base(date_start)
+        base_end = self._format_date_for_base(date_end)
 
+        # Construir sufixos de data suportados pela API do BASE
+        date_suffixes = []
+        if base_start or base_end:
+            # 1. Filtro por data de publicação
+            if date_mode in ("any", "publication"):
+                p_parts = []
+                if base_start:
+                    p_parts.append(f"desdedatapublicacao={base_start}")
+                if base_end:
+                    p_parts.append(f"atedatapublicacao={base_end}")
+                if p_parts:
+                    date_suffixes.append("&".join(p_parts))
+
+            # 2. Filtro por data de celebração (contrato)
+            if date_mode in ("any", "signing"):
+                c_parts = []
+                if base_start:
+                    c_parts.append(f"desdedatacontrato={base_start}")
+                if base_end:
+                    c_parts.append(f"atedatacontrato={base_end}")
+                if c_parts:
+                    date_suffixes.append("&".join(c_parts))
+        else:
+            date_suffixes.append("")
+
+        entity_terms = []
         if nif:
             clean_nif = str(nif).strip().replace(" ", "")
             if clean_nif:
-                queries.append(f"texto={clean_nif}")
+                entity_terms.append(f"texto={clean_nif}")
 
         if entity_name:
             clean_name = str(entity_name).strip()
             if clean_name:
-                queries.append(f"adjudicante={clean_name}")
-                queries.append(f"texto={clean_name}")
+                entity_terms.append(f"adjudicante={clean_name}")
+                entity_terms.append(f"texto={clean_name}")
 
-        if not queries:
+        if not entity_terms:
             return []
+
+        queries = []
+        for term in entity_terms:
+            for dsuf in date_suffixes:
+                if dsuf:
+                    queries.append(f"{term}&{dsuf}")
+                else:
+                    queries.append(term)
 
         for q in queries:
             try:
