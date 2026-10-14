@@ -4,6 +4,7 @@
 let allContracts = [];
 let currentFilteredContracts = [];
 let activeSearchQuery = '';
+let activePlatformFilter = 'all';
 
 // Elementos DOM
 const searchForm = document.getElementById('contracts-search-form');
@@ -179,12 +180,40 @@ function setupEventListeners() {
     });
   }
 
+  // Pílulas Rápidas de Entidades e Plataformas
+  document.querySelectorAll('.platform-pill').forEach(pill => {
+    pill.addEventListener('click', () => {
+      document.querySelectorAll('.platform-pill').forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      activePlatformFilter = pill.dataset.platform || 'all';
+      applyFilters();
+    });
+  });
+
   // Modal
   if (modalCloseBtn) modalCloseBtn.addEventListener('click', closeModal);
   if (contractDetailModal) {
     contractDetailModal.addEventListener('click', (e) => {
       if (e.target === contractDetailModal) closeModal();
     });
+  }
+}
+
+function updatePlatformPillCounts() {
+  const counts = {
+    all: allContracts.length,
+    acingov: allContracts.filter(c => c.platform_code === 'acingov').length,
+    vortal: allContracts.filter(c => c.platform_code === 'vortal').length,
+    anogov: allContracts.filter(c => c.platform_code === 'anogov').length,
+    compraspt: allContracts.filter(c => c.platform_code === 'compraspt').length,
+    dre: allContracts.filter(c => c.dre_id || c.dre_url).length,
+    base: allContracts.filter(c => c.source === 'Portal BASE').length,
+    ted: allContracts.filter(c => c.source === 'TED Europa').length
+  };
+
+  for (const [key, cnt] of Object.entries(counts)) {
+    const el = document.getElementById(`count-pill-${key}`);
+    if (el) el.textContent = cnt;
   }
 }
 
@@ -228,6 +257,7 @@ async function handleContractSearch() {
 
     const data = await response.json();
     allContracts = data.contracts || [];
+    updatePlatformPillCounts();
 
     if (totalContractsCount) totalContractsCount.textContent = allContracts.length;
     if (lastUpdateText) {
@@ -305,6 +335,19 @@ function applyFilters() {
   activeSearchQuery = qInsideWord;
 
   currentFilteredContracts = allContracts.filter(contract => {
+    // 0. Filtro por Plataforma / Entidade Oficial ativa
+    if (activePlatformFilter && activePlatformFilter !== 'all') {
+      if (activePlatformFilter === 'dre') {
+        if (!contract.dre_id && !contract.dre_url) return false;
+      } else if (activePlatformFilter === 'base') {
+        if (contract.source !== 'Portal BASE') return false;
+      } else if (activePlatformFilter === 'ted') {
+        if (contract.source !== 'TED Europa') return false;
+      } else {
+        if (contract.platform_code !== activePlatformFilter) return false;
+      }
+    }
+
     // 1. Filtro por Intervalo de Datas (Assinados e/ou Publicados)
     if (valStart || valEnd) {
       const dStart = valStart ? new Date(valStart + 'T00:00:00') : null;
@@ -377,6 +420,10 @@ function clearAllFilters() {
   if (filterPubDate) filterPubDate.value = '';
   if (filterInsideWords) filterInsideWords.value = '';
   if (btnClearWords) btnClearWords.classList.add('hidden');
+  activePlatformFilter = 'all';
+  document.querySelectorAll('.platform-pill').forEach(p => {
+    p.classList.toggle('active', p.dataset.platform === 'all');
+  });
   closeSidebar();
   applyFilters();
 }
@@ -413,15 +460,33 @@ function createContractCardHtml(c) {
   const safeEntity = escapeHtml(c.entity || 'Entidade Adjudicante');
   const safeContracted = escapeHtml(c.contracted || 'Adjudicatário não especificado');
 
+  let platformBadgeHtml = '';
+  if (c.platform_code && !['base', 'ted'].includes(c.platform_code)) {
+    platformBadgeHtml = `<span class="platform-badge badge-${escapeHtml(c.platform_code)}">${escapeHtml(c.platform_icon || '🏢')} ${escapeHtml(c.platform_name)}</span>`;
+  }
+
+  let dreBadgeHtml = '';
+  if (c.dre_url) {
+    dreBadgeHtml = `<a href="${escapeHtml(c.dre_url)}" target="_blank" rel="noopener noreferrer" class="dre-notice-badge" title="Ver Anúncio de Procedimento no Diário da República Eletrónico">📜 ${escapeHtml(c.dre_label || 'DRE')} ↗</a>`;
+  }
+
+  let topPlatformLinkHtml = '';
+  if (c.platform_url && !['base', 'ted'].includes(c.platform_code)) {
+    topPlatformLinkHtml = `<a href="${escapeHtml(c.platform_url)}" target="_blank" rel="noopener noreferrer" class="link-platform-piece" title="Descarregar Peças do Procedimento na plataforma ${escapeHtml(c.platform_name)}">📁 Peças no ${escapeHtml(c.platform_name)} ↗</a>`;
+  }
+
   return `
     <article class="contract-card" id="card-${escapeHtml(c.id)}" data-id="${escapeHtml(c.id)}">
       <div class="card-top">
         <div class="card-badges-left">
           <span class="source-badge ${badgeClass}">${sourceIcon} ${escapeHtml(c.source)}</span>
+          ${platformBadgeHtml}
+          ${dreBadgeHtml}
           <span class="procedure-type-badge">${escapeHtml(c.procedure_type || 'Contrato')}</span>
           <span class="id-tag">#${escapeHtml(c.raw_id || c.id)}</span>
         </div>
         <div class="card-top-right">
+          ${topPlatformLinkHtml}
           <a href="${escapeHtml(c.direct_url)}" target="_blank" rel="noopener noreferrer" class="link-official-card" title="Abrir página oficial do contrato">
             Portal Oficial ↗
           </a>
@@ -476,6 +541,11 @@ function createContractCardHtml(c) {
         <button type="button" class="btn btn-secondary btn-detail" data-id="${escapeHtml(c.id)}">
           📋 Ver Ficha Completa
         </button>
+        ${c.platform_url && !['base', 'ted'].includes(c.platform_code) ? `
+          <a href="${escapeHtml(c.platform_url)}" target="_blank" rel="noopener noreferrer" class="link-platform-piece" style="padding: 6px 12px; font-size: 0.82rem;" title="Abrir na plataforma ${escapeHtml(c.platform_name)}">
+            ${escapeHtml(c.platform_icon || '🔗')} Peças no ${escapeHtml(c.platform_name)} ↗
+          </a>
+        ` : ''}
         <a href="${escapeHtml(c.direct_url)}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-direct-link">
           Abrir no Portal Oficial ↗
         </a>
@@ -562,15 +632,60 @@ function showContractFichaInSidebar(c, switchToTab = true) {
     `;
   }
 
+  let platformBadgeHtml = '';
+  if (c.platform_code && !['base', 'ted'].includes(c.platform_code)) {
+    platformBadgeHtml = `<span class="platform-badge badge-${escapeHtml(c.platform_code)}">${escapeHtml(c.platform_icon || '🏢')} ${escapeHtml(c.platform_name)}</span>`;
+  }
+
+  let dreBadgeHtml = '';
+  if (c.dre_url) {
+    dreBadgeHtml = `<a href="${escapeHtml(c.dre_url)}" target="_blank" rel="noopener noreferrer" class="dre-notice-badge" title="Ver Anúncio de Procedimento no Diário da República Eletrónico">📜 ${escapeHtml(c.dre_label || 'DRE')} ↗</a>`;
+  }
+
   const fichaHtml = `
     <div class="ficha-header-block">
       <div class="ficha-badges-row">
         <span class="source-badge ${badgeClass}">${sourceIcon} ${escapeHtml(c.source)}</span>
+        ${platformBadgeHtml}
+        ${dreBadgeHtml}
         <span class="procedure-type-badge">${escapeHtml(c.procedure_type || 'Contrato')}</span>
         <span class="ficha-contract-id">#${escapeHtml(c.raw_id || c.id)}</span>
       </div>
       <h3 class="ficha-contract-title">${safeTitle}</h3>
     </div>
+
+    ${c.platform_url && !['base', 'ted'].includes(c.platform_code) ? `
+      <div class="ficha-platform-banner">
+        <div class="ficha-platform-header">
+          <strong>${escapeHtml(c.platform_icon || '🏢')} Plataforma Eletrónica de Contratação</strong>
+          <span class="platform-badge badge-${escapeHtml(c.platform_code)}">${escapeHtml(c.platform_name)}</span>
+        </div>
+        <a href="${escapeHtml(c.platform_url)}" target="_blank" rel="noopener noreferrer" class="ficha-btn-platform">
+          📁 Aceder ao Procedimento e Peças no ${escapeHtml(c.platform_name)} ↗
+        </a>
+      </div>
+    ` : ''}
+
+    ${c.dre_url ? `
+      <div class="ficha-platform-banner" style="border-left: 4px solid #be123c;">
+        <div class="ficha-platform-header">
+          <strong>📜 Diário da República Eletrónico</strong>
+          <span class="badge-dre">${escapeHtml(c.dre_label || 'Anúncio DRE')}</span>
+        </div>
+        <a href="${escapeHtml(c.dre_url)}" target="_blank" rel="noopener noreferrer" class="ficha-btn-dre">
+          📜 Ver Anúncio no Diário da República Eletrónico ↗
+        </a>
+      </div>
+    ` : ''}
+
+    ${c.documents && c.documents.length > 0 ? `
+      <div class="ficha-section">
+        <span class="ficha-section-title">📎 Peças e Documentos do Contrato</span>
+        <div class="ficha-section-content" style="display: flex; flex-direction: column; gap: 4px;">
+          ${c.documents.map(d => `<span style="font-family: monospace; font-size: 0.8rem;">📄 ${escapeHtml(d)}</span>`).join('')}
+        </div>
+      </div>
+    ` : ''}
 
     <!-- 4 Pilares Técnicos -->
     <div class="ficha-pillars-mini">
@@ -640,6 +755,11 @@ function showContractFichaInSidebar(c, switchToTab = true) {
     ${extraSectionsHtml}
 
     <div class="ficha-footer-actions">
+      ${c.platform_url && !['base', 'ted'].includes(c.platform_code) ? `
+        <a href="${escapeHtml(c.platform_url)}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" style="flex: 1; text-align: center; justify-content: center;">
+          ${escapeHtml(c.platform_icon || '📁')} Peças no ${escapeHtml(c.platform_name)} ↗
+        </a>
+      ` : ''}
       <a href="${escapeHtml(c.direct_url)}" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="flex: 1; text-align: center; justify-content: center;">
         Abrir no Portal Oficial ↗
       </a>
