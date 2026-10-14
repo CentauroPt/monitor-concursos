@@ -508,6 +508,98 @@ class ProcurementAnalyzer:
         except Exception as e:
             logger.error(f"Erro ao gravar cache: {e}")
 
+    def search_entity_contracts(
+        self,
+        nif: Optional[str] = None,
+        entity_name: Optional[str] = None,
+        source: str = "all",
+        ted_country: str = "PRT",
+        limit: int = 50
+    ) -> Dict[str, Any]:
+        """
+        Pesquisa agregada de contratos assinados nos portais BASE e TED por NIF ou Nome de Entidade Adjudicante.
+        Devolve lista unificada com detalhes completos e secções para pesquisa por palavras no texto.
+        """
+        start_time = datetime.now()
+        base_contracts = []
+        ted_contracts = []
+
+        # 1. Pesquisa no Portal BASE
+        if source in ("all", "base", "Portal BASE"):
+            try:
+                base_contracts = self.base_scraper.search_contracts_by_entity(
+                    nif=nif,
+                    entity_name=entity_name,
+                    max_items=limit
+                )
+            except Exception as e:
+                logger.error(f"Erro ao pesquisar contratos por entidade no BASE: {e}")
+
+        # 2. Pesquisa no TED Europa
+        if source in ("all", "ted", "TED Europa"):
+            try:
+                ted_contracts = self.ted_scraper.search_contracts_by_entity(
+                    nif=nif,
+                    entity_name=entity_name,
+                    country=ted_country,
+                    limit=limit
+                )
+            except Exception as e:
+                logger.error(f"Erro ao pesquisar contratos por entidade no TED: {e}")
+
+        all_contracts = base_contracts + ted_contracts
+
+        # Ordenar contratos por data (mais recentes primeiro)
+        all_contracts.sort(
+            key=lambda x: self._parse_date_sort(x.get('signing_date') if x.get('signing_date') != 'N/D' else x.get('publication_date')),
+            reverse=True
+        )
+
+        elapsed = round((datetime.now() - start_time).total_seconds(), 2)
+
+        return {
+            'contracts': all_contracts,
+            'total_count': len(all_contracts),
+            'base_count': len(base_contracts),
+            'ted_count': len(ted_contracts),
+            'searched_nif': nif,
+            'searched_entity': entity_name,
+            'duration_seconds': elapsed
+        }
+
+    def export_contracts_csv(self, contracts: List[Dict[str, Any]]) -> str:
+        """Exporta lista de contratos pesquisados para CSV legível no Excel (UTF-8 com BOM)."""
+        if not contracts:
+            return ""
+
+        headers = [
+            "Fonte", "Tipo de Procedimento", "Objeto do Contrato",
+            "Entidade Adjudicante", "NIF Adjudicante", "Adjudicatário", "NIF Adjudicatário",
+            "Preço Contratual", "Data do Contrato", "Data de Publicação",
+            "Local de Execução", "Fundamentação Legal", "Link Direto"
+        ]
+
+        lines = [";".join([f'"{h}"' for h in headers])]
+        for c in contracts:
+            row = [
+                c.get('source', ''),
+                c.get('procedure_type', ''),
+                (c.get('title') or '').replace('"', '""'),
+                (c.get('entity') or '').replace('"', '""'),
+                c.get('entity_nif', ''),
+                (c.get('contracted') or '').replace('"', '""'),
+                c.get('contracted_nif', ''),
+                c.get('value', ''),
+                c.get('signing_date', ''),
+                c.get('publication_date', ''),
+                (c.get('execution_place') or '').replace('"', '""'),
+                (c.get('fundamentation') or '').replace('"', '""'),
+                c.get('direct_url', '')
+            ]
+            lines.append(";".join([f'"{col}"' for col in row]))
+
+        return "\ufeff" + "\n".join(lines)
+
     def export_csv(self, selected_ids: Optional[List[str]] = None) -> str:
         """
         Exporta resultados para CSV legível no Excel (UTF-8 com BOM).
