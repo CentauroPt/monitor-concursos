@@ -11,6 +11,9 @@ const inputNif = document.getElementById('input-nif');
 const inputEntityName = document.getElementById('input-entity-name');
 const selectSource = document.getElementById('select-source');
 const selectLimit = document.getElementById('select-limit');
+const inputDateStart = document.getElementById('input-date-start');
+const inputDateEnd = document.getElementById('input-date-end');
+const selectDateType = document.getElementById('select-date-type');
 const btnSubmitSearch = document.getElementById('btn-submit-search');
 
 // Secção de Filtros
@@ -62,7 +65,7 @@ function setupEventListeners() {
     });
   }
 
-  // Exemplos rápidos
+  // Atalhos Rápidos de Entidades
   document.querySelectorAll('.quick-entity-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const nif = btn.dataset.nif;
@@ -72,6 +75,32 @@ function setupEventListeners() {
       handleContractSearch();
     });
   });
+
+  // Atalhos Rápidos de Datas
+  document.querySelectorAll('.quick-date-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const today = new Date();
+      if (btn.dataset.clear) {
+        if (inputDateStart) inputDateStart.value = '';
+        if (inputDateEnd) inputDateEnd.value = '';
+      } else if (btn.dataset.days) {
+        const days = parseInt(btn.dataset.days, 10);
+        const past = new Date();
+        past.setDate(past.getDate() - days);
+        if (inputDateStart) inputDateStart.value = past.toISOString().substring(0, 10);
+        if (inputDateEnd) inputDateEnd.value = today.toISOString().substring(0, 10);
+      } else if (btn.dataset.year) {
+        const yr = btn.dataset.year;
+        if (inputDateStart) inputDateStart.value = `${yr}-01-01`;
+        if (inputDateEnd) inputDateEnd.value = `${yr}-12-31`;
+      }
+      applyFilters();
+    });
+  });
+
+  if (inputDateStart) inputDateStart.addEventListener('change', applyFilters);
+  if (inputDateEnd) inputDateEnd.addEventListener('change', applyFilters);
+  if (selectDateType) selectDateType.addEventListener('change', applyFilters);
 
   // Filtros em tempo real
   if (filterObject) filterObject.addEventListener('input', applyFilters);
@@ -138,6 +167,9 @@ async function handleContractSearch() {
   const entityName = (inputEntityName ? inputEntityName.value.trim() : '');
   const source = (selectSource ? selectSource.value : 'all');
   const limit = (selectLimit ? parseInt(selectLimit.value, 10) : 50);
+  const dateStart = (inputDateStart ? inputDateStart.value.trim() : '');
+  const dateEnd = (inputDateEnd ? inputDateEnd.value.trim() : '');
+  const dateMode = (selectDateType ? selectDateType.value : 'any');
 
   if (!nif && !entityName) {
     alert("Por favor, introduza o NIF da entidade adjudicante ou o seu Nome para realizar a pesquisa.");
@@ -155,7 +187,10 @@ async function handleContractSearch() {
         nif: nif,
         entity_name: entityName,
         source: source,
-        limit: limit
+        limit: limit,
+        date_start: dateStart,
+        date_end: dateEnd,
+        date_mode: dateMode
       })
     });
 
@@ -215,6 +250,20 @@ function normalizeStr(str) {
   return String(str).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 }
 
+function parseContractDate(dStr) {
+  if (!dStr || dStr === 'N/D') return null;
+  const s = String(dStr).trim().substring(0, 10);
+  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) {
+    return new Date(s + 'T00:00:00');
+  }
+  const m = s.match(/^(\d{2})[-/](\d{2})[-/](\d{4})$/);
+  if (m) {
+    return new Date(`${m[3]}-${m[2]}-${m[1]}T00:00:00`);
+  }
+  const d = new Date(s);
+  return isNaN(d.getTime()) ? null : d;
+}
+
 // Aplicação de Filtros da Lista Apresentada
 function applyFilters() {
   const qObject = normalizeStr(filterObject ? filterObject.value.trim() : '');
@@ -222,29 +271,54 @@ function applyFilters() {
   const qPub = normalizeStr(filterPubDate ? filterPubDate.value.trim() : '');
   const qInsideWord = normalizeStr(filterInsideWords ? filterInsideWords.value.trim() : '');
 
+  const valStart = inputDateStart ? inputDateStart.value : '';
+  const valEnd = inputDateEnd ? inputDateEnd.value : '';
+  const dateType = selectDateType ? selectDateType.value : 'any';
+
   activeSearchQuery = qInsideWord;
 
   currentFilteredContracts = allContracts.filter(contract => {
-    // 1. Filtro por Objeto
+    // 1. Filtro por Intervalo de Datas (Assinados e/ou Publicados)
+    if (valStart || valEnd) {
+      const dStart = valStart ? new Date(valStart + 'T00:00:00') : null;
+      const dEnd = valEnd ? new Date(valEnd + 'T23:59:59') : null;
+
+      const dSign = parseContractDate(contract.signing_date);
+      const dPub = parseContractDate(contract.publication_date);
+
+      const signInRange = dSign ? ((!dStart || dSign >= dStart) && (!dEnd || dSign <= dEnd)) : false;
+      const pubInRange = dPub ? ((!dStart || dPub >= dStart) && (!dEnd || dPub <= dEnd)) : false;
+
+      if (dateType === 'signing') {
+        if (!signInRange) return false;
+      } else if (dateType === 'publication') {
+        if (!pubInRange) return false;
+      } else {
+        // 'any': assinados e/ou publicados entre essas datas
+        if (!signInRange && !pubInRange) return false;
+      }
+    }
+
+    // 2. Filtro por Objeto
     if (qObject) {
       const matchTitle = normalizeStr(contract.title).includes(qObject);
       const matchDesc = normalizeStr(contract.description).includes(qObject);
       if (!matchTitle && !matchDesc) return false;
     }
 
-    // 2. Filtro por Data do Contrato (Celebração)
+    // 3. Filtro por Data do Contrato (Celebração)
     if (qSigning) {
       const matchSigning = normalizeStr(contract.signing_date).includes(qSigning);
       if (!matchSigning) return false;
     }
 
-    // 3. Filtro por Data de Publicação
+    // 4. Filtro por Data de Publicação
     if (qPub) {
       const matchPub = normalizeStr(contract.publication_date).includes(qPub);
       if (!matchPub) return false;
     }
 
-    // 4. Se tiver filtro de palavras, só mostra contratos onde a palavra ocorre (opcional: ou filtra e destaca)
+    // 5. Se tiver filtro de palavras, só mostra contratos onde a palavra ocorre
     if (qInsideWord) {
       const hasMatch = checkContractContainsWord(contract, qInsideWord);
       if (!hasMatch) return false;
