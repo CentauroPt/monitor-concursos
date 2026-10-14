@@ -409,6 +409,64 @@ class BaseScraper:
         signing_date = item.get('signingDate') or detail.get('signingDate') or 'N/D'
         publication_date = item.get('publicationDate') or detail.get('publicationDate') or 'N/D'
 
+        # Deteção da Plataforma Eletrónica de Contratação Pública e Diário da República
+        curl = (detail.get('contractingProcedureUrl') or '').strip()
+        aid = detail.get('announcementId')
+        curl_lower = curl.lower()
+
+        platform_code = 'base'
+        platform_name = 'Portal BASE'
+        platform_icon = '🇵🇹'
+        platform_url = direct_url
+        platform_home = 'https://www.base.gov.pt/'
+
+        if 'acingov' in curl_lower:
+            platform_code = 'acingov'
+            platform_name = 'Acingov'
+            platform_icon = '🏢'
+            platform_url = curl
+            platform_home = 'https://www.acingov.pt/'
+        elif 'vortal' in curl_lower:
+            platform_code = 'vortal'
+            platform_name = 'Vortal / VortalGov'
+            platform_icon = '🌐'
+            platform_url = curl
+            platform_home = 'https://www.vortal.biz/'
+        elif 'anogov' in curl_lower:
+            platform_code = 'anogov'
+            platform_name = 'AnoGov'
+            platform_icon = '💼'
+            platform_url = curl
+            platform_home = 'https://www.anogov.com/'
+        elif 'compraspt' in curl_lower or 'gatewit' in curl_lower:
+            platform_code = 'compraspt'
+            platform_name = 'ComprasPT'
+            platform_icon = '🛒'
+            platform_url = curl
+            platform_home = 'https://www.compraspt.com/'
+        elif curl:
+            platform_code = 'external'
+            platform_name = 'Plataforma Eletrónica'
+            platform_icon = '🔗'
+            platform_url = curl
+            platform_home = curl
+
+        dre_id = None
+        dre_url = None
+        dre_label = None
+        if aid and str(aid).strip() not in ('-1', '0', 'None', ''):
+            dre_id = str(aid).strip()
+            dre_url = f"https://diariodarepublica.pt/dr/detalhe/anuncio-procedimento/{dre_id}"
+            dre_label = f"DRE Anúncio n.º {dre_id}"
+
+        # Documentos anexos ao contrato
+        docs_raw = detail.get('documents') or []
+        contract_docs = []
+        if isinstance(docs_raw, list):
+            for d in docs_raw:
+                if isinstance(d, dict) and d.get('description'):
+                    contract_docs.append(str(d.get('description')).strip())
+
         sections = {
             'Objeto do Contrato': title,
             'Descrição Detalhada': detail_desc,
@@ -417,6 +475,9 @@ class BaseScraper:
             'Designação CPV': cpvs_designation,
             'Adjudicatário': contracted_name,
             'Entidade Adjudicante': contracting_name,
+            'Plataforma Eletrónica': f"{platform_icon} {platform_name}" + (f" ({platform_url})" if platform_code != 'base' else ""),
+            'Diário da República (DRE)': f"📜 {dre_label} ({dre_url})" if dre_url else "",
+            'Documentos do Contrato': ", ".join(contract_docs) if contract_docs else "",
             'Observações': observations
         }
 
@@ -424,6 +485,14 @@ class BaseScraper:
             'id': f"base_contrato_{item_id}",
             'raw_id': str(item_id),
             'source': "Portal BASE",
+            'platform_code': platform_code,
+            'platform_name': platform_name,
+            'platform_icon': platform_icon,
+            'platform_url': platform_url,
+            'platform_home': platform_home,
+            'dre_id': dre_id,
+            'dre_url': dre_url,
+            'dre_label': dre_label,
             'procedure_type': procedure_type,
             'title': title,
             'description': detail_desc or title,
@@ -439,6 +508,7 @@ class BaseScraper:
             'execution_deadline': execution_deadline,
             'cpvs_designation': cpvs_designation,
             'direct_url': direct_url,
+            'documents': contract_docs,
             'sections': {k: v for k, v in sections.items() if v}
         }
 
