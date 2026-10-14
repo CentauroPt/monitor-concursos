@@ -56,7 +56,7 @@ def upload_file(rel_path, token):
         pass
 
     payload = {
-        'message': f"Apresenta ficha tecnica completa do contrato na lateral junto ao contrato ({rel_path})",
+        'message': f"Inclui Diário da República Eletrónico (DRE), Acingov, Vortal, AnoGov e ComprasPT na pesquisa ({rel_path})",
         'content': content_b64
     }
     if sha:
