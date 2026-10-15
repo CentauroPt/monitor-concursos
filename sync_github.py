@@ -11,6 +11,7 @@ BASE_DIR = os.path.dirname(__file__)
 FILES_TO_UPLOAD = [
     "app.py",
     "analyzer.py",
+    "enrichment.py",
     "scraper_base.py",
     "scraper_ted.py",
     "requirements.txt",
@@ -22,6 +23,8 @@ FILES_TO_UPLOAD = [
     "static/index.html",
     "static/contratos.html",
     "static/contratos.js",
+    "static/fornecedores.html",
+    "static/fornecedores.js",
     "static/styles.css",
     "static/app.js",
     "data/cache.json",
@@ -57,7 +60,7 @@ def upload_file(rel_path, token):
         pass
 
     payload = {
-        'message': f"Suporte Vercel Serverless: exporta handler, vercel.json e /tmp cache ({rel_path})",
+        'message': f"Nova página Pesquisa de Fornecedores com raio-x empresarial, moradas, contactos e redes sociais ({rel_path})",
         'content': content_b64
     }
     if sha:
