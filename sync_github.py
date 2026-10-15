@@ -16,6 +16,7 @@ FILES_TO_UPLOAD = [
     "requirements.txt",
     "render.yaml",
     "Procfile",
+    "vercel.json",
     "README.md",
     "sync_github.py",
     "static/index.html",
@@ -56,7 +57,7 @@ def upload_file(rel_path, token):
         pass
 
     payload = {
-        'message': f"Inclui Diário da República Eletrónico (DRE), Acingov, Vortal, AnoGov e ComprasPT na pesquisa ({rel_path})",
+        'message': f"Suporte Vercel Serverless: exporta handler, vercel.json e /tmp cache ({rel_path})",
         'content': content_b64
     }
     if sha:
