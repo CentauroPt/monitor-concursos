@@ -7,13 +7,16 @@ garantindo compatibilidade multi-computador e preservação absoluta de classifi
 
 import os
 import json
+import re
 import logging
 from datetime import datetime
 from typing import List, Dict, Any, Optional, Set
+from concurrent.futures import ThreadPoolExecutor
 
 from scraper_base import BaseScraper
 from scraper_ted import TedScraper
 from cloud_storage import cloud_storage
+from enrichment import enrich_supplier
 
 logger = logging.getLogger(__name__)
 
@@ -744,6 +747,207 @@ class ProcurementAnalyzer:
                 it.get('entity', '').replace('"', '""'),
                 it.get('publication_date', ''),
                 it.get('direct_url', '')
+            ]
+            lines.append(";".join([f'"{c}"' for c in row]))
+
+        return "\ufeff" + "\n".join(lines)
+
+    def search_entity_suppliers(
+        self,
+        nif: Optional[str] = None,
+        entity_name: Optional[str] = None,
+        source: str = "all",
+        ted_country: str = "PRT",
+        limit: int = 50,
+        date_start: Optional[str] = None,
+        date_end: Optional[str] = None,
+        date_mode: str = "any",
+        enrich_top: int = 25
+    ) -> Dict[str, Any]:
+        """
+        Pesquisa e agrega fornecedores de entidades públicas a partir dos contratos celebrados
+        no Portal BASE, TED e plataformas eletrónicas (Acingov, Vortal, AnoGov, ComprasPT, DRE).
+        Enriquece cada fornecedor com dados cadastrais, morada completa da sede, contactos e redes sociais.
+        """
+        contracts_result = self.search_entity_contracts(
+            nif=nif,
+            entity_name=entity_name,
+            source=source,
+            ted_country=ted_country,
+            limit=limit,
+            date_start=date_start,
+            date_end=date_end,
+            date_mode=date_mode
+        )
+        contracts = contracts_result.get('contracts', [])
+
+        suppliers_map: Dict[str, Dict[str, Any]] = {}
+
+        def _parse_val(v_str):
+            if not v_str:
+                return 0.0
+            clean = re.sub(r'[^\d,]', '', str(v_str)).replace(',', '.')
+            try:
+                return float(clean)
+            except Exception:
+                return 0.0
+
+        for c in contracts:
+            contracted_name = (c.get('contracted') or '').strip()
+            if not contracted_name or 'adjudicado —' in contracted_name.lower() or 'em apuramento' in contracted_name.lower():
+                continue
+
+            contracted_nif = (c.get('contracted_nif') or '').strip()
+            key = contracted_nif if contracted_nif and len(contracted_nif) == 9 else contracted_name.lower()
+
+            if key not in suppliers_map:
+                suppliers_map[key] = {
+                    'nif': contracted_nif,
+                    'name': contracted_name,
+                    'contracts_count': 0,
+                    'total_value': 0.0,
+                    'contracts': [],
+                    'categories': set(),
+                    'platforms': set(),
+                    'latest_date': '',
+                    'latest_title': '',
+                    'latest_procedure': ''
+                }
+
+            s = suppliers_map[key]
+            s['contracts_count'] += 1
+            val_num = _parse_val(c.get('value'))
+            s['total_value'] += val_num
+            s['contracts'].append(c)
+
+            c_date = c.get('signing_date') if c.get('signing_date') and c.get('signing_date') != 'N/D' else c.get('publication_date', '')
+            if not s['latest_date'] or c_date > s['latest_date']:
+                s['latest_date'] = c_date
+                s['latest_title'] = c.get('title', '')
+                s['latest_procedure'] = c.get('procedure_type', '')
+
+            cpv = c.get('cpvs_designation')
+            if cpv:
+                s['categories'].add(cpv)
+            plat = c.get('platform_name')
+            if plat:
+                s['platforms'].add(plat)
+
+        suppliers_list = []
+        total_global_val = 0.0
+
+        for key, s in suppliers_map.items():
+            total_global_val += s['total_value']
+            s_val = s['total_value']
+            formatted_val = f"{s_val:,.2f} €".replace(',', 'X').replace('.', ',').replace('X', '.') if s_val > 0 else "Sob consulta"
+            
+            suppliers_list.append({
+                'nif': s['nif'],
+                'name': s['name'],
+                'contracts_count': s['contracts_count'],
+                'total_value_raw': s_val,
+                'total_value': formatted_val,
+                'contracts': s['contracts'],
+                'categories': list(s['categories'])[:5],
+                'platforms': list(s['platforms']),
+                'latest_date': s['latest_date'] or 'N/D',
+                'latest_title': s['latest_title'] or 'Contrato Público',
+                'latest_procedure': s['latest_procedure'] or 'Ajuste Direto / Concurso',
+                'enrichment': None
+            })
+
+        # Ordenar por maior volume contratual
+        suppliers_list.sort(key=lambda x: (x['total_value_raw'], x['contracts_count']), reverse=True)
+
+        # Enriquecer os fornecedores com morada completa, contactos e redes sociais
+        with ThreadPoolExecutor(max_workers=5) as pool:
+            futures = []
+            for i, supp in enumerate(suppliers_list[:enrich_top]):
+                futures.append((i, pool.submit(enrich_supplier, supp['nif'], supp['name'])))
+            
+            for i, future in futures:
+                try:
+                    suppliers_list[i]['enrichment'] = future.result(timeout=7)
+                except Exception as e:
+                    logger.warning(f"Aviso no enriquecimento de {suppliers_list[i]['name']}: {e}")
+                    suppliers_list[i]['enrichment'] = enrich_supplier(suppliers_list[i]['nif'], suppliers_list[i]['name'])
+
+        for supp in suppliers_list[enrich_top:]:
+            supp['enrichment'] = enrich_supplier(supp['nif'], supp['name'])
+
+        avg_val = total_global_val / len(suppliers_list) if suppliers_list else 0.0
+        avg_formatted = f"{avg_val:,.2f} €".replace(',', 'X').replace('.', ',').replace('X', '.') if avg_val > 0 else "0,00 €"
+        total_formatted = f"{total_global_val:,.2f} €".replace(',', 'X').replace('.', ',').replace('X', '.') if total_global_val > 0 else "0,00 €"
+
+        return {
+            'query': contracts_result.get('query', {}),
+            'stats': {
+                'total_suppliers': len(suppliers_list),
+                'total_contracts': len(contracts),
+                'total_amount': total_formatted,
+                'avg_amount': avg_formatted
+            },
+            'suppliers': suppliers_list
+        }
+
+    def export_suppliers_csv(self, suppliers: List[Dict[str, Any]]) -> str:
+        """
+        Exporta tabela completa de fornecedores enriquecida para CSV compatível com Excel (UTF-8 com BOM).
+        """
+        if not suppliers:
+            return ""
+
+        headers = [
+            "NIF Fornecedor",
+            "Denominação Social",
+            "Nº Contratos Ganhos",
+            "Valor Total Adjudicado (€)",
+            "Morada da Sede",
+            "Código Postal",
+            "Localidade",
+            "Telefones de Contacto",
+            "Emails",
+            "Website Oficial",
+            "LinkedIn",
+            "Facebook",
+            "Atividade / Objeto Social",
+            "Último Contrato Celebrado",
+            "Data Último Contrato",
+            "Tipo Procedimento",
+            "Plataformas Eletrónicas",
+            "Ficha Portal BASE",
+            "Ficha Racius"
+        ]
+
+        lines = [";".join([f'"{h}"' for h in headers])]
+        for s in suppliers:
+            enr = s.get('enrichment') or {}
+            social = enr.get('social_media') or {}
+
+            phones_str = ", ".join(enr.get('phones', [])) if enr.get('phones') else enr.get('phone', '')
+            emails_str = ", ".join(enr.get('emails', [])) if enr.get('emails') else enr.get('email', '')
+            plats_str = ", ".join(s.get('platforms', []))
+
+            row = [
+                s.get('nif', ''),
+                (s.get('name') or '').replace('"', '""'),
+                str(s.get('contracts_count', 0)),
+                s.get('total_value', ''),
+                (enr.get('street_address') or enr.get('full_address') or '').replace('"', '""'),
+                enr.get('postal_code', ''),
+                (enr.get('locality') or '').replace('"', '""'),
+                phones_str,
+                emails_str,
+                enr.get('website', ''),
+                social.get('linkedin', ''),
+                social.get('facebook', ''),
+                (enr.get('activity_description') or '').replace('"', '""'),
+                (s.get('latest_title') or '').replace('"', '""'),
+                s.get('latest_date', ''),
+                s.get('latest_procedure', ''),
+                plats_str,
+                enr.get('base_gov_url', ''),
+                enr.get('racius_url', '')
             ]
             lines.append(";".join([f'"{c}"' for c in row]))
 
