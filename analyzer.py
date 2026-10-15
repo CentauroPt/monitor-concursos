@@ -17,7 +17,11 @@ from cloud_storage import cloud_storage
 
 logger = logging.getLogger(__name__)
 
-CACHE_DIR = os.path.join(os.path.dirname(__file__), "data")
+if os.environ.get("VERCEL"):
+    CACHE_DIR = "/tmp/data"
+else:
+    CACHE_DIR = os.path.join(os.path.dirname(__file__), "data")
+
 CACHE_FILE = os.path.join(CACHE_DIR, "cache.json")
 ASSIGNMENTS_FILE = os.path.join(CACHE_DIR, "assignments.json")
 
@@ -32,6 +36,18 @@ class ProcurementAnalyzer:
         self.base_scraper = BaseScraper()
         self.ted_scraper = TedScraper()
         os.makedirs(CACHE_DIR, exist_ok=True)
+        if os.environ.get("VERCEL"):
+            bundle_dir = os.path.join(os.path.dirname(__file__), "data")
+            if os.path.exists(bundle_dir):
+                import shutil
+                for fname in os.listdir(bundle_dir):
+                    src = os.path.join(bundle_dir, fname)
+                    dst = os.path.join(CACHE_DIR, fname)
+                    if os.path.isfile(src) and not os.path.exists(dst):
+                        try:
+                            shutil.copy2(src, dst)
+                        except Exception as e:
+                            logger.warning(f"Aviso ao inicializar {fname} no Vercel /tmp: {e}")
         self._sync_cloud_on_startup()
         self._ensure_assignments_initialized()
 
