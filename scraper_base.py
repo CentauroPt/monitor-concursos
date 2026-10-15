@@ -353,7 +353,7 @@ class BaseScraper:
         contract_items = list(results_map.values())[:max_items]
 
         # Enriquecer concorrentemente com detail_contratos para texto completo
-        enriched_list = []
+        enriched_contracts = []
         if contract_items:
             def fetch_full_detail(item):
                 cid = item.get('id')
@@ -371,9 +371,81 @@ class BaseScraper:
                 return self._normalize_entity_contract(item, detail)
 
             with ThreadPoolExecutor(max_workers=8) as pool:
-                enriched_list = list(pool.map(fetch_full_detail, contract_items))
+                enriched_contracts = list(pool.map(fetch_full_detail, contract_items))
 
-        return enriched_list
+        # 2. Pesquisar também Concursos e Adjudicações em search_anuncios (mesmo que ainda não assinados)
+        anuncios_map = {}
+        anuncio_queries = []
+        clean_name = str(entity_name).strip() if entity_name else ""
+        clean_nif = str(nif).strip().replace(" ", "") if nif else ""
+
+        if clean_name:
+            q_an = f"texto={clean_name}"
+            if base_start:
+                q_an += f"&desdedatapublicacao={base_start}"
+            if base_end:
+                q_an += f"&atedatapublicacao={base_end}"
+            anuncio_queries.append(q_an)
+
+        if clean_nif and clean_nif != clean_name:
+            q_an_nif = f"texto={clean_nif}"
+            if base_start:
+                q_an_nif += f"&desdedatapublicacao={base_start}"
+            if base_end:
+                q_an_nif += f"&atedatapublicacao={base_end}"
+            anuncio_queries.append(q_an_nif)
+
+        for q in anuncio_queries:
+            try:
+                items = self._post_query(
+                    search_type="search_anuncios",
+                    query=q,
+                    size=max_items,
+                    sort="-drPublicationDate"
+                )
+                for it in items:
+                    aid = it.get('id')
+                    if aid and f"base_anuncio_{aid}" not in anuncios_map:
+                        anuncios_map[f"base_anuncio_{aid}"] = it
+            except Exception as e:
+                logger.error(f"Erro ao pesquisar anúncios/adjudicações ({q}): {e}")
+
+        anuncio_items = list(anuncios_map.values())[:max_items]
+
+        enriched_anuncios = []
+        if anuncio_items:
+            def fetch_anuncio_detail(item):
+                aid = item.get('id')
+                detail = {}
+                try:
+                    resp = self.session.post(RESULTADOS_URL, data={
+                        'type': 'detail_anuncios',
+                        'version': self.version,
+                        'id': str(aid)
+                    }, timeout=6)
+                    if resp.status_code == 200 and resp.text.strip():
+                        detail = json.loads(resp.text.strip())
+                except Exception:
+                    pass
+                return self._normalize_entity_announcement(item, detail)
+
+            with ThreadPoolExecutor(max_workers=8) as pool:
+                raw_anuncios = list(pool.map(fetch_anuncio_detail, anuncio_items))
+
+            clean_name_lower = clean_name.lower()
+            for an in raw_anuncios:
+                match = True
+                ent_name_an = (an.get('entity') or '').lower()
+                ent_nif_an = (an.get('entity_nif') or '')
+                if clean_nif and ent_nif_an and clean_nif != ent_nif_an:
+                    match = False
+                elif clean_name_lower and clean_name_lower not in ent_name_an and ent_name_an not in clean_name_lower:
+                    if not (clean_nif and ent_nif_an == clean_nif):
+                        match = False
+                if match:
+                    enriched_anuncios.append(an)
+
+        return enriched_contracts + enriched_anuncios
 
     def _normalize_entity_contract(self, item: Dict[str, Any], detail: Dict[str, Any]) -> Dict[str, Any]:
         item_id = item.get('id')
@@ -467,8 +539,13 @@ class BaseScraper:
                 if isinstance(d, dict) and d.get('description'):
                     contract_docs.append(str(d.get('description')).strip())
 
+        is_signed = True if signing_date != 'N/D' and not str(signing_date).lower().startswith('não') else False
+        record_type = "contrato_assinado"
+        record_status = "✍️ Contrato Assinado / Celebrado" if is_signed else "🏆 Adjudicação / Contrato em Formalização"
+
         sections = {
             'Objeto do Contrato': title,
+            'Estado da Adjudicação': record_status,
             'Descrição Detalhada': detail_desc,
             'Fundamentação Legal': fundamentation,
             'Local de Execução': execution_place,
@@ -485,6 +562,9 @@ class BaseScraper:
             'id': f"base_contrato_{item_id}",
             'raw_id': str(item_id),
             'source': "Portal BASE",
+            'is_signed': is_signed,
+            'record_type': record_type,
+            'record_status': record_status,
             'platform_code': platform_code,
             'platform_name': platform_name,
             'platform_icon': platform_icon,
@@ -509,6 +589,132 @@ class BaseScraper:
             'cpvs_designation': cpvs_designation,
             'direct_url': direct_url,
             'documents': contract_docs,
+            'sections': {k: v for k, v in sections.items() if v}
+        }
+
+    def _normalize_entity_announcement(self, item: Dict[str, Any], detail: Dict[str, Any]) -> Dict[str, Any]:
+        item_id = item.get('id')
+        direct_url = f"{BASE_URL}/Base4/pt/detalhe/?type=anuncios&id={item_id}"
+
+        contracting_list = detail.get('contractingEntities') or []
+        contracting_name = (item.get('contractingEntity') or '').strip()
+        contracting_nif = ''
+        if contracting_list and isinstance(contracting_list, list):
+            first_c = contracting_list[0]
+            if isinstance(first_c, dict):
+                contracting_name = (first_c.get('description') or contracting_name).strip()
+                contracting_nif = str(first_c.get('nif') or '').strip()
+
+        title = (item.get('contractDesignation') or detail.get('contractDesignation') or '').strip()
+        procedure_type = item.get('contractingProcedureType') or detail.get('modelType') or 'Concurso público'
+        base_price = item.get('basePrice') or detail.get('basePrice') or 'Não especificado'
+        pub_date = item.get('drPublicationDate') or detail.get('drPublicationDate') or 'N/D'
+        proposal_deadline = item.get('proposalDeadline') or detail.get('proposalDeadline') or 'N/D'
+        contracts_count = detail.get('contractsCount') or 0
+
+        # Deteção de Plataforma Eletrónica
+        curl = (detail.get('contractingProcedureUrl') or '').strip()
+        curl_lower = curl.lower()
+
+        platform_code = 'base'
+        platform_name = 'Portal BASE'
+        platform_icon = '🇵🇹'
+        platform_url = direct_url
+        platform_home = 'https://www.base.gov.pt/'
+
+        if 'acingov' in curl_lower:
+            platform_code = 'acingov'
+            platform_name = 'Acingov'
+            platform_icon = '🏢'
+            platform_url = curl
+            platform_home = 'https://www.acingov.pt/'
+        elif 'vortal' in curl_lower:
+            platform_code = 'vortal'
+            platform_name = 'Vortal / VortalGov'
+            platform_icon = '🌐'
+            platform_url = curl
+            platform_home = 'https://www.vortal.biz/'
+        elif 'anogov' in curl_lower:
+            platform_code = 'anogov'
+            platform_name = 'AnoGov'
+            platform_icon = '💼'
+            platform_url = curl
+            platform_home = 'https://www.anogov.com/'
+        elif 'compraspt' in curl_lower or 'gatewit' in curl_lower:
+            platform_code = 'compraspt'
+            platform_name = 'ComprasPT'
+            platform_icon = '🛒'
+            platform_url = curl
+            platform_home = 'https://www.compraspt.com/'
+        elif curl:
+            platform_code = 'external'
+            platform_name = 'Plataforma Eletrónica'
+            platform_icon = '🔗'
+            platform_url = curl
+            platform_home = curl
+
+        dre_id = str(item_id)
+        dre_url = f"https://diariodarepublica.pt/dr/detalhe/anuncio-procedimento/{dre_id}"
+        announcement_num = detail.get('announcementNumber') or item_id
+        dre_label = f"DRE Anúncio n.º {announcement_num}"
+        dre_ref_pdf = detail.get('reference') or ''
+
+        # Determinar Estado da Adjudicação
+        if contracts_count > 0:
+            record_status = f"🏆 Adjudicado ({contracts_count} contrato(s) gerado(s))"
+            record_type = "adjudicacao"
+            contracted_disp = f"Adjudicado — Consulte os contratos e adjudicatários na plataforma ({platform_name})"
+        else:
+            record_status = "🏆 Concurso em Fase de Adjudicação / Decisão"
+            record_type = "adjudicacao"
+            contracted_disp = f"Em apuramento / Consulte o relatório de adjudicação no {platform_name}"
+
+        sections = {
+            'Objeto do Procedimento': title,
+            'Estado da Adjudicação': record_status,
+            'Tipo de Concurso': procedure_type,
+            'Preço Base': base_price,
+            'Prazo de Entrega de Propostas': proposal_deadline,
+            'Entidade Adjudicante': contracting_name,
+            'Resultado do Concurso': f"A ata do júri, lista de concorrentes admitidos e a Decisão de Adjudicação estão disponíveis para consulta pública direta na plataforma eletrónica de contratação ({platform_name}).",
+            'Plataforma Eletrónica': f"{platform_icon} {platform_name}" + (f" ({platform_url})" if platform_code != 'base' else ""),
+            'Diário da República (DRE)': f"📜 {dre_label} ({dre_url})" + (f" [PDF: {dre_ref_pdf}]" if dre_ref_pdf else "")
+        }
+
+        return {
+            'id': f"base_anuncio_{item_id}",
+            'raw_id': str(item_id),
+            'source': "Portal BASE / DRE",
+            'is_signed': False,
+            'record_type': record_type,
+            'record_status': record_status,
+            'platform_code': platform_code,
+            'platform_name': platform_name,
+            'platform_icon': platform_icon,
+            'platform_url': platform_url,
+            'platform_home': platform_home,
+            'dre_id': dre_id,
+            'dre_url': dre_url,
+            'dre_label': dre_label,
+            'dre_pdf': dre_ref_pdf,
+            'procedure_type': procedure_type,
+            'title': title,
+            'description': title,
+            'fundamentation': "Código dos Contratos Públicos (Concurso Público / Decisão de Adjudicação)",
+            'entity': contracting_name,
+            'entity_nif': contracting_nif,
+            'contracted': contracted_disp,
+            'contracted_nif': "",
+            'value': base_price,
+            'signing_date': "Não assinado (Em formalização / Adjudicação)",
+            'publication_date': pub_date,
+            'proposal_deadline': proposal_deadline,
+            'execution_place': "Portugal",
+            'execution_deadline': proposal_deadline,
+            'cpvs_designation': detail.get('cpvs') or '',
+            'direct_url': direct_url,
+            'documents': [dre_ref_pdf] if dre_ref_pdf else [],
+            'contracts_count': contracts_count,
             'sections': {k: v for k, v in sections.items() if v}
         }
 
