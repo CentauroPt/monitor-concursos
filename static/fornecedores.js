@@ -1,110 +1,178 @@
 /**
- * Pesquisa de Fornecedores de Entidades Públicas - Portal BASE & Autarquias
- * Suporta identificação de fornecedores, agregação contratual,
- * enriquecimento cadastral (moradas, contactos, websites, redes sociais)
- * e gaveta lateral de raio-x empresarial.
+ * Frontend para a Pesquisa de Fornecedores de Entidades Públicas.
+ * Segue a mesma linha estética e arquitetura da Pesquisa de Contratos Públicos:
+ * Formulário com grelha moderna, atalhos rápidos de datas e municípios,
+ * barra de filtros interativos, cartões com 4 pilares e painel lateral vertical de Raio-X.
  */
 
 let allSuppliers = [];
-let filteredSuppliers = [];
-let activeDrawerSupplier = null;
+let currentFilteredSuppliers = [];
+let activeSupplierIndex = null;
+
+// Elementos DOM do Formulário
+const searchForm = document.getElementById('suppliers-search-form');
+const inputNif = document.getElementById('input-nif');
+const inputEntityName = document.getElementById('input-entity-name');
+const selectSource = document.getElementById('select-source');
+const selectLimit = document.getElementById('select-limit');
+const inputDateStart = document.getElementById('input-date-start');
+const inputDateEnd = document.getElementById('input-date-end');
+const selectDateType = document.getElementById('select-date-type');
+const btnSubmitSearch = document.getElementById('btn-submit-search');
+
+// Secção de Filtros
+const filterSection = document.getElementById('suppliers-filter-section');
+const filterName = document.getElementById('filter-supplier-name');
+const filterLocality = document.getElementById('filter-supplier-locality');
+const filterAmount = document.getElementById('filter-supplier-amount');
+const filterWords = document.getElementById('filter-supplier-words');
+const btnClearWords = document.getElementById('btn-clear-words');
+const btnClearAllFilters = document.getElementById('btn-clear-all-filters');
+const btnExportExcel = document.getElementById('btn-export-excel');
+const btnToggleSidebar = document.getElementById('btn-toggle-sidebar');
+const visibleCount = document.getElementById('visible-count');
+const totalSuppliersCount = document.getElementById('total-suppliers-count');
+const totalAmountBadge = document.getElementById('total-amount-badge');
+
+// Estados e Conteúdo
+const suppliersContentColumn = document.getElementById('suppliers-content-column');
+const suppliersList = document.getElementById('suppliers-list');
+const emptyState = document.getElementById('empty-state');
+const loadingState = document.getElementById('loading-state');
+const lastUpdateText = document.getElementById('last-update-text');
+
+// Janela Vertical Lateral Direita (Raio-X & Contratos)
+const sidebarPanel = document.getElementById('supplier-sidebar-panel');
+const btnCloseSidebar = document.getElementById('btn-close-sidebar');
+const tabSidebarRaiox = document.getElementById('tab-sidebar-raiox');
+const tabSidebarContracts = document.getElementById('tab-sidebar-contracts');
+const sidebarContractsCountBadge = document.getElementById('sidebar-contracts-count-badge');
+const sidebarViewRaiox = document.getElementById('sidebar-view-raiox');
+const sidebarViewContracts = document.getElementById('sidebar-view-contracts');
+const sidebarRaioxEmpty = document.getElementById('sidebar-raiox-empty');
+const sidebarRaioxContent = document.getElementById('sidebar-raiox-content');
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Preencher datas padrão: último ano até hoje
-  setDateRange('last_year');
+  setupEventListeners();
+  checkUrlParams();
+});
 
-  // Fechar gaveta com tecla ESC
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      closeSupplierDrawer();
-    }
+function setupEventListeners() {
+  // Submissão do formulário
+  if (searchForm) {
+    searchForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      handleSupplierSearch();
+    });
+  }
+
+  // Atalhos Rápidos de Municípios / Entidades
+  document.querySelectorAll('.quick-entity-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const nif = btn.dataset.nif;
+      const name = btn.dataset.name;
+      if (inputNif) inputNif.value = nif || '';
+      if (inputEntityName) inputEntityName.value = name || '';
+      handleSupplierSearch();
+    });
   });
 
-  // Verificar se há parâmetros na URL (ex: ?nif=505170940)
+  // Atalhos Rápidos de Datas
+  document.querySelectorAll('.quick-date-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const today = new Date();
+      if (btn.dataset.clear) {
+        if (inputDateStart) inputDateStart.value = '';
+        if (inputDateEnd) inputDateEnd.value = '';
+      } else if (btn.dataset.days) {
+        const days = parseInt(btn.dataset.days, 10);
+        const past = new Date();
+        past.setDate(past.getDate() - days);
+        if (inputDateStart) inputDateStart.value = past.toISOString().substring(0, 10);
+        if (inputDateEnd) inputDateEnd.value = today.toISOString().substring(0, 10);
+      } else if (btn.dataset.year) {
+        const year = btn.dataset.year;
+        if (inputDateStart) inputDateStart.value = `${year}-01-01`;
+        if (inputDateEnd) inputDateEnd.value = `${year}-12-31`;
+      }
+    });
+  });
+
+  // Filtros em Tempo Real
+  if (filterName) filterName.addEventListener('input', applyFilters);
+  if (filterLocality) filterLocality.addEventListener('input', applyFilters);
+  if (filterAmount) filterAmount.addEventListener('change', applyFilters);
+  if (filterWords) {
+    filterWords.addEventListener('input', () => {
+      if (btnClearWords) {
+        btnClearWords.classList.toggle('hidden', !filterWords.value.trim());
+      }
+      applyFilters();
+    });
+  }
+
+  if (btnClearWords) {
+    btnClearWords.addEventListener('click', () => {
+      if (filterWords) filterWords.value = '';
+      btnClearWords.classList.add('hidden');
+      applyFilters();
+    });
+  }
+
+  if (btnClearAllFilters) {
+    btnClearAllFilters.addEventListener('click', clearAllFilters);
+  }
+
+  if (btnExportExcel) {
+    btnExportExcel.addEventListener('click', exportToExcel);
+  }
+
+  if (btnToggleSidebar) {
+    btnToggleSidebar.addEventListener('click', toggleSidebar);
+  }
+
+  if (btnCloseSidebar) {
+    btnCloseSidebar.addEventListener('click', closeSidebar);
+  }
+
+  // Tabs do Painel Lateral
+  if (tabSidebarRaiox) {
+    tabSidebarRaiox.addEventListener('click', () => switchSidebarTab('raiox'));
+  }
+  if (tabSidebarContracts) {
+    tabSidebarContracts.addEventListener('click', () => switchSidebarTab('contracts'));
+  }
+}
+
+function checkUrlParams() {
   const urlParams = new URLSearchParams(window.location.search);
   const nifParam = urlParams.get('nif');
   const nameParam = urlParams.get('nome') || urlParams.get('entidade');
   if (nifParam || nameParam) {
-    const input = document.getElementById('supplier-entity-input');
-    if (input) {
-      input.value = nifParam || nameParam;
-      handleSupplierSearch();
-    }
-  }
-});
-
-function setEntityQuick(nif, name) {
-  const input = document.getElementById('supplier-entity-input');
-  if (input) {
-    input.value = nif || name;
+    if (inputNif && nifParam) inputNif.value = nifParam;
+    if (inputEntityName && nameParam) inputEntityName.value = nameParam;
     handleSupplierSearch();
   }
 }
 
-function clearSupplierInput() {
-  const input = document.getElementById('supplier-entity-input');
-  if (input) {
-    input.value = '';
-    input.focus();
-  }
-}
-
-function setDateRange(rangeType) {
-  const startInput = document.getElementById('supplier-date-start');
-  const endInput = document.getElementById('supplier-date-end');
-  if (!startInput || !endInput) return;
-
-  const now = new Date();
-  const formatYMD = (d) => d.toISOString().split('T')[0];
-
-  endInput.value = formatYMD(now);
-
-  if (rangeType === 'last_month') {
-    const past = new Date(now);
-    past.setMonth(past.getMonth() - 1);
-    startInput.value = formatYMD(past);
-  } else if (rangeType === 'last_6m') {
-    const past = new Date(now);
-    past.setMonth(past.getMonth() - 6);
-    startInput.value = formatYMD(past);
-  } else if (rangeType === 'last_year') {
-    const past = new Date(now);
-    past.setFullYear(past.getFullYear() - 1);
-    startInput.value = formatYMD(past);
-  } else if (rangeType === 'all') {
-    startInput.value = '';
-    endInput.value = '';
-  }
-}
-
 async function handleSupplierSearch() {
-  const entityInput = document.getElementById('supplier-entity-input');
-  const query = entityInput ? entityInput.value.trim() : '';
+  const nif = inputNif ? inputNif.value.trim() : '';
+  const entityName = inputEntityName ? inputEntityName.value.trim() : '';
 
-  if (!query) {
-    alert('Por favor, introduza o NIF ou o Nome da Autarquia / Entidade Adjudicante.');
-    if (entityInput) entityInput.focus();
+  if (!nif && !entityName) {
+    alert('Por favor, indique o NIF ou o Nome da Entidade Adjudicante / Município.');
+    if (inputNif) inputNif.focus();
     return;
   }
 
-  let nif = null;
-  let entity_name = null;
+  const source = selectSource ? selectSource.value : 'all';
+  const limit = selectLimit ? parseInt(selectLimit.value, 10) : 50;
+  const date_start = inputDateStart ? inputDateStart.value : null;
+  const date_end = inputDateEnd ? inputDateEnd.value : null;
+  const date_mode = selectDateType ? selectDateType.value : 'any';
 
-  const cleanDigits = query.replace(/\D/g, '');
-  if (cleanDigits.length === 9) {
-    nif = cleanDigits;
-    entity_name = query;
-  } else {
-    entity_name = query;
-  }
-
-  const date_start = document.getElementById('supplier-date-start')?.value || null;
-  const date_end = document.getElementById('supplier-date-end')?.value || null;
-  const date_mode = document.getElementById('supplier-date-mode')?.value || 'any';
-  const source = document.getElementById('supplier-source')?.value || 'all';
-
-  // Mostrar indicador de carregamento
-  showLoading(true, `A pesquisar fornecedores de "${query}"...`);
+  // Mostrar estado de carregamento
+  showLoading(true, `A pesquisar fornecedores de "${entityName || nif}"...`);
 
   try {
     const response = await fetch('/api/suppliers/search', {
@@ -112,415 +180,422 @@ async function handleSupplierSearch() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         nif,
-        entity_name,
+        entity_name: entityName,
+        source,
+        limit,
         date_start,
         date_end,
-        date_mode,
-        source,
-        limit: 100
+        date_mode
       })
     });
 
     if (!response.ok) {
-      throw new Error(`Erro no servidor (${response.status})`);
+      throw new Error(`Erro na pesquisa (${response.status})`);
     }
 
     const data = await response.json();
     allSuppliers = data.suppliers || [];
-    filteredSuppliers = [...allSuppliers];
+    currentFilteredSuppliers = [...allSuppliers];
 
-    updateKPIs(data.stats || {});
-    renderSuppliersTable();
+    // Atualizar estatísticas e indicadores
+    const stats = data.stats || {};
+    if (totalSuppliersCount) totalSuppliersCount.textContent = stats.total_suppliers || allSuppliers.length;
+    if (totalAmountBadge) totalAmountBadge.textContent = stats.total_amount || '0,00 €';
+    if (visibleCount) visibleCount.textContent = currentFilteredSuppliers.length;
 
-    // Ativar botões de exportação se houver dados
-    const hasData = allSuppliers.length > 0;
-    const btnExcel = document.getElementById('btn-export-excel');
-    const btnPdf = document.getElementById('btn-export-pdf');
-    if (btnExcel) btnExcel.disabled = !hasData;
-    if (btnPdf) btnPdf.disabled = !hasData;
-
-    const lastUpdate = document.getElementById('last-update-text');
-    if (lastUpdate) {
-      lastUpdate.textContent = `${allSuppliers.length} fornecedores identificados em ${new Date().toLocaleTimeString('pt-PT')}`;
+    if (lastUpdateText) {
+      lastUpdateText.textContent = `${allSuppliers.length} fornecedores recolhidos às ${new Date().toLocaleTimeString('pt-PT')}`;
     }
 
+    // Exibir barra de filtros
+    if (filterSection) {
+      filterSection.classList.remove('hidden');
+    }
+
+    renderSuppliersList();
+
   } catch (error) {
-    console.error('Erro ao pesquisar fornecedores:', error);
-    alert(`Ocorreu um erro ao obter os fornecedores: ${error.message}`);
+    console.error('Erro na pesquisa de fornecedores:', error);
+    alert(`Ocorreu um erro ao obter fornecedores: ${error.message}`);
   } finally {
     showLoading(false);
   }
 }
 
 function showLoading(show, title = null) {
-  const loading = document.getElementById('suppliers-loading');
-  const emptyState = document.getElementById('suppliers-empty-state');
-  const tableContainer = document.getElementById('suppliers-table-container');
-  const kpis = document.getElementById('suppliers-kpis');
-  const filterBar = document.getElementById('suppliers-filter-bar');
-  const btn = document.getElementById('btn-search-suppliers');
-
-  if (show) {
-    if (loading) loading.style.display = 'flex';
-    if (title && document.getElementById('loading-title')) {
-      document.getElementById('loading-title').textContent = title;
-    }
-    if (emptyState) emptyState.style.display = 'none';
-    if (tableContainer) tableContainer.style.display = 'none';
-    if (kpis) kpis.style.display = 'none';
-    if (filterBar) filterBar.style.display = 'none';
-    if (btn) btn.disabled = true;
-  } else {
-    if (loading) loading.style.display = 'none';
-    if (btn) btn.disabled = false;
+  if (loadingState) loadingState.classList.toggle('hidden', !show);
+  if (emptyState && show) emptyState.classList.add('hidden');
+  if (btnSubmitSearch) btnSubmitSearch.disabled = show;
+  if (title && document.getElementById('loading-title')) {
+    document.getElementById('loading-title').textContent = title;
   }
 }
 
-function updateKPIs(stats) {
-  const kpis = document.getElementById('suppliers-kpis');
-  const filterBar = document.getElementById('suppliers-filter-bar');
+function renderSuppliersList() {
+  if (!suppliersList) return;
 
-  if (kpis) kpis.style.display = 'grid';
-  if (filterBar) filterBar.style.display = 'flex';
-
-  document.getElementById('kpi-total-suppliers').textContent = stats.total_suppliers || allSuppliers.length || '0';
-  document.getElementById('kpi-total-amount').textContent = stats.total_amount || '0,00 €';
-  document.getElementById('kpi-total-contracts').textContent = stats.total_contracts || '0';
-  document.getElementById('kpi-avg-amount').textContent = stats.avg_amount || '0,00 €';
-}
-
-function renderSuppliersTable() {
-  const tbody = document.getElementById('suppliers-table-body');
-  const tableContainer = document.getElementById('suppliers-table-container');
-  const emptyState = document.getElementById('suppliers-empty-state');
-
-  if (!tbody || !tableContainer) return;
-
-  if (filteredSuppliers.length === 0) {
-    tableContainer.style.display = 'none';
-    if (emptyState) {
-      emptyState.style.display = 'block';
-      emptyState.innerHTML = `
-        <div class="empty-icon">🔍</div>
+  if (currentFilteredSuppliers.length === 0) {
+    suppliersList.innerHTML = `
+      <div class="state-card">
+        <div class="state-icon">🔍</div>
         <h3>Nenhum fornecedor encontrado</h3>
-        <p>Não foram encontrados fornecedores para os critérios especificados. Tente alargar o período temporal ou verificar a designação da entidade.</p>
-      `;
-    }
+        <p>Não foram encontrados fornecedores correspondentes aos filtros selecionados. Tente ajustar os termos ou o período temporal.</p>
+      </div>
+    `;
     return;
   }
 
-  if (emptyState) emptyState.style.display = 'none';
-  tableContainer.style.display = 'block';
+  suppliersList.innerHTML = currentFilteredSuppliers.map((s, idx) => createSupplierCardHtml(s, idx)).join('');
+}
 
-  let html = '';
-  filteredSuppliers.forEach((s, idx) => {
-    const enr = s.enrichment || {};
-    const nif = s.nif || enr.nif || 'NIF N/D';
-    const name = s.name || 'Fornecedor sem designação';
-    const locality = enr.locality || enr.postal_code || 'Portugal';
-    const address = enr.full_address || enr.street_address || '';
-    
-    // Contactos rápidos
-    const phone = enr.phone || (enr.phones && enr.phones[0]) || '';
-    const email = enr.email || (enr.emails && enr.emails[0]) || '';
-    const website = enr.website || '';
-    const social = enr.social_media || {};
+function createSupplierCardHtml(s, idx) {
+  const enr = s.enrichment || {};
+  const nif = s.nif || enr.nif || 'NIF N/D';
+  const name = s.name || 'Fornecedor';
+  const locality = enr.locality || 'Portugal';
+  const address = enr.full_address || enr.street_address || '';
+  const phone = enr.phone || (enr.phones && enr.phones[0]) || '';
+  const email = enr.email || (enr.emails && enr.emails[0]) || '';
+  const website = enr.website || '';
+  const social = enr.social_media || {};
+  const contractsCount = s.contracts_count || 1;
+  const totalVal = s.total_value || 'Sob consulta';
+  const latestDate = s.latest_date || 'N/D';
+  const latestTitle = s.latest_title || 'Fornecimento / Prestação de Serviços';
+  const latestProc = s.latest_procedure || 'Ajuste Direto';
 
-    // Último contrato
-    const lastDate = s.latest_date || 'N/D';
-    const lastTitle = s.latest_title || 'Contrato Público';
-    const lastProc = s.latest_procedure || 'Ajuste Direto';
+  const isCurrentActive = activeSupplierIndex === idx;
 
-    html += `
-      <tr class="supplier-row">
-        <!-- Coluna 1: Fornecedor -->
-        <td class="col-supplier">
-          <div class="supplier-name-box">
-            <span class="supplier-name" title="${escapeHtml(name)}">${escapeHtml(name)}</span>
-            <div class="supplier-meta-tags">
-              <span class="badge-nif">NIF ${nif}</span>
-              ${locality ? `<span class="badge-locality">📍 ${escapeHtml(locality)}</span>` : ''}
-            </div>
-            ${address && address !== 'Morada disponível mediante consulta pública' ? `
-              <div class="supplier-address-snippet" title="${escapeHtml(address)}">
-                <span class="addr-icon">🏢</span> ${escapeHtml(address)}
-              </div>
-            ` : ''}
-          </div>
-        </td>
+  return `
+    <article class="contract-card supplier-card ${isCurrentActive ? 'card-selected' : ''}" id="card-supplier-${idx}" data-idx="${idx}">
+      <div class="card-top">
+        <div class="card-badges-left">
+          <span class="status-badge badge-signed">🏢 Fornecedor Oficial</span>
+          <span class="party-nif">NIF: ${escapeHtml(nif)}</span>
+          <span class="source-badge badge-base">📍 ${escapeHtml(locality)}</span>
+          <span class="framework-tag">🏆 ${contractsCount} Contrato${contractsCount > 1 ? 's' : ''}</span>
+          <span class="procedure-type-badge">${escapeHtml(latestProc)}</span>
+        </div>
+        <div class="card-top-right">
+          ${enr.base_gov_url ? `
+            <a href="${escapeHtml(enr.base_gov_url)}" target="_blank" rel="noopener noreferrer" class="link-official-card" title="Abrir ficha oficial no Portal BASE">
+              Portal BASE ↗
+            </a>
+          ` : ''}
+          ${enr.racius_url ? `
+            <a href="${escapeHtml(enr.racius_url)}" target="_blank" rel="noopener noreferrer" class="link-official-card" title="Ver ficha no Racius">
+              Racius ↗
+            </a>
+          ` : ''}
+        </div>
+      </div>
 
-        <!-- Coluna 2: Volume Contratual com a Autarquia -->
-        <td class="col-volume">
-          <div class="volume-box">
-            <span class="volume-amount">${s.total_value}</span>
-            <span class="contracts-count-badge">${s.contracts_count} contrato${s.contracts_count > 1 ? 's' : ''} ganho${s.contracts_count > 1 ? 's' : ''}</span>
-          </div>
-        </td>
+      <h2 class="contract-title">${escapeHtml(name)}</h2>
 
-        <!-- Coluna 3: Contactos Rápidos & Presença Web -->
-        <td class="col-contacts">
-          <div class="contacts-list">
-            ${phone ? `
-              <a href="tel:${phone.replace(/\s+/g, '')}" class="contact-pill phone-pill" title="Ligar para ${phone}">
-                <span class="pill-icon">📞</span> ${phone}
-              </a>
-            ` : ''}
-            ${email ? `
-              <a href="mailto:${email}" class="contact-pill email-pill" title="Enviar email para ${email}">
-                <span class="pill-icon">✉️</span> ${escapeHtml(email)}
-              </a>
-            ` : ''}
-            ${website ? `
-              <a href="${website}" target="_blank" rel="noopener noreferrer" class="contact-pill web-pill" title="Visitar website oficial">
-                <span class="pill-icon">🌐</span> Website Oficial
-              </a>
-            ` : ''}
-            
-            <div class="social-pills-row">
-              ${social.linkedin ? `<a href="${social.linkedin}" target="_blank" rel="noopener noreferrer" class="social-mini-btn linkedin" title="Ver LinkedIn">in</a>` : ''}
-              ${social.facebook ? `<a href="${social.facebook}" target="_blank" rel="noopener noreferrer" class="social-mini-btn facebook" title="Ver Facebook">fb</a>` : ''}
-              <a href="${enr.google_search_url || `https://www.google.com/search?q=${encodeURIComponent(name)}`}" target="_blank" rel="noopener noreferrer" class="social-mini-btn google" title="Pesquisar no Google">G</a>
-            </div>
-          </div>
-        </td>
+      <!-- Sede & Contactos Principais -->
+      <div class="contract-parties-row">
+        <div class="party-item">
+          <span class="party-icon">📍</span>
+          <span class="party-label">Sede / Morada:</span>
+          <strong class="party-name">${escapeHtml(address || 'Morada oficial disponível mediante consulta no Portal BASE')}</strong>
+          ${enr.google_maps_url ? `<a href="${escapeHtml(enr.google_maps_url)}" target="_blank" class="party-nif" style="text-decoration: underline;">Ver no Mapa ↗</a>` : ''}
+        </div>
+        <div class="party-item">
+          <span class="party-icon">📞</span>
+          <span class="party-label">Contactos Principais:</span>
+          <strong class="party-name">
+            ${phone ? `<a href="tel:${phone.replace(/\s+/g, '')}" style="color: #2563eb; text-decoration: none;">📞 ${phone}</a>` : 'Telefone disponível na ficha'}
+            ${email ? ` &bull; <a href="mailto:${escapeHtml(email)}" style="color: #db2777; text-decoration: none;">✉️ ${escapeHtml(email)}</a>` : ''}
+          </strong>
+          ${website ? `<a href="${escapeHtml(website)}" target="_blank" rel="noopener noreferrer" class="party-nif" style="color: #166534; font-weight: 700;">🌐 ${escapeHtml(website.replace(/^https?:\/\//, ''))}</a>` : ''}
+        </div>
+      </div>
 
-        <!-- Coluna 4: Último Contrato -->
-        <td class="col-latest-contract">
-          <div class="latest-contract-box">
-            <div class="latest-contract-header">
-              <span class="latest-date">📅 ${lastDate}</span>
-              <span class="latest-proc">${escapeHtml(lastProc)}</span>
-            </div>
-            <p class="latest-title" title="${escapeHtml(lastTitle)}">${escapeHtml(lastTitle)}</p>
-          </div>
-        </td>
+      <!-- Grid com os 4 Pilares do Fornecedor -->
+      <div class="contract-pillars-grid">
+        <div class="pillar-box">
+          <span class="p-label">💰 Volume Total Adjudicado</span>
+          <strong class="p-value highlight-price">${escapeHtml(totalVal)}</strong>
+        </div>
+        <div class="pillar-box">
+          <span class="p-label">📑 Contratos Celebrados</span>
+          <strong class="p-value">${contractsCount} contrato${contractsCount > 1 ? 's' : ''}</strong>
+        </div>
+        <div class="pillar-box">
+          <span class="p-label">📅 Último Contrato Celebrado</span>
+          <strong class="p-value highlight-date">${escapeHtml(latestDate)}</strong>
+        </div>
+        <div class="pillar-box">
+          <span class="p-label">🏢 Atividade / Setor</span>
+          <strong class="p-value" style="font-size: 0.85rem; font-weight: 600;" title="${escapeHtml(enr.activity_description || latestTitle)}">
+            ${escapeHtml((enr.activity_description || latestTitle).substring(0, 45))}...
+          </strong>
+        </div>
+      </div>
 
-        <!-- Coluna 5: Ações / Raio-X -->
-        <td class="col-actions">
-          <button type="button" class="btn-raiox" onclick="openSupplierDrawer(${idx})" title="Abrir raio-x completo do fornecedor e todos os contratos">
-            <span class="btn-action-icon">👁️</span>
-            <span>Raio-X</span>
+      <!-- Resumo do Último Contrato -->
+      <div class="contract-desc-box">
+        <span class="desc-label">Último Procedimento:</span>
+        <span class="desc-content">${escapeHtml(latestTitle)}</span>
+      </div>
+
+      <!-- Rodapé do Cartão com Ações e Redes Sociais -->
+      <div class="card-bottom">
+        <div class="matched-badges">
+          ${social.linkedin ? `<a href="${escapeHtml(social.linkedin)}" target="_blank" class="platform-badge badge-vortal">in LinkedIn</a>` : ''}
+          ${social.facebook ? `<a href="${escapeHtml(social.facebook)}" target="_blank" class="platform-badge badge-acingov">fb Facebook</a>` : ''}
+          <a href="${escapeHtml(enr.google_search_url || `https://www.google.com/search?q=${encodeURIComponent(name)}`)}" target="_blank" class="platform-badge">🔍 Google Web</a>
+        </div>
+        <div class="card-actions">
+          <button type="button" class="btn btn-primary btn-sm" onclick="openSupplierSidebar(${idx})">
+            <span>📋</span> <span>Ver Raio-X & Todos os Contratos (${contractsCount})</span>
           </button>
-        </td>
-      </tr>
-    `;
-  });
-
-  tbody.innerHTML = html;
+        </div>
+      </div>
+    </article>
+  `;
 }
 
-function applyTableFilters() {
-  const searchInput = document.getElementById('table-filter-input');
-  const term = searchInput ? searchInput.value.toLowerCase().trim() : '';
-  const amountFilter = document.getElementById('filter-amount')?.value || 'all';
-
-  filteredSuppliers = allSuppliers.filter(s => {
-    // Filtro por texto
-    if (term) {
-      const enr = s.enrichment || {};
-      const haystack = [
-        s.name,
-        s.nif,
-        enr.full_address,
-        enr.locality,
-        enr.activity_description,
-        s.latest_title,
-        ...(s.categories || [])
-      ].join(' ').toLowerCase();
-
-      if (!haystack.includes(term)) return false;
-    }
-
-    // Filtro por montante
-    const val = s.total_value_raw || 0;
-    if (amountFilter === 'over_100k' && val < 100000) return false;
-    if (amountFilter === 'over_500k' && val < 500000) return false;
-    if (amountFilter === 'over_1m' && val < 1000000) return false;
-
-    return true;
-  });
-
-  applyTableSorting(false);
-  renderSuppliersTable();
-}
-
-function applyTableSorting(reRender = true) {
-  const sort = document.getElementById('sort-select')?.value || 'value_desc';
-
-  filteredSuppliers.sort((a, b) => {
-    if (sort === 'value_desc') {
-      return (b.total_value_raw || 0) - (a.total_value_raw || 0);
-    } else if (sort === 'contracts_desc') {
-      return (b.contracts_count || 0) - (a.contracts_count || 0);
-    } else if (sort === 'date_desc') {
-      return String(b.latest_date || '').localeCompare(String(a.latest_date || ''));
-    } else if (sort === 'name_asc') {
-      return String(a.name || '').localeCompare(String(b.name || ''));
-    }
-    return 0;
-  });
-
-  if (reRender) {
-    renderSuppliersTable();
-  }
-}
-
-function openSupplierDrawer(index) {
-  const supplier = filteredSuppliers[index];
+function openSupplierSidebar(idx) {
+  const supplier = currentFilteredSuppliers[idx];
   if (!supplier) return;
 
-  activeDrawerSupplier = supplier;
+  activeSupplierIndex = idx;
   const enr = supplier.enrichment || {};
   const social = enr.social_media || {};
 
-  // Atualizar cabeçalho
-  document.getElementById('drawer-company-name').textContent = supplier.name;
-  document.getElementById('drawer-company-nif').textContent = `NIF: ${supplier.nif || enr.nif || 'Não disponível'}`;
+  // Destacar cartão selecionado
+  document.querySelectorAll('.supplier-card').forEach(c => c.classList.remove('card-selected'));
+  const card = document.getElementById(`card-supplier-${idx}`);
+  if (card) card.classList.add('card-selected');
 
-  // Morada e contactos
-  const addressText = enr.full_address || enr.street_address || 'Morada disponível mediante consulta pública no Portal BASE e diretórios empresariais';
-  document.getElementById('drawer-address').textContent = addressText;
+  // Atualizar cabeçalho da barra lateral
+  document.getElementById('sb-supplier-name').textContent = supplier.name;
+  document.getElementById('sb-supplier-nif').textContent = `NIF: ${supplier.nif || enr.nif || 'N/D'}`;
+  document.getElementById('sb-supplier-legal').textContent = enr.legal_name || supplier.name;
 
-  const mapsBtn = document.getElementById('drawer-maps-link');
-  if (mapsBtn) {
-    mapsBtn.href = enr.google_maps_url || `https://www.google.com/maps/search/${encodeURIComponent(addressText)}`;
+  // Atualizar resumo financeiro
+  document.getElementById('sb-total-amount').textContent = supplier.total_value;
+  document.getElementById('sb-contracts-count').textContent = `${supplier.contracts_count} contrato(s)`;
+  if (sidebarContractsCountBadge) {
+    sidebarContractsCountBadge.textContent = supplier.contracts_count;
   }
 
-  // Telefones
-  const phoneVal = enr.phone || (enr.phones && enr.phones.join(' / ')) || 'Disponível via consulta ao Portal BASE';
-  const phoneEl = document.getElementById('drawer-phone');
+  // Atualizar morada
+  const addr = enr.full_address || enr.street_address || 'Morada oficial disponível para consulta pública nos portais governamentais';
+  document.getElementById('sb-address').textContent = addr;
+  document.getElementById('sb-locality').textContent = `${enr.postal_code || ''} ${enr.locality || ''}`.trim() || 'Portugal';
+  const mapsLink = document.getElementById('sb-maps-link');
+  if (mapsLink) {
+    mapsLink.href = enr.google_maps_url || `https://www.google.com/maps/search/${encodeURIComponent(addr)}`;
+  }
+
+  // Atualizar contactos
+  const phoneEl = document.getElementById('sb-phone');
   if (phoneEl) {
-    if (enr.phone) {
-      phoneEl.innerHTML = `<a href="tel:${enr.phone.replace(/\s+/g, '')}" class="link-direct-contact">📞 ${enr.phone}</a>`;
+    const phone = enr.phone || (enr.phones && enr.phones.join(', '));
+    if (phone) {
+      phoneEl.innerHTML = `<a href="tel:${phone.replace(/\s+/g, '')}" style="color: #2563eb; font-weight: 700; text-decoration: none;">📞 ${phone}</a>`;
     } else {
-      phoneEl.textContent = phoneVal;
+      phoneEl.textContent = 'Não especificado no registo prévio';
     }
   }
 
-  // Emails
-  const emailVal = enr.email || (enr.emails && enr.emails.join(' / ')) || 'Disponível no processo do contrato';
-  const emailEl = document.getElementById('drawer-email');
+  const emailEl = document.getElementById('sb-email');
   if (emailEl) {
-    if (enr.email) {
-      emailEl.innerHTML = `<a href="mailto:${enr.email}" class="link-direct-contact">✉️ ${escapeHtml(enr.email)}</a>`;
+    const email = enr.email || (enr.emails && enr.emails.join(', '));
+    if (email) {
+      emailEl.innerHTML = `<a href="mailto:${escapeHtml(email)}" style="color: #db2777; font-weight: 700; text-decoration: none;">✉️ ${escapeHtml(email)}</a>`;
     } else {
-      emailEl.textContent = emailVal;
+      emailEl.textContent = 'Disponível no caderno de encargos do contrato';
     }
   }
 
-  // Website
-  const webEl = document.getElementById('drawer-website');
+  const webEl = document.getElementById('sb-website');
   if (webEl) {
     if (enr.website) {
-      webEl.innerHTML = `<a href="${enr.website}" target="_blank" rel="noopener noreferrer" class="link-direct-contact">🌐 ${escapeHtml(enr.website)}</a>`;
+      webEl.innerHTML = `<a href="${escapeHtml(enr.website)}" target="_blank" rel="noopener noreferrer" style="color: #166534; font-weight: 700; text-decoration: underline;">🌐 ${escapeHtml(enr.website)}</a>`;
     } else {
       webEl.textContent = 'Não especificado';
     }
   }
 
   // Redes Sociais
-  const socialsContainer = document.getElementById('drawer-socials');
-  if (socialsContainer) {
+  const socialsBox = document.getElementById('sb-socials');
+  if (socialsBox) {
     let sHtml = '';
     if (social.linkedin) {
-      sHtml += `<a href="${social.linkedin}" target="_blank" class="social-pill linkedin">💼 LinkedIn</a>`;
+      sHtml += `<a href="${escapeHtml(social.linkedin)}" target="_blank" class="platform-badge badge-vortal">in LinkedIn</a>`;
     }
     if (social.facebook) {
-      sHtml += `<a href="${social.facebook}" target="_blank" class="social-pill facebook">📘 Facebook</a>`;
+      sHtml += `<a href="${escapeHtml(social.facebook)}" target="_blank" class="platform-badge badge-acingov">fb Facebook</a>`;
     }
-    if (social.instagram) {
-      sHtml += `<a href="${social.instagram}" target="_blank" class="social-pill instagram">📸 Instagram</a>`;
-    }
-    sHtml += `<a href="${enr.google_search_url || '#'}" target="_blank" class="social-pill google">🔍 Google Web</a>`;
-    socialsContainer.innerHTML = sHtml;
+    sHtml += `<a href="${escapeHtml(enr.google_search_url || '#')}" target="_blank" class="platform-badge">🔍 Google Web</a>`;
+    socialsBox.innerHTML = sHtml;
   }
 
   // Atividade
-  const actEl = document.getElementById('drawer-activity');
+  const actEl = document.getElementById('sb-activity');
   if (actEl) {
-    actEl.textContent = enr.activity_description || 'Fornecimento de bens, serviços ou empreitadas em procedimentos de contratação pública.';
+    actEl.textContent = enr.activity_description || 'Fornecimentos de bens, prestação de serviços ou empreitadas de obras públicas.';
   }
 
-  // Resumo financeiro
-  document.getElementById('drawer-total-amount').textContent = supplier.total_value;
-  document.getElementById('drawer-contracts-count').textContent = supplier.contracts_count;
+  // Links Oficiais
+  const linkBase = document.getElementById('sb-link-base');
+  if (linkBase) linkBase.href = enr.base_gov_url || `https://www.base.gov.pt/Base4/pt/pesquisa/?type=contratos&adjudicataria=${encodeURIComponent(supplier.nif || supplier.name)}`;
 
-  // Lista de Contratos
-  const contractsListContainer = document.getElementById('drawer-contracts-list');
-  if (contractsListContainer) {
+  const linkRacius = document.getElementById('sb-link-racius');
+  if (linkRacius) linkRacius.href = enr.racius_url || `https://www.racius.com/pesquisa/?q=${encodeURIComponent(supplier.nif || supplier.name)}`;
+
+  const linkNif = document.getElementById('sb-link-nif');
+  if (linkNif) linkNif.href = enr.nif_pt_url || `https://www.nif.pt/${supplier.nif}/`;
+
+  const linkGoogle = document.getElementById('sb-link-google');
+  if (linkGoogle) linkGoogle.href = enr.google_search_url || `https://www.google.com/search?q=${encodeURIComponent(supplier.name)}`;
+
+  // Preencher Lista de Contratos na Aba 2
+  const contractsItemsBox = document.getElementById('sb-contracts-list-items');
+  if (contractsItemsBox) {
     const contracts = supplier.contracts || [];
     if (contracts.length === 0) {
-      contractsListContainer.innerHTML = '<p class="no-contracts-text">Nenhum detalhe adicional de contrato disponível.</p>';
+      contractsItemsBox.innerHTML = '<p class="sidebar-no-results">Nenhum contrato individual encontrado.</p>';
     } else {
-      let cHtml = '';
-      contracts.forEach((c, cIdx) => {
+      contractsItemsBox.innerHTML = contracts.map((c, cIdx) => {
         const val = c.value || 'Sob consulta';
         const sDate = c.signing_date || 'N/D';
         const pDate = c.publication_date || 'N/D';
-        const obj = c.title || 'Sem título especificado';
+        const obj = c.title || 'Contrato Público';
         const proc = c.procedure_type || 'Ajuste Direto';
-        const plat = c.platform_name || 'Portal BASE';
         const directUrl = c.direct_url || '#';
 
-        cHtml += `
-          <div class="drawer-contract-card">
-            <div class="contract-card-top">
-              <span class="card-contract-num">#${cIdx + 1}</span>
-              <span class="card-contract-proc">${escapeHtml(proc)}</span>
-              <span class="card-contract-value">${escapeHtml(val)}</span>
+        return `
+          <div class="sidebar-match-card">
+            <div class="sidebar-match-header">
+              <span class="match-source-tag">#${cIdx + 1} &bull; ${escapeHtml(proc)}</span>
+              <strong style="color: #059669; font-size: 0.95rem;">${escapeHtml(val)}</strong>
             </div>
-            <h4 class="card-contract-title">${escapeHtml(obj)}</h4>
-            <div class="card-contract-dates">
-              <span>✍️ Celebração: <strong>${escapeHtml(sDate)}</strong></span>
-              <span>📢 Publicação: <strong>${escapeHtml(pDate)}</strong></span>
-              <span>🏢 Plataforma: <strong>${escapeHtml(plat)}</strong></span>
-            </div>
-            ${directUrl !== '#' ? `
-              <div class="card-contract-link">
-                <a href="${directUrl}" target="_blank" rel="noopener noreferrer" class="btn-contract-source">
-                  <span>🇵🇹 Ver Contrato Oficial no Portal BASE</span> ↗
+            <p class="sidebar-match-title">${escapeHtml(obj)}</p>
+            <div class="sidebar-match-footer" style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px;">
+              <span class="sidebar-match-meta">📅 Assinatura: ${escapeHtml(sDate)} | Publicação: ${escapeHtml(pDate)}</span>
+              ${directUrl !== '#' ? `
+                <a href="${escapeHtml(directUrl)}" target="_blank" rel="noopener noreferrer" class="link-official-card" style="font-size: 0.76rem; padding: 2px 8px;">
+                  BASE ↗
                 </a>
-              </div>
-            ` : ''}
+              ` : ''}
+            </div>
           </div>
         `;
-      });
-      contractsListContainer.innerHTML = cHtml;
+      }).join('');
     }
   }
 
-  // Links externos de verificação
-  const baseLink = document.getElementById('drawer-link-base');
-  if (baseLink) baseLink.href = enr.base_gov_url || `https://www.base.gov.pt/Base4/pt/pesquisa/?type=contratos&adjudicataria=${encodeURIComponent(supplier.nif || supplier.name)}`;
+  // Exibir conteúdo
+  if (sidebarRaioxEmpty) sidebarRaioxEmpty.classList.add('hidden');
+  if (sidebarRaioxContent) sidebarRaioxContent.classList.remove('hidden');
 
-  const raciusLink = document.getElementById('drawer-link-racius');
-  if (raciusLink) raciusLink.href = enr.racius_url || `https://www.racius.com/pesquisa/?q=${encodeURIComponent(supplier.nif || supplier.name)}`;
-
-  const nifLink = document.getElementById('drawer-link-nif');
-  if (nifLink) nifLink.href = enr.nif_pt_url || `https://www.nif.pt/${supplier.nif}/`;
-
-  const googleLink = document.getElementById('drawer-link-google');
-  if (googleLink) googleLink.href = enr.google_search_url || `https://www.google.com/search?q=${encodeURIComponent(supplier.name)}`;
-
-  // Abrir gaveta
-  const drawer = document.getElementById('supplier-drawer');
-  const backdrop = document.getElementById('supplier-drawer-backdrop');
-  if (drawer) drawer.classList.add('open');
-  if (backdrop) backdrop.classList.add('open');
-  document.body.style.overflow = 'hidden';
+  // Abrir painel lateral
+  if (sidebarPanel) sidebarPanel.classList.remove('hidden');
+  if (suppliersContentColumn) suppliersContentColumn.classList.add('expanded-with-sidebar');
+  if (btnToggleSidebar) btnToggleSidebar.classList.add('active');
 }
 
-function closeSupplierDrawer() {
-  const drawer = document.getElementById('supplier-drawer');
-  const backdrop = document.getElementById('supplier-drawer-backdrop');
-  if (drawer) drawer.classList.remove('open');
-  if (backdrop) backdrop.classList.remove('open');
-  document.body.style.overflow = '';
-  activeDrawerSupplier = null;
+function closeSidebar() {
+  if (sidebarPanel) sidebarPanel.classList.add('hidden');
+  if (suppliersContentColumn) suppliersContentColumn.classList.remove('expanded-with-sidebar');
+  if (btnToggleSidebar) btnToggleSidebar.classList.remove('active');
+  document.querySelectorAll('.supplier-card').forEach(c => c.classList.remove('card-selected'));
+  activeSupplierIndex = null;
 }
 
-async function exportSuppliersExcel() {
-  if (filteredSuppliers.length === 0) {
+function toggleSidebar() {
+  if (!sidebarPanel) return;
+  const isHidden = sidebarPanel.classList.contains('hidden');
+  if (isHidden) {
+    if (activeSupplierIndex !== null) {
+      openSupplierSidebar(activeSupplierIndex);
+    } else if (currentFilteredSuppliers.length > 0) {
+      openSupplierSidebar(0);
+    }
+  } else {
+    closeSidebar();
+  }
+}
+
+function switchSidebarTab(tabName) {
+  if (tabName === 'raiox') {
+    if (tabSidebarRaiox) tabSidebarRaiox.classList.add('active');
+    if (tabSidebarContracts) tabSidebarContracts.classList.remove('active');
+    if (sidebarViewRaiox) sidebarViewRaiox.classList.remove('hidden');
+    if (sidebarViewContracts) sidebarViewContracts.classList.add('hidden');
+  } else if (tabName === 'contracts') {
+    if (tabSidebarContracts) tabSidebarContracts.classList.add('active');
+    if (tabSidebarRaiox) tabSidebarRaiox.classList.remove('active');
+    if (sidebarViewContracts) sidebarViewContracts.classList.remove('hidden');
+    if (sidebarViewRaiox) sidebarViewRaiox.classList.add('hidden');
+  }
+}
+
+function applyFilters() {
+  const qName = normalizeStr(filterName ? filterName.value.trim() : '');
+  const qLoc = normalizeStr(filterLocality ? filterLocality.value.trim() : '');
+  const amountVal = filterAmount ? filterAmount.value : 'all';
+  const qWords = normalizeStr(filterWords ? filterWords.value.trim() : '');
+
+  currentFilteredSuppliers = allSuppliers.filter(s => {
+    const enr = s.enrichment || {};
+
+    // 1. Filtro por Nome ou NIF
+    if (qName) {
+      const matchName = normalizeStr(s.name).includes(qName);
+      const matchNif = normalizeStr(s.nif).includes(qName);
+      if (!matchName && !matchNif) return false;
+    }
+
+    // 2. Filtro por Localidade / Sede
+    if (qLoc) {
+      const matchLoc = normalizeStr(enr.locality).includes(qLoc);
+      const matchAddr = normalizeStr(enr.full_address).includes(qLoc);
+      if (!matchLoc && !matchAddr) return false;
+    }
+
+    // 3. Filtro por Escalão de Valor
+    if (amountVal !== 'all') {
+      const val = s.total_value_raw || 0;
+      if (amountVal === 'over_50k' && val < 50000) return false;
+      if (amountVal === 'over_100k' && val < 100000) return false;
+      if (amountVal === 'over_500k' && val < 500000) return false;
+      if (amountVal === 'over_1m' && val < 1000000) return false;
+    }
+
+    // 4. Filtro por Palavras / Setor / Contratos
+    if (qWords) {
+      const haystack = [
+        enr.activity_description,
+        s.latest_title,
+        ...(s.categories || []),
+        ...(s.contracts || []).map(c => c.title)
+      ].join(' ');
+      if (!normalizeStr(haystack).includes(qWords)) return false;
+    }
+
+    return true;
+  });
+
+  if (visibleCount) visibleCount.textContent = currentFilteredSuppliers.length;
+  renderSuppliersList();
+}
+
+function clearAllFilters() {
+  if (filterName) filterName.value = '';
+  if (filterLocality) filterLocality.value = '';
+  if (filterAmount) filterAmount.value = 'all';
+  if (filterWords) filterWords.value = '';
+  if (btnClearWords) btnClearWords.classList.add('hidden');
+  applyFilters();
+}
+
+async function exportToExcel() {
+  if (currentFilteredSuppliers.length === 0) {
     alert('Não existem fornecedores para exportar.');
     return;
   }
@@ -529,26 +604,31 @@ async function exportSuppliersExcel() {
     const response = await fetch('/api/suppliers/export', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ suppliers: filteredSuppliers })
+      body: JSON.stringify({ suppliers: currentFilteredSuppliers })
     });
 
     if (!response.ok) {
-      throw new Error(`Erro ao exportar (${response.status})`);
+      throw new Error(`Erro na exportação (${response.status})`);
     }
 
     const blob = await response.blob();
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `fornecedores_${new Date().toISOString().slice(0, 10)}.csv`;
+    a.download = `fornecedores_${new Date().toISOString().substring(0, 10)}.csv`;
     document.body.appendChild(a);
     a.click();
     a.remove();
     window.URL.revokeObjectURL(url);
-  } catch (error) {
-    console.error('Erro ao exportar para Excel:', error);
-    alert(`Erro na exportação: ${error.message}`);
+  } catch (err) {
+    console.error('Erro ao exportar:', err);
+    alert(`Ocorreu um erro ao exportar: ${err.message}`);
   }
+}
+
+function normalizeStr(str) {
+  if (!str) return '';
+  return str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 }
 
 function escapeHtml(str) {
