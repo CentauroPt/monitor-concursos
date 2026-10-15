@@ -261,6 +261,7 @@ class TedScraper:
                 'publication-number',
                 'notice-title',
                 'buyer-name',
+                'winner-name',
                 'estimated-value-proc',
                 'estimated-value-lot',
                 'publication-date',
@@ -305,6 +306,24 @@ class TedScraper:
         elif isinstance(buyer_dict, str):
             buyer = buyer_dict
 
+        # Extração do Adjudicatário Vencedor (Winner)
+        winner_dict = item.get('winner-name') or {}
+        winner_name = ""
+        if isinstance(winner_dict, dict):
+            w_list = winner_dict.get('por') or winner_dict.get('eng') or (list(winner_dict.values())[0] if winner_dict else '')
+            if isinstance(w_list, list) and len(w_list) > 0:
+                w_unique = []
+                for w in w_list:
+                    if w and w not in w_unique:
+                        w_unique.append(w)
+                winner_name = ", ".join(w_unique)
+            elif isinstance(w_list, str):
+                winner_name = w_list
+        elif isinstance(winner_dict, list) and len(winner_dict) > 0:
+            winner_name = ", ".join(set(winner_dict))
+        elif isinstance(winner_dict, str):
+            winner_name = winner_dict
+
         val_proc = item.get('estimated-value-proc')
         val_lot = item.get('estimated-value-lot')
         formatted_value = self._format_price(val_proc, val_lot)
@@ -319,12 +338,28 @@ class TedScraper:
         else:
             pub_date = "N/D"
 
-        notice_type = item.get('notice-type') or 'can-standard'
-        proc_type_desc = "Adjudicação de Contrato (TED)"
-        if "modif" in str(notice_type):
+        notice_type = str(item.get('notice-type') or 'can-standard').lower()
+        if "can" in notice_type:
+            proc_type_desc = "Adjudicação de Contrato (TED)"
+            record_type = "adjudicacao"
+            record_status = "🏆 Adjudicação Decidida (Resultado de Concurso)"
+            is_signed = False
+            contracted_party = winner_name if winner_name else "Adjudicatário notificado no TED"
+            signing_disp = "Não assinado (Em formalização / Adjudicação)"
+        elif "modif" in notice_type:
             proc_type_desc = "Modificação de Contrato (TED)"
-        elif "cn" in str(notice_type):
-            proc_type_desc = "Concurso Internacional"
+            record_type = "contrato_assinado"
+            record_status = "✍️ Modificação de Contrato Celebrado"
+            is_signed = True
+            contracted_party = winner_name if winner_name else "Consulte a ficha oficial do TED"
+            signing_disp = pub_date
+        else:
+            proc_type_desc = "Concurso Internacional (TED)"
+            record_type = "concurso"
+            record_status = "📢 Concurso em Tramitação / Adjudicação"
+            is_signed = False
+            contracted_party = "Em fase de entrega de propostas / apuramento de adjudicação"
+            signing_disp = "Não assinado (Concurso Aberto)"
 
         direct_url = f"{TED_BASE_WEB}/pt/notice/-/detail/{pub_number}"
 
@@ -332,6 +367,8 @@ class TedScraper:
             'Objeto do Contrato': title.strip(),
             'Entidade Adjudicante': buyer.strip() if buyer else "Entidade Pública",
             'Tipo de Anúncio': proc_type_desc,
+            'Estado da Adjudicação': record_status,
+            'Adjudicatário Vencedor': contracted_party,
             'Número de Publicação': str(pub_number),
             'Plataforma Eletrónica': '🇪🇺 TED Europa (ted.europa.eu)'
         }
@@ -340,6 +377,9 @@ class TedScraper:
             'id': f"ted_{pub_number}",
             'raw_id': str(pub_number),
             'source': "TED Europa",
+            'is_signed': is_signed,
+            'record_type': record_type,
+            'record_status': record_status,
             'platform_code': 'ted',
             'platform_name': 'TED Europa',
             'platform_icon': '🇪🇺',
@@ -354,10 +394,10 @@ class TedScraper:
             'fundamentation': "Diretivas Europeias de Contratação Pública",
             'entity': buyer.strip() if buyer else "Entidade Pública (Consulte o anúncio)",
             'entity_nif': str(searched_nif or '').strip(),
-            'contracted': "Consulte a ficha oficial do TED",
+            'contracted': contracted_party,
             'contracted_nif': "",
             'value': formatted_value,
-            'signing_date': pub_date,
+            'signing_date': signing_disp,
             'publication_date': pub_date,
             'execution_place': "União Europeia / Portugal",
             'execution_deadline': "Consulte o anúncio",
