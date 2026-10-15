@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pesquisa de Fornecedores de Entidades Públicas - Portal BASE & Autarquias</title>
+  <link rel="stylesheet" href="/styles.css?v=3.5" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header Principal -->
+    <header class="header">
+      <div class="header-inner">
+        <div class="header-branding">
+          <div class="logo-circle">🏢</div>
+          <div class="header-title-group">
+            <h1>Pesquisa de Fornecedores de Entidades Públicas</h1>
+            <p class="subtitle">Identificação de fornecedores, raio-x empresarial, moradas completas, contactos e histórico de contratação pública</p>
+          </div>
+        </div>
+        <div class="header-status">
+          <span class="status-indicator live"></span>
+          <span id="last-update-text">Pronto para pesquisar fornecedores</span>
+        </div>
+      </div>
+
+      <!-- Barra de Navegação entre Páginas -->
+      <nav class="main-nav-bar">
+        <a href="/index.html" class="nav-tab">
+          <span class="nav-icon">📢</span>
+          <div class="nav-text">
+            <span class="nav-title">Monitor de Oportunidades</span>
+            <span class="nav-desc">Alertas de Viaturas & Unidades Móveis</span>
+          </div>
+        </a>
+        <a href="/contratos.html" class="nav-tab">
+          <span class="nav-icon">📑</span>
+          <div class="nav-text">
+            <span class="nav-title">Pesquisa de Contratos Públicos</span>
+            <span class="nav-desc">Por NIF / Nome de Entidade Adjudicante</span>
+          </div>
+        </a>
+        <a href="/fornecedores.html" class="nav-tab active">
+          <span class="nav-icon">🏢</span>
+          <div class="nav-text">
+            <span class="nav-title">Pesquisa de Fornecedores</span>
+            <span class="nav-desc">Moradas, Contactos & Redes Sociais</span>
+          </div>
+        </a>
+      </nav>
+    </header>
+
+    <!-- Formulário de Pesquisa de Fornecedores por Autarquia -->
+    <section class="contracts-search-card">
+      <div class="search-card-header">
+        <div class="search-card-title">
+          <h2>🔍 Pesquisar Fornecedores de uma Entidade Adjudicante / Autarquia</h2>
+          <p>Indique o <strong>Contribuinte (NIF)</strong> ou o <strong>Nome da Autarquia / Município</strong>. O sistema extrai todos os fornecedores (adjudicatários), agrega valores e volumes contratados e enriquece automaticamente cada empresa com <strong>morada da sede, contactos telefónicos, emails, página web e redes sociais</strong>.</p>
+        </div>
+      </div>
+
+      <form id="suppliers-search-form" class="contracts-form" onsubmit="event.preventDefault(); handleSupplierSearch();">
+        <div class="form-grid">
+          <!-- Campo Autarquia (NIF ou Nome) -->
+          <div class="form-field full-width">
+            <label for="supplier-entity-input">
+              🏛️ Entidade Adjudicante / Autarquia (NIF ou Nome Completo)
+              <span class="field-hint">Ex: 505170940, 500051054, Município de Loulé, Câmara Municipal de Lisboa, Município do Porto...</span>
+            </label>
+            <div class="input-with-clear">
+              <input 
+                type="text" 
+                id="supplier-entity-input" 
+                placeholder="Introduza o NIF (9 dígitos) ou o nome do município/entidade..." 
+                autocomplete="off"
+                required
+              />
+              <button type="button" class="btn-clear-input" onclick="clearSupplierInput()" title="Limpar campo">✕</button>
+            </div>
+            
+            <!-- Sugestões Rápidas de Municípios -->
+            <div class="quick-chips">
+              <span class="chips-label">Sugestões rápidas:</span>
+              <button type="button" class="chip" onclick="setEntityQuick('505170940', 'Município de Loulé')">Loulé</button>
+              <button type="button" class="chip" onclick="setEntityQuick('500051054', 'Município de Lisboa')">Lisboa</button>
+              <button type="button" class="chip" onclick="setEntityQuick('501275344', 'Município do Porto')">Porto</button>
+              <button type="button" class="chip" onclick="setEntityQuick('500051062', 'Município de Sintra')">Sintra</button>
+              <button type="button" class="chip" onclick="setEntityQuick('501290947', 'Município de Cascais')">Cascais</button>
+              <button type="button" class="chip" onclick="setEntityQuick('506415082', 'Município de Coimbra')">Coimbra</button>
+              <button type="button" class="chip" onclick="setEntityQuick('506901784', 'Município de Braga')">Braga</button>
+              <button type="button" class="chip" onclick="setEntityQuick('505345700', 'Município de Faro')">Faro</button>
+            </div>
+          </div>
+
+          <!-- Período Temporal de Celebração / Publicação -->
+          <div class="form-field date-group">
+            <label>📅 Período Temporal dos Contratos (Opcional)</label>
+            <div class="date-inputs-row">
+              <div class="date-col">
+                <span class="date-sublabel">Data Início:</span>
+                <input type="date" id="supplier-date-start" />
+              </div>
+              <div class="date-col">
+                <span class="date-sublabel">Data Fim:</span>
+                <input type="date" id="supplier-date-end" />
+              </div>
+            </div>
+            <div class="date-quick-buttons">
+              <button type="button" class="btn-date-quick" onclick="setDateRange('last_month')">Último Mês</button>
+              <button type="button" class="btn-date-quick" onclick="setDateRange('last_6m')">Últimos 6 Meses</button>
+              <button type="button" class="btn-date-quick" onclick="setDateRange('last_year')">Último Ano</button>
+              <button type="button" class="btn-date-quick" onclick="setDateRange('all')">Todo o Período</button>
+            </div>
+          </div>
+
+          <!-- Filtro de Tipo de Data e Fonte -->
+          <div class="form-field">
+            <label for="supplier-date-mode">🎯 Critério de Filtragem de Datas</label>
+            <select id="supplier-date-mode">
+              <option value="any">Celebrados OU Publicados no período</option>
+              <option value="signing">Apenas Data de Celebração (Assinatura)</option>
+              <option value="publication">Apenas Data de Publicação no Portal BASE</option>
+            </select>
+
+            <label for="supplier-source" style="margin-top: 12px;">🌐 Fontes de Pesquisa</label>
+            <select id="supplier-source">
+              <option value="all">Todas as Fontes (Portal BASE, TED Europa, Plataformas & Autarquias)</option>
+              <option value="base">Apenas Portal BASE (base.gov.pt)</option>
+              <option value="ted">Apenas TED Europa (ted.europa.eu)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-search-contracts" id="btn-search-suppliers">
+            <span class="btn-icon">🔍</span>
+            <span>Pesquisar Fornecedores</span>
+          </button>
+          <button type="button" class="btn-export-contracts" id="btn-export-excel" onclick="exportSuppliersExcel()" disabled>
+            <span class="btn-icon">📊</span>
+            <span>Exportar para Excel (CSV)</span>
+          </button>
+          <button type="button" class="btn-export-contracts btn-pdf" id="btn-export-pdf" onclick="window.print()" disabled>
+            <span class="btn-icon">📄</span>
+            <span>Descarregar PDF / Imprimir</span>
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Indicador de Carregamento e Progresso -->
+    <div id="suppliers-loading" class="search-loading-panel" style="display: none;">
+      <div class="spinner"></div>
+      <div class="loading-text">
+        <h3 id="loading-title">A recolher fornecedores da autarquia...</h3>
+        <p id="loading-desc">A consultar Portal BASE, TED Europa, diários oficiais e a enriquecer dados cadastrais (moradas, contactos e redes sociais)...</p>
+      </div>
+    </div>
+
+    <!-- Painel de Resumo / Estatísticas (KPIs) -->
+    <section id="suppliers-kpis" class="kpi-summary-grid" style="display: none;">
+      <div class="kpi-card">
+        <div class="kpi-icon">🏢</div>
+        <div class="kpi-content">
+          <span class="kpi-label">Fornecedores Distintos</span>
+          <span class="kpi-value" id="kpi-total-suppliers">0</span>
+        </div>
+      </div>
+      <div class="kpi-card highlight">
+        <div class="kpi-icon">💶</div>
+        <div class="kpi-content">
+          <span class="kpi-label">Valor Total Adjudicado</span>
+          <span class="kpi-value" id="kpi-total-amount">0,00 €</span>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon">📑</div>
+        <div class="kpi-content">
+          <span class="kpi-label">Contratos Analisados</span>
+          <span class="kpi-value" id="kpi-total-contracts">0</span>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon">📈</div>
+        <div class="kpi-content">
+          <span class="kpi-label">Média por Fornecedor</span>
+          <span class="kpi-value" id="kpi-avg-amount">0,00 €</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Barra de Filtros e Pesquisa de Resultados -->
+    <section id="suppliers-filter-bar" class="results-filter-bar" style="display: none;">
+      <div class="filter-search-box">
+        <span class="filter-icon">🔎</span>
+        <input 
+          type="text" 
+          id="table-filter-input" 
+          placeholder="Filtrar por nome do fornecedor, NIF, morada, setor ou palavras..." 
+          oninput="applyTableFilters()"
+        />
+      </div>
+      <div class="filter-controls">
+        <select id="filter-amount" onchange="applyTableFilters()">
+          <option value="all">Todos os Escalões de Valor</option>
+          <option value="over_100k">Mais de 100.000 €</option>
+          <option value="over_500k">Mais de 500.000 €</option>
+          <option value="over_1m">Mais de 1.000.000 €</option>
+        </select>
+        <select id="sort-select" onchange="applyTableSorting()">
+          <option value="value_desc">Ordenar: Maior Volume (€)</option>
+          <option value="contracts_desc">Ordenar: Mais Contratos Ganhos</option>
+          <option value="date_desc">Ordenar: Contrato Mais Recente</option>
+          <option value="name_asc">Ordenar: Nome Fornecedor (A-Z)</option>
+        </select>
+      </div>
+    </section>
+
+    <!-- Tabela Principal de Fornecedores -->
+    <main class="main-content">
+      <div id="suppliers-empty-state" class="empty-state">
+        <div class="empty-icon">🏢</div>
+        <h3>Pronto para Pesquisar Fornecedores</h3>
+        <p>Indique uma autarquia ou organismo público acima para consultar todos os fornecedores, moradas completas, contactos, websites e contratos celebrados.</p>
+      </div>
+
+      <div id="suppliers-table-container" class="table-responsive-card" style="display: none;">
+        <table class="suppliers-table" id="suppliers-table">
+          <thead>
+            <tr>
+              <th style="width: 28%;">Fornecedor / Empresa</th>
+              <th style="width: 16%;">Volume Contratual</th>
+              <th style="width: 22%;">Contactos & Sede</th>
+              <th style="width: 22%;">Último Contrato Ganho</th>
+              <th style="width: 12%; text-align: center;">Raio-X</th>
+            </tr>
+          </thead>
+          <tbody id="suppliers-table-body">
+            <!-- Linhas geradas via JavaScript -->
+          </tbody>
+        </table>
+      </div>
+    </main>
+
+    <!-- Gaveta Lateral Direita: Ficha Completa do Fornecedor (Raio-X Cadastral & Contratos) -->
+    <div id="supplier-drawer-backdrop" class="drawer-backdrop" onclick="closeSupplierDrawer()"></div>
+    <aside id="supplier-drawer" class="supplier-drawer">
+      <div class="drawer-header">
+        <div class="drawer-title-group">
+          <div class="drawer-badge" id="drawer-badge">🏢 FORNECEDOR</div>
+          <h2 id="drawer-company-name">Nome da Empresa</h2>
+          <span class="drawer-nif" id="drawer-company-nif">NIF: ---</span>
+        </div>
+        <button type="button" class="drawer-close-btn" onclick="closeSupplierDrawer()" title="Fechar janela">✕</button>
+      </div>
+
+      <div class="drawer-body" id="drawer-body-content">
+        <!-- Cartão 1: Informação Cadastral, Morada & Contactos -->
+        <div class="drawer-section">
+          <h3 class="section-title">📍 Morada da Sede & Contactos Oficiais</h3>
+          <div class="contact-card">
+            <div class="contact-row">
+              <span class="contact-icon">📍</span>
+              <div class="contact-detail">
+                <span class="contact-label">Morada Completa:</span>
+                <span class="contact-value" id="drawer-address">A carregar...</span>
+              </div>
+              <a href="#" target="_blank" id="drawer-maps-link" class="btn-quick-map" title="Ver no Google Maps">🗺️ Mapa</a>
+            </div>
+
+            <div class="contact-row">
+              <span class="contact-icon">📞</span>
+              <div class="contact-detail">
+                <span class="contact-label">Telefone(s):</span>
+                <span class="contact-value" id="drawer-phone">Não disponível</span>
+              </div>
+            </div>
+
+            <div class="contact-row">
+              <span class="contact-icon">✉️</span>
+              <div class="contact-detail">
+                <span class="contact-label">Email(s):</span>
+                <span class="contact-value" id="drawer-email">Não disponível</span>
+              </div>
+            </div>
+
+            <div class="contact-row">
+              <span class="contact-icon">🌐</span>
+              <div class="contact-detail">
+                <span class="contact-label">Página Web / Website Oficial:</span>
+                <span class="contact-value" id="drawer-website">Não disponível</span>
+              </div>
+            </div>
+
+            <div class="contact-row">
+              <span class="contact-icon">📱</span>
+              <div class="contact-detail">
+                <span class="contact-label">Redes Sociais:</span>
+                <div class="social-links-pills" id="drawer-socials">
+                  <!-- Pills de LinkedIn, Facebook, Instagram -->
+                </div>
+              </div>
+            </div>
+
+            <div class="contact-row">
+              <span class="contact-icon">🏢</span>
+              <div class="contact-detail">
+                <span class="contact-label">Objeto Social / Atividade:</span>
+                <span class="contact-value desc-text" id="drawer-activity">Consultoria e fornecimento comercial</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cartão 2: Resumo Financeiro com esta Autarquia -->
+        <div class="drawer-section">
+          <h3 class="section-title">📊 Relação Contratual com a Autarquia</h3>
+          <div class="financial-summary-box">
+            <div class="fin-item">
+              <span class="fin-label">Valor Total Adjudicado</span>
+              <span class="fin-value" id="drawer-total-amount">0,00 €</span>
+            </div>
+            <div class="fin-item">
+              <span class="fin-label">Nº de Contratos Ganhos</span>
+              <span class="fin-value" id="drawer-contracts-count">0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cartão 3: Lista Discriminada de Contratos Ganhos -->
+        <div class="drawer-section">
+          <h3 class="section-title">📑 Contratos Celebrados com a Autarquia</h3>
+          <div class="contracts-history-list" id="drawer-contracts-list">
+            <!-- Lista gerada dinamicamente com objetos, datas, valores e links diretos -->
+          </div>
+        </div>
+
+        <!-- Cartão 4: Ligações Externas Oficiais de Verificação -->
+        <div class="drawer-section">
+          <h3 class="section-title">🔗 Fontes & Verificação Pública</h3>
+          <div class="external-links-grid">
+            <a href="#" target="_blank" id="drawer-link-base" class="ext-link-card">
+              <span class="ext-icon">🇵🇹</span>
+              <div>
+                <strong>Portal BASE</strong>
+                <small>Ficha Oficial de Adjudicatário</small>
+              </div>
+            </a>
+            <a href="#" target="_blank" id="drawer-link-racius" class="ext-link-card">
+              <span class="ext-icon">🏢</span>
+              <div>
+                <strong>Racius</strong>
+                <small>Informação Empresarial e Sede</small>
+              </div>
+            </a>
+            <a href="#" target="_blank" id="drawer-link-nif" class="ext-link-card">
+              <span class="ext-icon">📑</span>
+              <div>
+                <strong>NIF.pt</strong>
+                <small>Validação e Dados Fiscais</small>
+              </div>
+            </a>
+            <a href="#" target="_blank" id="drawer-link-google" class="ext-link-card">
+              <span class="ext-icon">🔍</span>
+              <div>
+                <strong>Google Search</strong>
+                <small>Pesquisa Completa na Web</small>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        <p>Monitor de Concursos & Fornecedores Públicos &copy; 2026 | Portal BASE (IMPIC) &bull; TED Europa &bull; DRE &bull; Acingov &bull; Vortal &bull; AnoGov &bull; ComprasPT</p>
+      </div>
+    </footer>
+  </div>
+
+  <script src="/fornecedores.js?v=3.5"></script>
+</body>
+</html>
