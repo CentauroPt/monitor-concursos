@@ -9,9 +9,9 @@ import json
 import logging
 import mimetypes
 from datetime import datetime
-from typing import Any
+from typing import Any, Dict
 from urllib.parse import urlparse, parse_qs
-from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
+from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler, BaseHTTPRequestHandler
 
 from analyzer import ProcurementAnalyzer
 
@@ -25,11 +25,26 @@ analyzer = ProcurementAnalyzer()
 
 class MonitorHandler(SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, directory=STATIC_DIR, **kwargs)
+        kwargs.setdefault('directory', STATIC_DIR)
+        super().__init__(*args, **kwargs)
+
+    def _resolve_path(self) -> str:
+        # Suporte a Vercel rewrites (x-forwarded-uri ou x-matched-path)
+        forwarded = self.headers.get('x-forwarded-uri') or self.headers.get('x-matched-path')
+        if forwarded:
+            f_path = urlparse(forwarded).path
+            if f_path and f_path not in ('/app.py', '/api/app.py'):
+                return f_path
+        parsed = urlparse(self.path)
+        if parsed.path in ('/app.py', '/api/app.py') and forwarded:
+            f_path = urlparse(forwarded).path
+            if f_path:
+                return f_path
+        return parsed.path
 
     def do_GET(self):
-        parsed = urlparse(self.path)
-        path = parsed.path
+        path = self._resolve_path()
+        self.path = path
 
         if path == "/" or path == "/index.html":
             return self._serve_file(os.path.join(STATIC_DIR, "index.html"), "text/html; charset=utf-8")
@@ -93,8 +108,8 @@ class MonitorHandler(SimpleHTTPRequestHandler):
             return super().do_GET()
 
     def do_POST(self):
-        parsed = urlparse(self.path)
-        path = parsed.path
+        path = self._resolve_path()
+        self.path = path
 
         if path == "/api/search":
             content_length = int(self.headers.get('Content-Length', 0))
@@ -361,6 +376,12 @@ def run_server():
     except KeyboardInterrupt:
         print("\nA encerrar servidor...")
         httpd.server_close()
+
+
+# Entrypoint para Vercel Serverless Functions
+class handler(MonitorHandler):
+    """Entrypoint de nível superior exigido pelo runtime Python da Vercel."""
+    pass
 
 
 if __name__ == "__main__":
