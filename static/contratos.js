@@ -227,15 +227,18 @@ function updatePlatformPillCounts() {
     if (el) el.textContent = cnt;
   }
 
-  // Contadores de Estado (Assinados vs Adjudicações)
+  // Contadores de Estado e Procedimento (Assinados, Ajustes Diretos, Adjudicações)
   const statusAll = allContracts.length;
+  const statusAjustes = allContracts.filter(c => c.is_ajuste_direto).length;
   const statusSigned = allContracts.filter(c => c.is_signed).length;
-  const statusAwards = allContracts.filter(c => !c.is_signed).length;
+  const statusAwards = allContracts.filter(c => !c.is_signed || c.is_ajuste_direto || c.record_type === 'adjudicacao').length;
 
   const elStatusAll = document.getElementById('count-pill-status-all');
+  const elStatusAjustes = document.getElementById('count-pill-status-ajustes');
   const elStatusSigned = document.getElementById('count-pill-status-signed');
   const elStatusAwards = document.getElementById('count-pill-status-awards');
   if (elStatusAll) elStatusAll.textContent = statusAll;
+  if (elStatusAjustes) elStatusAjustes.textContent = statusAjustes;
   if (elStatusSigned) elStatusSigned.textContent = statusSigned;
   if (elStatusAwards) elStatusAwards.textContent = statusAwards;
 }
@@ -358,10 +361,11 @@ function applyFilters() {
   activeSearchQuery = qInsideWord;
 
   currentFilteredContracts = allContracts.filter(contract => {
-    // 0. Filtro por Estado (Assinados vs Adjudicações / Resultados)
+    // 0. Filtro por Estado & Procedimento
     if (activeStatusFilter && activeStatusFilter !== 'all') {
       if (activeStatusFilter === 'signed' && !contract.is_signed) return false;
-      if (activeStatusFilter === 'awards' && contract.is_signed) return false;
+      if (activeStatusFilter === 'ajustes' && !contract.is_ajuste_direto) return false;
+      if (activeStatusFilter === 'awards' && !(contract.is_ajuste_direto || !contract.is_signed || contract.record_type === 'adjudicacao')) return false;
     }
 
     // 0.1. Filtro por Plataforma / Entidade Oficial ativa
@@ -504,10 +508,17 @@ function createContractCardHtml(c) {
   }
 
   let statusBadgeHtml = '';
-  if (c.is_signed) {
+  if (c.is_ajuste_direto) {
+    statusBadgeHtml = `<span class="status-badge badge-ajuste">⚡ Ajuste Direto / Adjudicação</span>`;
+  } else if (c.is_signed) {
     statusBadgeHtml = `<span class="status-badge badge-signed">✍️ Assinado</span>`;
   } else {
     statusBadgeHtml = `<span class="status-badge badge-award">🏆 Adjudicação / Resultado</span>`;
+  }
+
+  let frameworkBadgeHtml = '';
+  if (c.framework_agreement_id) {
+    frameworkBadgeHtml = `<span class="framework-tag" title="${escapeHtml(c.framework_agreement_desc || 'Acordo-Quadro')}">📋 AQ #${escapeHtml(c.framework_agreement_id)}</span>`;
   }
 
   let topPlatformLinkHtml = '';
@@ -523,7 +534,8 @@ function createContractCardHtml(c) {
           <span class="source-badge ${badgeClass}">${sourceIcon} ${escapeHtml(c.source)}</span>
           ${platformBadgeHtml}
           ${dreBadgeHtml}
-          <span class="procedure-type-badge">${escapeHtml(c.procedure_type || 'Contrato')}</span>
+          ${frameworkBadgeHtml}
+          <span class="procedure-type-badge ${c.is_ajuste_direto ? 'badge-proc-ajuste' : ''}">${escapeHtml(c.procedure_type || 'Contrato')}</span>
           <span class="id-tag">#${escapeHtml(c.raw_id || c.id)}</span>
         </div>
         <div class="card-top-right">
@@ -684,14 +696,28 @@ function showContractFichaInSidebar(c, switchToTab = true) {
   }
 
   let statusBadgeHtml = '';
-  if (c.is_signed) {
+  if (c.is_ajuste_direto) {
+    statusBadgeHtml = `<span class="status-badge badge-ajuste">⚡ Ajuste Direto / Adjudicação</span>`;
+  } else if (c.is_signed) {
     statusBadgeHtml = `<span class="status-badge badge-signed">✍️ Assinado</span>`;
   } else {
     statusBadgeHtml = `<span class="status-badge badge-award">🏆 Adjudicação / Resultado</span>`;
   }
 
   let statusBannerHtml = '';
-  if (!c.is_signed) {
+  if (c.is_ajuste_direto) {
+    statusBannerHtml = `
+      <div class="ficha-platform-banner" style="border-left: 4px solid #2563eb; background: #eff6ff;">
+        <div class="ficha-platform-header">
+          <strong style="color: #1e40af;">⚡ Ajuste Direto / Adjudicação Decidida</strong>
+          <span class="status-badge badge-ajuste">Ajuste Direto</span>
+        </div>
+        <p style="margin: 6px 0 0 0; font-size: 0.85rem; color: #1e3a8a;">
+          Este registo corresponde a um <strong>Ajuste Direto / Adjudicação Decidida</strong> por parte da entidade adjudicante${c.framework_agreement_id ? ' ao abrigo de Acordo-Quadro' : ''}.
+        </p>
+      </div>
+    `;
+  } else if (!c.is_signed) {
     statusBannerHtml = `
       <div class="ficha-platform-banner" style="border-left: 4px solid #d97706; background: #fffbeb;">
         <div class="ficha-platform-header">
@@ -721,7 +747,8 @@ function showContractFichaInSidebar(c, switchToTab = true) {
         <span class="source-badge ${badgeClass}">${sourceIcon} ${escapeHtml(c.source)}</span>
         ${platformBadgeHtml}
         ${dreBadgeHtml}
-        <span class="procedure-type-badge">${escapeHtml(c.procedure_type || 'Contrato')}</span>
+        ${c.framework_agreement_id ? `<span class="framework-tag">📋 AQ #${escapeHtml(c.framework_agreement_id)}</span>` : ''}
+        <span class="procedure-type-badge ${c.is_ajuste_direto ? 'badge-proc-ajuste' : ''}">${escapeHtml(c.procedure_type || 'Contrato')}</span>
         <span class="ficha-contract-id">#${escapeHtml(c.raw_id || c.id)}</span>
       </div>
       <h3 class="ficha-contract-title">${safeTitle}</h3>
@@ -781,6 +808,16 @@ function showContractFichaInSidebar(c, switchToTab = true) {
         <span class="mini-p-val">${escapeHtml(c.execution_deadline || 'Consulte caderno')}</span>
       </div>
     </div>
+
+    ${c.framework_agreement_id ? `
+      <div class="ficha-section">
+        <span class="ficha-section-title">📋 Acordo-Quadro Relacionado</span>
+        <div class="ficha-party-box">
+          <span class="ficha-party-name">N.º ${escapeHtml(c.framework_agreement_id)}</span>
+          ${c.framework_agreement_desc ? `<p style="margin: 6px 0 0 0; font-size: 0.85rem; color: #475569;">${escapeHtml(c.framework_agreement_desc)}</p>` : ''}
+        </div>
+      </div>
+    ` : ''}
 
     <!-- Partes Envolvidas -->
     <div class="ficha-section">
