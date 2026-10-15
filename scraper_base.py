@@ -7,6 +7,7 @@ por palavras-chave e códigos CPV (34140000 - 34149999).
 import json
 import logging
 import re
+import time
 from datetime import datetime
 import requests
 import urllib3
@@ -31,12 +32,12 @@ KEYWORDS = [
 CPV_PREFIX = "3414"
 
 DEFAULT_HEADERS = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-    'Accept': 'text/plain, */*; q=0.01',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36',
+    'Accept': 'application/json, text/javascript, text/plain, */*; q=0.01',
     'Accept-Language': 'pt-PT,pt;q=0.9,en;q=0.8',
     'X-Requested-With': 'XMLHttpRequest',
     'Origin': BASE_URL,
-    'Referer': f"{BASE_URL}/Base4/pt/pesquisa/"
+    'Referer': f"{BASE_URL}/Base4/pt/pesquisa/?type=contratos"
 }
 
 
@@ -60,7 +61,7 @@ class BaseScraper:
         except Exception:
             self.version = "87.0"
 
-    def _post_query(self, search_type: str, query: str, size: int = 30, sort: Optional[str] = None) -> List[Dict[str, Any]]:
+    def _post_query(self, search_type: str, query: str, size: int = 30, sort: Optional[str] = None, page: str = '0') -> List[Dict[str, Any]]:
         """Executa um POST no endpoint /Base4/pt/resultados/."""
         if sort is None:
             sort = "-drPublicationDate" if search_type == "search_anuncios" else "-publicationDate"
@@ -69,22 +70,26 @@ class BaseScraper:
             'version': self.version,
             'query': query,
             'sort': sort,
-            'page': '0',
+            'page': str(page),
             'size': str(size)
         }
-        try:
-            resp = self.session.post(RESULTADOS_URL, data=payload, timeout=self.timeout)
-            if resp.status_code == 200 and resp.text.strip():
-                try:
-                    data = json.loads(resp.text)
-                except Exception:
-                    data = json.loads(resp.text.strip())
-                if isinstance(data, dict):
-                    return data.get('items', []) or []
-                elif isinstance(data, list):
-                    return data
-        except Exception as e:
-            logger.error(f"Erro ao pesquisar no BASE ({search_type}, query={query}): {e}")
+        for attempt in range(2):
+            try:
+                resp = self.session.post(RESULTADOS_URL, data=payload, timeout=self.timeout)
+                if resp.status_code == 200 and resp.text.strip():
+                    try:
+                        data = json.loads(resp.text)
+                    except Exception:
+                        data = json.loads(resp.text.strip())
+                    if isinstance(data, dict):
+                        return data.get('items', []) or []
+                    elif isinstance(data, list):
+                        return data
+                elif resp.status_code == 999 and attempt == 0:
+                    time.sleep(1.2)
+                    continue
+            except Exception as e:
+                logger.error(f"Erro ao pesquisar no BASE ({search_type}, query={query}): {e}")
         return []
 
     def search_anuncios(self, max_per_term: int = 25) -> List[Dict[str, Any]]:
@@ -313,16 +318,19 @@ class BaseScraper:
             date_suffixes.append("")
 
         entity_terms = []
-        if nif:
-            clean_nif = str(nif).strip().replace(" ", "")
-            if clean_nif:
-                entity_terms.append(f"texto={clean_nif}")
+        clean_nif = str(nif).strip().replace(" ", "") if nif else ""
+        clean_name = str(entity_name).strip() if entity_name else ""
 
-        if entity_name:
-            clean_name = str(entity_name).strip()
-            if clean_name:
-                entity_terms.append(f"adjudicante={clean_name}")
-                entity_terms.append(f"texto={clean_name}")
+        if clean_nif:
+            entity_terms.append(f"adjudicante={clean_nif}")
+            entity_terms.append(f"texto={clean_nif}")
+
+        if clean_name:
+            entity_terms.append(f"adjudicante={clean_name}")
+            clean_name_lower = clean_name.lower()
+            if not clean_name_lower.startswith("município de") and not clean_name_lower.startswith("municipio de"):
+                entity_terms.append(f"adjudicante=Município de {clean_name}")
+            entity_terms.append(f"texto={clean_name}")
 
         if not entity_terms:
             return []
@@ -350,7 +358,42 @@ class BaseScraper:
             except Exception as e:
                 logger.error(f"Erro ao pesquisar contratos por entidade ({q}): {e}")
 
-        contract_items = list(results_map.values())[:max_items]
+        # 1.1. Pesquisa também nas páginas iniciais de contratos do Portal BASE (as publicações mais recentes)
+        # para captar de imediato ajustes diretos e adjudicações acabadas de publicar pelo município
+        try:
+            for p_num in ("0", "1"):
+                recent_items = self._post_query(
+                    search_type="search_contratos",
+                    query="",
+                    size=50,
+                    sort="-publicationDate",
+                    page=p_num
+                )
+                for it in recent_items:
+                    contracting_str = str(it.get('contracting') or '').lower()
+                    desc_str = str(it.get('objectBriefDescription') or '').lower()
+                    matched = False
+                    if clean_nif and clean_nif in str(it.get('contracting') or ''):
+                        matched = True
+                    if clean_name and (clean_name.lower() in contracting_str or clean_name.lower() in desc_str):
+                        matched = True
+                    if matched:
+                        cid = it.get('id')
+                        if cid and f"base_contrato_{cid}" not in results_map:
+                            results_map[f"base_contrato_{cid}"] = it
+        except Exception as e:
+            logger.error(f"Erro ao consultar páginas iniciais do BASE: {e}")
+
+        # Ordenar os contratos encontrados por data decrescente antes de limitar a lista
+        def _get_sort_key(it):
+            p_date = str(it.get('publicationDate') or it.get('signingDate') or '')
+            parts = p_date.split('-')
+            if len(parts) == 3:
+                return f"{parts[2]}{parts[1]}{parts[0]}"
+            return p_date
+
+        sorted_items = sorted(results_map.values(), key=_get_sort_key, reverse=True)
+        contract_items = sorted_items[:max(max_items, 100)]
 
         # Enriquecer concorrentemente com detail_contratos para texto completo
         enriched_contracts = []
@@ -370,7 +413,7 @@ class BaseScraper:
                     pass
                 return self._normalize_entity_contract(item, detail)
 
-            with ThreadPoolExecutor(max_workers=8) as pool:
+            with ThreadPoolExecutor(max_workers=4) as pool:
                 enriched_contracts = list(pool.map(fetch_full_detail, contract_items))
 
         # 2. Pesquisar também Concursos e Adjudicações em search_anuncios (mesmo que ainda não assinados)
@@ -539,9 +582,35 @@ class BaseScraper:
                 if isinstance(d, dict) and d.get('description'):
                     contract_docs.append(str(d.get('description')).strip())
 
+        # Acordo-quadro e tipos de contrato
+        framework_agreement_id = str(detail.get('frameworkAgreementNumber') or detail.get('frameworkAgreementId') or item.get('frameworkAgreementNumber') or '').strip()
+        framework_agreement_desc = str(detail.get('frameworkAgreementDescription') or '').strip()
+        contract_types = str(detail.get('contractTypes') or item.get('contractTypes') or '').strip()
+
+        proc_lower = (procedure_type or '').lower()
+        title_lower = (title or '').lower()
+        desc_lower = (detail_desc or '').lower()
+        fund_lower = (fundamentation or '').lower()
+
+        is_ajuste_direto = (
+            'ajuste direto' in proc_lower or 
+            'acordo-quadro' in proc_lower or 
+            'consulta prévia' in proc_lower or
+            'art.º 258' in proc_lower or
+            'artigo 258' in proc_lower or
+            'ajuste direto' in title_lower or
+            'ajuste direto' in desc_lower or
+            'ajuste direto' in fund_lower
+        )
+
         is_signed = True if signing_date != 'N/D' and not str(signing_date).lower().startswith('não') else False
-        record_type = "contrato_assinado"
-        record_status = "✍️ Contrato Assinado / Celebrado" if is_signed else "🏆 Adjudicação / Contrato em Formalização"
+        
+        if is_ajuste_direto:
+            record_type = "ajuste_direto"
+            record_status = "⚡ Ajuste Direto / Adjudicação Decidida" if is_signed else "⚡ Ajuste Direto em Formalização"
+        else:
+            record_type = "contrato_assinado"
+            record_status = "✍️ Contrato Assinado / Celebrado" if is_signed else "🏆 Adjudicação / Contrato em Formalização"
 
         sections = {
             'Objeto do Contrato': title,
@@ -558,11 +627,17 @@ class BaseScraper:
             'Observações': observations
         }
 
+        if framework_agreement_id or framework_agreement_desc:
+            sections['Acordo-Quadro'] = f"N.º {framework_agreement_id} - {framework_agreement_desc}".strip(" -")
+        if contract_types:
+            sections['Tipos de Contrato'] = contract_types
+
         return {
             'id': f"base_contrato_{item_id}",
             'raw_id': str(item_id),
             'source': "Portal BASE",
             'is_signed': is_signed,
+            'is_ajuste_direto': is_ajuste_direto,
             'record_type': record_type,
             'record_status': record_status,
             'platform_code': platform_code,
@@ -574,6 +649,9 @@ class BaseScraper:
             'dre_url': dre_url,
             'dre_label': dre_label,
             'procedure_type': procedure_type,
+            'framework_agreement_id': framework_agreement_id,
+            'framework_agreement_desc': framework_agreement_desc,
+            'contract_types': contract_types,
             'title': title,
             'description': detail_desc or title,
             'fundamentation': fundamentation,
