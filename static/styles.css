@@ -2170,6 +2170,12 @@ body {
   border: 1px solid #86efac;
 }
 
+.badge-ajuste {
+  background: #eff6ff;
+  color: #1e40af;
+  border: 1px solid #bfdbfe;
+}
+
 .badge-award {
   background: #fef3c7;
   color: #92400e;
@@ -2180,6 +2186,24 @@ body {
   background: #e0e7ff;
   color: #3730a3;
   border: 1px solid #c7d2fe;
+}
+
+.procedure-type-badge.badge-proc-ajuste {
+  background: #eff6ff;
+  color: #1e40af;
+  border-color: #bfdbfe;
+}
+
+.framework-tag {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 6px;
+  background: #f1f5f9;
+  color: #334155;
+  border: 1px solid #cbd5e1;
 }
 
 .highlight-unsigned {
