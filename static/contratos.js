@@ -5,6 +5,7 @@ let allContracts = [];
 let currentFilteredContracts = [];
 let activeSearchQuery = '';
 let activePlatformFilter = 'all';
+let activeStatusFilter = 'all';
 
 // Elementos DOM
 const searchForm = document.getElementById('contracts-search-form');
@@ -180,6 +181,16 @@ function setupEventListeners() {
     });
   }
 
+  // Pílulas de Estado (Assinados vs Adjudicações/Resultados)
+  document.querySelectorAll('.status-pill').forEach(pill => {
+    pill.addEventListener('click', () => {
+      document.querySelectorAll('.status-pill').forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      activeStatusFilter = pill.dataset.status || 'all';
+      applyFilters();
+    });
+  });
+
   // Pílulas Rápidas de Entidades e Plataformas
   document.querySelectorAll('.platform-pill').forEach(pill => {
     pill.addEventListener('click', () => {
@@ -215,6 +226,18 @@ function updatePlatformPillCounts() {
     const el = document.getElementById(`count-pill-${key}`);
     if (el) el.textContent = cnt;
   }
+
+  // Contadores de Estado (Assinados vs Adjudicações)
+  const statusAll = allContracts.length;
+  const statusSigned = allContracts.filter(c => c.is_signed).length;
+  const statusAwards = allContracts.filter(c => !c.is_signed).length;
+
+  const elStatusAll = document.getElementById('count-pill-status-all');
+  const elStatusSigned = document.getElementById('count-pill-status-signed');
+  const elStatusAwards = document.getElementById('count-pill-status-awards');
+  if (elStatusAll) elStatusAll.textContent = statusAll;
+  if (elStatusSigned) elStatusSigned.textContent = statusSigned;
+  if (elStatusAwards) elStatusAwards.textContent = statusAwards;
 }
 
 // Executar Pesquisa Principal no Servidor
@@ -335,7 +358,13 @@ function applyFilters() {
   activeSearchQuery = qInsideWord;
 
   currentFilteredContracts = allContracts.filter(contract => {
-    // 0. Filtro por Plataforma / Entidade Oficial ativa
+    // 0. Filtro por Estado (Assinados vs Adjudicações / Resultados)
+    if (activeStatusFilter && activeStatusFilter !== 'all') {
+      if (activeStatusFilter === 'signed' && !contract.is_signed) return false;
+      if (activeStatusFilter === 'awards' && contract.is_signed) return false;
+    }
+
+    // 0.1. Filtro por Plataforma / Entidade Oficial ativa
     if (activePlatformFilter && activePlatformFilter !== 'all') {
       if (activePlatformFilter === 'dre') {
         if (!contract.dre_id && !contract.dre_url) return false;
@@ -421,8 +450,12 @@ function clearAllFilters() {
   if (filterInsideWords) filterInsideWords.value = '';
   if (btnClearWords) btnClearWords.classList.add('hidden');
   activePlatformFilter = 'all';
+  activeStatusFilter = 'all';
   document.querySelectorAll('.platform-pill').forEach(p => {
     p.classList.toggle('active', p.dataset.platform === 'all');
+  });
+  document.querySelectorAll('.status-pill').forEach(p => {
+    p.classList.toggle('active', p.dataset.status === 'all');
   });
   closeSidebar();
   applyFilters();
@@ -470,6 +503,13 @@ function createContractCardHtml(c) {
     dreBadgeHtml = `<a href="${escapeHtml(c.dre_url)}" target="_blank" rel="noopener noreferrer" class="dre-notice-badge" title="Ver Anúncio de Procedimento no Diário da República Eletrónico">📜 ${escapeHtml(c.dre_label || 'DRE')} ↗</a>`;
   }
 
+  let statusBadgeHtml = '';
+  if (c.is_signed) {
+    statusBadgeHtml = `<span class="status-badge badge-signed">✍️ Assinado</span>`;
+  } else {
+    statusBadgeHtml = `<span class="status-badge badge-award">🏆 Adjudicação / Resultado</span>`;
+  }
+
   let topPlatformLinkHtml = '';
   if (c.platform_url && !['base', 'ted'].includes(c.platform_code)) {
     topPlatformLinkHtml = `<a href="${escapeHtml(c.platform_url)}" target="_blank" rel="noopener noreferrer" class="link-platform-piece" title="Descarregar Peças do Procedimento na plataforma ${escapeHtml(c.platform_name)}">📁 Peças no ${escapeHtml(c.platform_name)} ↗</a>`;
@@ -479,6 +519,7 @@ function createContractCardHtml(c) {
     <article class="contract-card" id="card-${escapeHtml(c.id)}" data-id="${escapeHtml(c.id)}">
       <div class="card-top">
         <div class="card-badges-left">
+          ${statusBadgeHtml}
           <span class="source-badge ${badgeClass}">${sourceIcon} ${escapeHtml(c.source)}</span>
           ${platformBadgeHtml}
           ${dreBadgeHtml}
@@ -513,15 +554,15 @@ function createContractCardHtml(c) {
       <!-- Grid com os 4 Pilares do Contrato -->
       <div class="contract-pillars-grid">
         <div class="pillar-box">
-          <span class="p-label">📅 Data do Contrato (Celebração)</span>
-          <strong class="p-value highlight-date">${escapeHtml(c.signing_date || 'N/D')}</strong>
+          <span class="p-label">${c.is_signed ? '📅 Data do Contrato (Celebração)' : '📅 Fase / Formalização'}</span>
+          <strong class="p-value ${c.is_signed ? 'highlight-date' : 'highlight-unsigned'}">${escapeHtml(c.signing_date || 'N/D')}</strong>
         </div>
         <div class="pillar-box">
           <span class="p-label">📢 Data de Publicação</span>
           <strong class="p-value">${escapeHtml(c.publication_date || 'N/D')}</strong>
         </div>
         <div class="pillar-box">
-          <span class="p-label">💰 Preço Contratual</span>
+          <span class="p-label">${c.is_signed ? '💰 Preço Contratual' : '💰 Valor da Adjudicação / Base'}</span>
           <strong class="p-value highlight-price">${escapeHtml(c.value || 'Não especificado')}</strong>
         </div>
         <div class="pillar-box">
@@ -642,9 +683,41 @@ function showContractFichaInSidebar(c, switchToTab = true) {
     dreBadgeHtml = `<a href="${escapeHtml(c.dre_url)}" target="_blank" rel="noopener noreferrer" class="dre-notice-badge" title="Ver Anúncio de Procedimento no Diário da República Eletrónico">📜 ${escapeHtml(c.dre_label || 'DRE')} ↗</a>`;
   }
 
+  let statusBadgeHtml = '';
+  if (c.is_signed) {
+    statusBadgeHtml = `<span class="status-badge badge-signed">✍️ Assinado</span>`;
+  } else {
+    statusBadgeHtml = `<span class="status-badge badge-award">🏆 Adjudicação / Resultado</span>`;
+  }
+
+  let statusBannerHtml = '';
+  if (!c.is_signed) {
+    statusBannerHtml = `
+      <div class="ficha-platform-banner" style="border-left: 4px solid #d97706; background: #fffbeb;">
+        <div class="ficha-platform-header">
+          <strong style="color: #92400e;">🏆 Adjudicação Decidida / Resultado de Concurso</strong>
+          <span class="status-badge badge-award">Não assinado formalmente</span>
+        </div>
+        <p style="margin: 6px 0 0 0; font-size: 0.85rem; color: #78350f;">
+          Este registo corresponde à decisão de adjudicação / resultado de concurso apurado pelo município. Consulte as peças na plataforma eletrónica de contratação (ou anúncio DRE) para aceder ao Relatório Final do Júri e despacho de adjudicação.
+        </p>
+      </div>
+    `;
+  } else {
+    statusBannerHtml = `
+      <div class="ficha-platform-banner" style="border-left: 4px solid #16a34a; background: #f0fdf4;">
+        <div class="ficha-platform-header">
+          <strong style="color: #166534;">✍️ Contrato Assinado / Celebrado</strong>
+          <span class="status-badge badge-signed">Celebrado</span>
+        </div>
+      </div>
+    `;
+  }
+
   const fichaHtml = `
     <div class="ficha-header-block">
       <div class="ficha-badges-row">
+        ${statusBadgeHtml}
         <span class="source-badge ${badgeClass}">${sourceIcon} ${escapeHtml(c.source)}</span>
         ${platformBadgeHtml}
         ${dreBadgeHtml}
@@ -653,6 +726,8 @@ function showContractFichaInSidebar(c, switchToTab = true) {
       </div>
       <h3 class="ficha-contract-title">${safeTitle}</h3>
     </div>
+
+    ${statusBannerHtml}
 
     ${c.platform_url && !['base', 'ted'].includes(c.platform_code) ? `
       <div class="ficha-platform-banner">
@@ -690,12 +765,12 @@ function showContractFichaInSidebar(c, switchToTab = true) {
     <!-- 4 Pilares Técnicos -->
     <div class="ficha-pillars-mini">
       <div class="ficha-mini-pillar">
-        <span class="mini-p-label">💰 Preço Contratual</span>
+        <span class="mini-p-label">${c.is_signed ? '💰 Preço Contratual' : '💰 Valor da Adjudicação / Base'}</span>
         <span class="mini-p-val highlight-price">${escapeHtml(c.value || 'N/D')}</span>
       </div>
       <div class="ficha-mini-pillar">
-        <span class="mini-p-label">📅 Data do Contrato</span>
-        <span class="mini-p-val highlight-date">${escapeHtml(c.signing_date || 'N/D')}</span>
+        <span class="mini-p-label">${c.is_signed ? '📅 Data do Contrato' : '📅 Fase / Formalização'}</span>
+        <span class="mini-p-val ${c.is_signed ? 'highlight-date' : 'highlight-unsigned'}">${escapeHtml(c.signing_date || 'N/D')}</span>
       </div>
       <div class="ficha-mini-pillar">
         <span class="mini-p-label">📢 Publicação</span>
