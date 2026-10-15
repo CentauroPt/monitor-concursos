@@ -2391,6 +2391,38 @@ body {
    ESTILOS: PESQUISA DE FORNECEDORES DE ENTIDADES PÚBLICAS
    ========================================================================== */
 
+/* Cartão de Fornecedor - Mesma Linha de Contratos */
+.supplier-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.supplier-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+}
+
+.supplier-card.card-selected {
+  border-color: #2563eb !important;
+  background: #f0f7ff !important;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2) !important;
+}
+
+.supplier-card .contract-pillars-grid {
+  grid-template-columns: 1.1fr 0.9fr 1fr 1.2fr;
+}
+
+@media (max-width: 900px) {
+  .supplier-card .contract-pillars-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .supplier-card .contract-pillars-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* KPIs de Resumo */
 .kpi-summary-grid {
   display: grid;
