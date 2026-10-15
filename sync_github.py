@@ -60,7 +60,7 @@ def upload_file(rel_path, token):
         pass
 
     payload = {
-        'message': f"Nova página Pesquisa de Fornecedores com raio-x empresarial, moradas, contactos e redes sociais ({rel_path})",
+        'message': f"Uniformizacao estetica da Pesquisa de Fornecedores identica a Pesquisa de Contratos ({rel_path})",
         'content': content_b64
     }
     if sha:
