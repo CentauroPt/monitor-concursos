@@ -628,7 +628,9 @@ class ProcurementAnalyzer:
         return {
             'contracts': all_contracts,
             'total_count': len(all_contracts),
-            'base_count': len([c for c in all_contracts if c.get('source') == 'Portal BASE']),
+            'signed_count': len([c for c in all_contracts if c.get('is_signed')]),
+            'awards_count': len([c for c in all_contracts if not c.get('is_signed')]),
+            'base_count': len([c for c in all_contracts if 'BASE' in c.get('source', '')]),
             'ted_count': len([c for c in all_contracts if c.get('source') == 'TED Europa']),
             'acingov_count': len([c for c in all_contracts if c.get('platform_code') == 'acingov']),
             'vortal_count': len([c for c in all_contracts if c.get('platform_code') == 'vortal']),
@@ -650,10 +652,10 @@ class ProcurementAnalyzer:
             return ""
 
         headers = [
-            "Fonte", "Plataforma Eletrónica", "Link Procedimento Plataforma",
-            "Diário da República (DRE)", "Link DRE", "Tipo de Procedimento", "Objeto do Contrato",
-            "Entidade Adjudicante", "NIF Adjudicante", "Adjudicatário", "NIF Adjudicatário",
-            "Preço Contratual", "Data do Contrato", "Data de Publicação",
+            "Fonte", "Estado / Assinatura", "Plataforma Eletrónica", "Link Procedimento Plataforma",
+            "Diário da República (DRE)", "Link DRE", "Tipo de Procedimento", "Objeto do Contrato / Concurso",
+            "Entidade Adjudicante", "NIF Adjudicante", "Adjudicatário / Vencedor", "NIF Adjudicatário",
+            "Preço / Valor", "Data do Contrato", "Data de Publicação",
             "Local de Execução", "Fundamentação Legal", "Link Portal BASE / Oficial"
         ]
 
@@ -661,6 +663,7 @@ class ProcurementAnalyzer:
         for c in contracts:
             row = [
                 c.get('source', ''),
+                c.get('record_status', ''),
                 c.get('platform_name', ''),
                 c.get('platform_url', ''),
                 c.get('dre_label', ''),
