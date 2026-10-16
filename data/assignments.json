@@ -1,5 +1,5 @@
 {
-  "last_search": "14-10-2026 15:08:17",
+  "last_search": "16-10-2026 07:52:18",
   "assignments": {
     "base_anuncio_10079": {
       "folder": "dismissed",
@@ -1587,6 +1587,46 @@
     },
     "base_contrato_15769835": {
       "folder": "dismissed",
+      "is_favorite": false
+    },
+    "base_anuncio_458420": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_anuncio_458442": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_anuncio_458448": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_contrato_15780652": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_contrato_15778575": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_contrato_15772382": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "ted_717158-2026": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "ted_716281-2026": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "ted_717106-2026": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "ted_712604-2026": {
+      "folder": "inbox",
       "is_favorite": false
     }
   }
