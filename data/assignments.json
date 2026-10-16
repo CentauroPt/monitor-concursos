@@ -1,5 +1,5 @@
 {
-  "last_search": "16-10-2026 07:52:18",
+  "last_search": "16-10-2026 10:38:14",
   "assignments": {
     "base_anuncio_10079": {
       "folder": "dismissed",
@@ -1627,6 +1627,14 @@
     },
     "ted_712604-2026": {
       "folder": "dismissed",
+      "is_favorite": false
+    },
+    "base_contrato_15786406": {
+      "folder": "inbox",
+      "is_favorite": false
+    },
+    "base_contrato_15785898": {
+      "folder": "inbox",
       "is_favorite": false
     }
   }
